@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <title>أدوات</title>
+</head>
+
+<body>
+    <div id="main">
+        <div>
+            <fieldset class="options">
+                <legend>الخيارات:</legend>
+                <input type="radio" id="RemoveAllTashkil" name="options" value="1" checked="checked" />
+                <label for="RemoveAllTashkil">إزالة كامل التشكيل.</label><br />
+                <input type="radio" id="RemoveTashkilKeepShadda" name="options" value="2" />
+                <label for="RemoveTashkilKeepShadda">إزالة التشكيل عدا الشدة.</label><br />
+                <input type="radio" id="RemoveLastTashkil" name="options" value="3" />
+                <label for="RemoveLastTashkil">إزالة تشكيل آخر حرف.</label><br />
+                <input type="radio" id="KeepLastTashkilOnly" name="options" value="4" />
+                <label for="KeepLastTashkilOnly">ابقاء تشكيل الحرف الآخير</label><br />
+                <input type="radio" id="ReduceTashkil" name="options" value="5" />
+                <label for="ReduceTashkil">تخفيف التشكيل.</label><br />
+                <input type="radio" id="RemoveTatweel" name="options" value="6" />
+                <label for="RemoveTatweel">إزالة التطويل.</label><br />
+                <input type="radio" id="DisconnectChars" name="options" value="7" />
+                <label for="DisconnectChars">تفكيك الحروف.</label><br />
+            </fieldset>
+        </div>
+        <div>
+            <fieldset>
+                <legend>نص:</legend>
+                <textarea rows="5"
+                    id="input_text">ذَهَبَ زَيْدُ إِلَى اَلسُّوقِ فَلَمْ يَعْثُرْ عَلَى مَا كَانَ يُرِيدُ، وَكَانَ الْجَوُّ حِينَهَا جَمِيلًا، وَالسَّمَاءُ صَافِيَةً، والْهَوَاءُ نَقِيًا، فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ.</textarea>
+                <button type="button" id="execute">تنفيذ</button>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset>
+                <legend>الناتج:</legend>
+                <textarea id="result_text" rows="5"></textarea>
+                <!-- <button type="button" onclick="">نسخ</button> -->
+            </fieldset>
+        </div>
+    </div>
+
+    <script>
+        "use strict";
+        window.onload = function () {
+            let selected_op = 1;
+
+            const ops = document.getElementsByName("options");
+            for (let i = 0; i < ops.length; i++) {
+                ops[i].addEventListener('change', function () {
+                    selected_op = parseInt(this.value, 10);
+                });
+            }
+
+            const js_element = document.createElement("script");
+            js_element.src = "js/arlib.js";
+            js_element.charset = "utf-8";
+            js_element.onload = function () {
+                const input_text = document.getElementById("input_text");
+                const result_text = document.getElementById("result_text");
+
+                document.getElementById("execute").addEventListener('click', function () {
+                    result_text.value = (function () {
+                        switch (selected_op) {
+                            case 1:
+                            case 2:
+                                return ArLib.RemoveTashkil(input_text.value, (selected_op === 2));
+                            case 3:
+                            case 4:
+                                return ArLib.LastTashkil(input_text.value, (selected_op === 3));
+                            case 5:
+                                return ArLib.ReduceTashkil(input_text.value);
+                            case 6:
+                                return ArLib.RemoveTatweel(input_text.value);
+                            case 7:
+                                return ArLib.DisconnectChars(input_text.value);
+                            default:
+                                return "";
+                        }
+                    })();
+                });
+
+            }
+
+            document.body.appendChild(js_element);
+        };
+    </script>
+</body>
+
+</html>
