@@ -21,8 +21,6 @@ const ArLib = {
         /*!
          * Arabic Alphabet in the unicode table are betwean 1569 -> 1610 (UTF-16BE: dec).
          * (UTF-16BE: dec) الحروف العربية في جدول الينيكود هي بين 1569 إلى 1610 حسب الترميز.
-         * UTF-16 is encoding for JavaScript.
-         * UTF-16 هو الترميز المستخدم في الجافا سكرب.
          */
         for (let i = 0; i < len; i++) {
             const cc = text.charCodeAt(i);
@@ -83,7 +81,7 @@ const ArLib = {
 
     /*!
      * It returns false if Tashkil is at the end of the word.
-     * تعود بلا إذا كان التشكيل ليس آخر الكلمة.
+     * تعود بلا إذا كان التشكيل آخر الكلمة.
      */
     CheckLastTashkilForRemoval: function (cc, bcc) {
         if ((cc < 1569) || (cc > 1618)) {
@@ -260,9 +258,8 @@ const ArLib = {
                             // تجاهل الكسرة إذا كان بعدها ياء.
                             const n = (i + 1);
                             if (n < len) {
-                                const acc = text.charCodeAt(n);
                                 // 1610 = ي Yeh.
-                                if (acc === 1610) {
+                                if (text.charCodeAt(n) === 1610) {
                                     break;
                                 }
                             }
