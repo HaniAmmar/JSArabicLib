@@ -1,2 +1,4 @@
 /.vscode
 /Notes
+/node_modules
+/package-lock.json
