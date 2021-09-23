@@ -10,15 +10,18 @@
  */
 
 const ArLib = {
-    /*!
+    /**
      * Takes string and return words' characters in disconnected form.
      * تأخذ نص وتعيد أحرف الكلمات منفصلة عن بعظها.
+     *
+     * @param {string} text
+     * @return {string}
      */
     DisconnectChars: function (text) {
         const len = text.length;
         let newText = "";
 
-        /*!
+        /**
          * Arabic Alphabet in the unicode table are betwean 1569 -> 1610 (UTF-16BE: dec).
          * (UTF-16BE: dec) الحروف العربية في جدول الينيكود هي بين 1569 إلى 1610 حسب الترميز.
          */
@@ -39,11 +42,15 @@ const ArLib = {
         return newText;
     },
 
-    /*!
+    /**
      * Takes string and return a words without Tashkil.
      * It also takes an optional boolean to keep Shadda or not.
      * تأخذ نص وتعيد الكلمات بدون تشكيل.
      * كما تأخذ قيمة اختبارية تحدد الاحتفاظ بالشدة من عدمه.
+     *
+     * @param {string} text
+     * @param {boolean} [keepShadda = false]
+     * @return {string}
      */
     RemoveTashkil: function (text, keepShadda = false) {
         const len = text.length;
@@ -65,9 +72,13 @@ const ArLib = {
         return newText;
     },
 
-    /*!
+    /**
      * It returns false if Tashkil is at the end of the word.
      * تعود بلا إذا كان التشكيل آخر الكلمة.
+     *
+     * @param {number} cc
+     * @param {number} bcc
+     * @return {boolean}
      */
     CheckLastTashkilForRemoval: function (cc, bcc) {
         if ((cc < 1569) || (cc > 1618)) {
@@ -85,9 +96,13 @@ const ArLib = {
         return false;
     },
 
-    /*!
+    /**
      * It returns false if Tashkil is not at the end of the word.
      * تعود بلا إذا كان التشكيل ليس آخر الكلمة.
+     *
+     * @param {number} cc
+     * @param {number} bcc
+     * @return {boolean}
      */
     CheckLastTashkilForKeeping: function (cc, bcc) {
         if ((cc < 1569) || (cc > 1618)) {
@@ -99,11 +114,15 @@ const ArLib = {
         return false;
     },
 
-    /*!
+    /**
      * It removes the last Tashkil for every word in a give string if "remove" is set to true,
      * otherwise if keeps only the last Tashkil.
      * تزيل التشكيل الأخير لجميع الكلمات في نص معطى في حال كان المتغير الثاني remove قيمته true,
      * عدا ذلك فإنها تبقي التشكيل الأخير للكلمات.
+     *
+     * @param {string} text
+     * @param {boolean} [remove = false]
+     * @return {string}
      */
     LastTashkil: function (text, remove = true) {
         const len = text.length;
@@ -142,9 +161,12 @@ const ArLib = {
         return newText;
     },
 
-    /*!
+    /**
      * Removes Tatweel form words ـ .
      * تحذف التطويل من الكلمات.
+     *
+     * @param {string} text
+     * @return {string}
      */
     RemoveTatweel: function (text) {
         const len = text.length;
@@ -161,9 +183,12 @@ const ArLib = {
         return newText;
     },
 
-    /*!
+    /**
      * Removes Tashkil if it's obvious to pronounce.
      * حذف التشكبل الواضح نطقًا.
+     *
+     * @param {string} text
+     * @return {string}
      */
     ReduceTashkil: function (text) {
         const len = text.length;
@@ -273,13 +298,15 @@ const ArLib = {
         return newText;
     },
 
-    //  ﺀ ﺁ ﺃ ﺅ ﺇ ﺉ ﺍ ﺏ ﺓ ﺕ ﺙ ﺝ ﺡ ﺥ ﺩ ﺭ ﺯ ﺱ ﺵ ﺹ ﺽ ﻁ ﻅ ﻉ ﻍ ﻑ ﻕ ﻙ ﻝ ﻡ ﻥ ﻩ ﻭ ﻯ ﻱ
-    // 1600 = ـ مدّة
-    // ػ = ﻙ
-    // ؼ = ﻙ
-    // ﻯ = ؽ ؾ ؿ
-    // List of Arabic character in unconnectable form.
-    // قائمة بالحروف العربية التي لا تتصل ببعضها.
+    /**
+     *  ﺀ ﺁ ﺃ ﺅ ﺇ ﺉ ﺍ ﺏ ﺓ ﺕ ﺙ ﺝ ﺡ ﺥ ﺩ ﺭ ﺯ ﺱ ﺵ ﺹ ﺽ ﻁ ﻅ ﻉ ﻍ ﻑ ﻕ ﻙ ﻝ ﻡ ﻥ ﻩ ﻭ ﻯ ﻱ
+     * 1600 = ـ مدّة
+     * ػ = ﻙ
+     * ؼ = ﻙ
+     * ﻯ = ؽ ؾ ؿ
+     * List of Arabic character in unconnectable form.
+     * قائمة بالحروف العربية التي لا تتصل ببعضها.
+     */
     IsolatedForms: [65152, 65153, 65155, 65157, 65159, 65161, 65165, 65167, 65171, 65173, 65177, 65181, 65185,
         65189, 65193, 65195, 65197, 65199, 65201, 65205, 65209, 65213, 65217, 65221, 65225,
         65241, 65241, 65263, 65263, 65263, 1600, 65229, 65233, 65237, 65241, 65245, 65249, 65253, 65257, 65261, 65263, 65265]
