@@ -49,52 +49,50 @@
     <script>
         "use strict";
         window.onload = function () {
-            let selected_op = 0;
+            let selectedOP = 0;
 
             const ops = document.getElementsByName("options");
             for (let i = 0; i < ops.length; i++) {
                 const r = ops[i];
 
-                r.addEventListener('change', function () {
-                    selected_op = parseInt(this.value, 10);
+                r.addEventListener("change", function () {
+                    selectedOP = parseInt(this.value, 10);
                 });
 
                 if (r.checked) {
-                    selected_op = parseInt(r.value, 10);
+                    selectedOP = parseInt(r.value, 10);
                 }
             }
 
-            const js_element = document.createElement("script");
-            js_element.src = "js/arlib.js";
-            js_element.charset = "utf-8";
-            js_element.onload = function () {
-                const input_text = document.getElementById("input_text");
-                const result_text = document.getElementById("result_text");
+            const jsElement = document.createElement("script");
+            jsElement.src = "js/arlib.js";
+            jsElement.onload = function () {
+                const inputText = document.getElementById("input_text");
+                const resultText = document.getElementById("result_text");
 
-                document.getElementById("execute").addEventListener('click', function () {
-                    result_text.value = (function () {
-                        switch (selected_op) {
+                document.getElementById("execute").addEventListener("click", function () {
+                    resultText.value = (function () {
+                        switch (selectedOP) {
                             case 1:
                             case 2:
-                                return ArLib.RemoveTashkil(input_text.value, (selected_op === 2));
+                                return ArLib.RemoveTashkil(inputText.value, (selectedOP === 2));
                             case 3:
                             case 4:
-                                return ArLib.LastTashkil(input_text.value, (selected_op === 3));
+                                return ArLib.LastTashkil(inputText.value, (selectedOP === 3));
                             case 5:
-                                return ArLib.ReduceTashkil(input_text.value);
+                                return ArLib.ReduceTashkil(inputText.value);
                             case 6:
-                                return ArLib.RemoveTatweel(input_text.value);
+                                return ArLib.RemoveTatweel(inputText.value);
                             case 7:
-                                return ArLib.DisconnectChars(input_text.value);
+                                return ArLib.DisconnectChars(inputText.value);
                             default:
                                 return "";
                         }
                     })();
                 });
+            };
 
-            }
-
-            document.body.appendChild(js_element);
+            document.body.appendChild(jsElement);
         };
     </script>
 </body>
