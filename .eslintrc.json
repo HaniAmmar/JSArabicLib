@@ -1,0 +1,47 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "standard"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": [
+            "error",
+            4,
+            { "SwitchCase": 1 }
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-cond-assign": [
+            "error",
+            "always"
+        ],
+        "no-console": 2,
+        "no-debugger": 2,
+        "no-var": 1,
+        "no-trailing-spaces": 1,
+        "eol-last": 1,
+        "no-underscore-dangle": 1,
+        "no-alert": 1
+    },
+    "globals": {
+        "Atomics": false,
+        "SharedArrayBuffer": false
+    }
+}
