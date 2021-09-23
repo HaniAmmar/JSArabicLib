@@ -49,13 +49,19 @@
     <script>
         "use strict";
         window.onload = function () {
-            let selected_op = 1;
+            let selected_op = 0;
 
             const ops = document.getElementsByName("options");
             for (let i = 0; i < ops.length; i++) {
-                ops[i].addEventListener('change', function () {
+                const r = ops[i];
+
+                r.addEventListener('change', function () {
                     selected_op = parseInt(this.value, 10);
                 });
+
+                if (r.checked) {
+                    selected_op = parseInt(r.value, 10);
+                }
             }
 
             const js_element = document.createElement("script");
