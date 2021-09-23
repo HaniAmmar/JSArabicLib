@@ -28,24 +28,31 @@ button {
     font-size: 110%;
     font-weight: bold;
     border-radius: 0.4em;
-    margin: 1em auto 0.5em auto;
+    margin: 1em auto 0 auto;
     padding: 0.5em;
 }
 
 #main{
+    width: 60%;
     display: block;
     margin: 0 auto;
     padding: 2em;
     text-align: center;
+    flex-wrap: wrap;
 }
 
 #main > div {
-    min-width: 30em;
-    max-width: 30em;
     padding: 0.5em;
     margin: 1em auto 0.5em auto;
 }
 
 .options {
     text-align: right;
+}
+
+@media only screen and (max-width: 768px) {
+    #main{
+        width: 95%;
+        flex-direction: column-reverse;
+    }
 }
