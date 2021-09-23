@@ -49,30 +49,16 @@ const ArLib = {
         const len = text.length;
         let new_text = "";
 
-        if (keepShadda) {
-            // Remove all Tashkil expect Shadda
-            // الاحتفاظ بالشدة مع إزالة باقي الحركات
-            for (let i = 0; i < len; i++) {
-                const cc = text.charCodeAt(i);
+        // Remove all Tashkil and (Optional) Shadda.
+        // إزالة التشكيل، واختياريًا الشدة.
+        for (let i = 0; i < len; i++) {
+            const cc = text.charCodeAt(i);
 
-                // Arabic Tashkil characters are from 1611 to 1618.
-                // الحروف المستخدمة في التشكيل هي من 1611 إلى 1618.
-                // 1617 = ّ
-                if (((cc < 1611) || (cc > 1618)) || (cc === 1617)) {
-                    new_text += text[i];
-                }
-            }
-        }
-        else {
-            // Remove all Tashkil
-            for (let i = 0; i < len; i++) {
-                const cc = text.charCodeAt(i);
-
-                // Arabic Tashkil characters are from 1611 to 1618.
-                // الحروف المستخدمة في التشكيل هي من 1611 إلى 1618.
-                if ((cc < 1611) || (cc > 1618)) {
-                    new_text += text[i];
-                }
+            // Arabic Tashkil characters are from 1611 to 1618.
+            // الحروف المستخدمة في التشكيل هي من 1611 إلى 1618.
+            // 1617 = ّ
+            if (((cc < 1611) || (cc > 1618)) || (keepShadda && (cc === 1617))) {
+                new_text += text[i];
             }
         }
 
@@ -129,38 +115,28 @@ const ArLib = {
             let cc = 0, y = 0;
             let bcc = text.charCodeAt(0);
 
-            if (remove) {
-                for (let i = 1; i < len; i++, y++) {
-                    cc = text.charCodeAt(i);
+            for (let i = 1; i < len; i++, y++) {
+                cc = text.charCodeAt(i);
 
+                if (remove) {
                     if (this.CheckLastTashkilForRemoval(cc, bcc)) {
                         new_text += text[y];
                     }
-
-                    bcc = cc;
+                } else if (this.CheckLastTashkilForKeeping(cc, bcc)) {
+                    new_text += text[y];
                 }
 
-                // last char.
-                // آخر حرف.
+                bcc = cc;
+            }
+
+            // last char.
+            // آخر حرف.
+            if (remove) {
                 if (this.CheckLastTashkilForRemoval(cc, bcc)) {
                     new_text += text[y];
                 }
-            } else {
-                for (let i = 1; i < len; i++, y++) {
-                    cc = text.charCodeAt(i);
-
-                    if (this.CheckLastTashkilForKeeping(cc, bcc)) {
-                        new_text += text[y];
-                    }
-
-                    bcc = cc;
-                }
-
-                // last char.
-                // آخر حرف.
-                if (this.CheckLastTashkilForKeeping(cc, bcc)) {
-                    new_text += text[y];
-                }
+            } else if (this.CheckLastTashkilForKeeping(cc, bcc)) {
+                new_text += text[y];
             }
         }
 
@@ -176,6 +152,8 @@ const ArLib = {
         let new_text = "";
 
         for (let i = 0; i < len; i++) {
+            // 1600 = Tatweel ـ
+            // 1600 = حرف التطويل ـ
             if (text.charCodeAt(i) !== 1600) {
                 new_text += text[i];
             }
