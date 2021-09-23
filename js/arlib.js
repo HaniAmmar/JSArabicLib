@@ -1,15 +1,13 @@
 ﻿"use strict";
 
-/*!
- * Arabic library for JavaScript v0.0.1
- * https://github.com/hani-ammar/JSArabicLib
- *
- * Copyright 2021 Taha Zerrouki and other contributors
- * Released under GNU GPL version 2 license
- * https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html
+/**
+ * @Name Arabic library for JavaScript v0.0.1
+ * @Source https://github.com/hani-ammar/JSArabicLib
+ * @Copyright 2021 Taha Zerrouki, Hani Ammar, and other contributors
+ * @License GPL version 2 license https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html
  */
 
-const ArLib = {
+export const ArLib = {
     /**
      * Takes string and return words' characters in disconnected form.
      * تأخذ نص وتعيد أحرف الكلمات منفصلة عن بعظها.
