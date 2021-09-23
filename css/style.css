@@ -8,7 +8,7 @@ body {
 
 fieldset {
     border-radius: 1em;
-    padding: 1em;
+    padding: 1em 1em 1em 0;
     margin: 0;
 }
 
@@ -16,8 +16,8 @@ textarea {
     font-size: 110%;
     font-family: 'arabic traditional', 'Times New Roman', Times, serif;
     border-radius: 0.5em;
-    padding: 0.1em;
-    margin: 0.2em;
+    padding: 0.2em;
+    margin: 0;
     width: 95%;
 }
 
@@ -28,21 +28,21 @@ button {
     font-size: 110%;
     font-weight: bold;
     border-radius: 0.4em;
-    margin: 1em auto 0 auto;
     padding: 0.5em;
+    margin: 0.5em auto 0 auto;
 }
 
-#main{
+#main {
     width: 60%;
     display: block;
+    padding: 0;
     margin: 0 auto;
-    padding: 2em;
     text-align: center;
     flex-wrap: wrap;
 }
 
 #main > div {
-    padding: 0.5em;
+    padding: 0;
     margin: 1em auto 0.5em auto;
 }
 
@@ -52,7 +52,7 @@ button {
 
 @media only screen and (max-width: 768px) {
     #main{
-        width: 95%;
+        width: 100%;
         flex-direction: column-reverse;
     }
 }
