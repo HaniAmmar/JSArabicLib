@@ -241,9 +241,20 @@ const ArLib = {
                             const n = (i + 1);
                             if (n < len) {
                                 const acc = text.charCodeAt(n);
+
                                 // 1608 = و Waw.
                                 // 1572 = ؤ Waw or with Hamza above.
                                 if ((acc === 1608) || (acc === 1572) || (bcc === 1608) || (bcc === 1572)) {
+                                    break;
+                                }
+                            }
+
+
+                            // Ignore Damma if is on Shadda, and Shadda is on Waw (with Hamza above or without).
+                            // تجهاهل الضمة إذا كانت على شدة والشدة على واو، سواء كان على الواو همزة أو لا.
+                            if ((bcc === 1617) && (i > 2)) {
+                                const acc = text.charCodeAt(i - 2);
+                                if ((acc === 1608) || (acc === 1572)) {
                                     break;
                                 }
                             }
