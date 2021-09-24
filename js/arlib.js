@@ -147,7 +147,7 @@ const ArLib = {
                 cc = str.charCodeAt(i);
 
                 switch (cc) {
-                    case 1618: //  ْ Sukun سكون.
+                    // case 1618: //  ْ Sukun سكون.
                     case 1614: //  َ Fatha فتحة.
                     {
                         if (cc === 1614) { // Fatha فتحة.
