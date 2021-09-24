@@ -11,32 +11,32 @@ const ArLib = {
      * Takes string and return words' characters in disconnected form.
      * تأخذ نص وتعيد أحرف الكلمات منفصلة عن بعضها.
      *
-     * @param {string} text
+     * @param {string} str
      * @return {string}
      */
-    DisconnectChars: function (text) {
-        const len = text.length;
-        let newText = "";
+    DisconnectChars: function (str) {
+        const len = str.length;
+        let newstr = "";
 
         /**
          * Arabic Alphabet in the Unicode table are between 1569 -> 1610 (UTF-16BE: dec).
          * (UTF-16BE: dec) الحروف العربية في جدول الينيكود هي بين 1569 إلى 1610 حسب الترميز.
          */
         for (let i = 0; i < len; i++) {
-            const cc = text.charCodeAt(i);
+            const cc = str.charCodeAt(i);
 
             if ((cc >= 1569) && (cc <= 1610)) {
                 // Because arrays starts from 0, subtract 1569 from char code; to match the index of isolated form.
                 // بحكم أن المصفوفة تبدأ من العدد 0، يطرح 1569 من رقم الحرف؛ للوصول إلى هيئة الحرف المستقلة.
                 if (cc !== 1600) { // تخطي المدّة.
-                    newText += String.fromCharCode(this.IsolatedForms[(cc - 1569)]);
+                    newstr += String.fromCharCode(this.IsolatedForms[(cc - 1569)]);
                 }
             } else {
-                newText += text[i];
+                newstr += str[i];
             }
         }
 
-        return newText;
+        return newstr;
     },
 
     /**
@@ -45,28 +45,28 @@ const ArLib = {
      * تأخذ نص وتعيد الكلمات دون تشكيل.
      * كما تأخذ قيمة اختبارية تحدد الاحتفاظ بالشدة من عدمه.
      *
-     * @param {string} text
+     * @param {string} str
      * @param {boolean} [keepShadda = false]
      * @return {string}
      */
-    RemoveTashkil: function (text, keepShadda = false) {
-        const len = text.length;
-        let newText = "";
+    RemoveTashkil: function (str, keepShadda = false) {
+        const len = str.length;
+        let newstr = "";
 
         // Remove all Tashkil and (Optional) Shadda.
         // إزالة التشكيل، واختياريًا الشدة.
         for (let i = 0; i < len; i++) {
-            const cc = text.charCodeAt(i);
+            const cc = str.charCodeAt(i);
 
             // Arabic Tashkil characters are from 1611 to 1618.
             // الحروف المستخدمة في التشكيل هي من 1611 إلى 1618.
             // 1617 = ّ
             if (((cc < 1611) || (cc > 1618)) || (keepShadda && (cc === 1617))) {
-                newText += text[i];
+                newstr += str[i];
             }
         }
 
-        return newText;
+        return newstr;
     },
 
     /**
@@ -117,28 +117,28 @@ const ArLib = {
      * تزيل التشكيل الأخير لجميع الكلمات في نص معطى في حال كان المتغير الثاني remove قيمته true,
      * عدا ذلك فإنها تبقي التشكيل الأخير للكلمات.
      *
-     * @param {string} text
+     * @param {string} str
      * @param {boolean} [remove = false]
      * @return {string}
      */
-    LastTashkil: function (text, remove = true) {
-        const len = text.length;
-        let newText = "";
+    LastTashkil: function (str, remove = true) {
+        const len = str.length;
+        let newstr = "";
 
         if (len !== 0) {
             let cc = 0;
             let y = 0;
-            let bcc = text.charCodeAt(0);
+            let bcc = str.charCodeAt(0);
 
             for (let i = 1; i < len; i++, y++) {
-                cc = text.charCodeAt(i);
+                cc = str.charCodeAt(i);
 
                 if (remove) {
                     if (this.CheckLastTashkilForRemoval(cc, bcc)) {
-                        newText += text[y];
+                        newstr += str[y];
                     }
                 } else if (this.CheckLastTashkilForKeeping(cc, bcc)) {
-                    newText += text[y];
+                    newstr += str[y];
                 }
 
                 bcc = cc;
@@ -148,57 +148,57 @@ const ArLib = {
             // آخر حرف.
             if (remove) {
                 if (this.CheckLastTashkilForRemoval(cc, bcc)) {
-                    newText += text[y];
+                    newstr += str[y];
                 }
             } else if (this.CheckLastTashkilForKeeping(cc, bcc)) {
-                newText += text[y];
+                newstr += str[y];
             }
         }
 
-        return newText;
+        return newstr;
     },
 
     /**
      * Removes Tatweel form words ـ .
      * تحذف التطويل من الكلمات.
      *
-     * @param {string} text
+     * @param {string} str
      * @return {string}
      */
-    RemoveTatweel: function (text) {
-        const len = text.length;
-        let newText = "";
+    RemoveTatweel: function (str) {
+        const len = str.length;
+        let newstr = "";
 
         for (let i = 0; i < len; i++) {
             // 1600 = Tatweel ـ
             // 1600 = حرف التطويل ـ
-            if (text.charCodeAt(i) !== 1600) {
-                newText += text[i];
+            if (str.charCodeAt(i) !== 1600) {
+                newstr += str[i];
             }
         }
 
-        return newText;
+        return newstr;
     },
 
     /**
      * Removes Tashkil if it's obvious to pronounce.
      * حذف التشكيل الواضح نطقًا.
      *
-     * @param {string} text
+     * @param {string} str
      * @return {string}
      */
-    ReduceTashkil: function (text) {
-        const len = text.length;
-        let newText = "";
+    ReduceTashkil: function (str) {
+        const len = str.length;
+        let newstr = "";
 
         if (len !== 0) {
             let cc = 0;
             let y = 0;
-            let bcc = text.charCodeAt(0);
-            newText += text[0];
+            let bcc = str.charCodeAt(0);
+            newstr += str[0];
 
             for (let i = 1; i < len; i++, y++) {
-                cc = text.charCodeAt(i);
+                cc = str.charCodeAt(i);
 
                 switch (cc) {
                     case 1618: // Sukun سكون.
@@ -209,7 +209,7 @@ const ArLib = {
                             // تجاهل الفَتْحَة التي تأتي قبل أي ألف.
                             const n = (i + 1);
                             if (n < len) {
-                                const acc = text.charCodeAt(n);
+                                const acc = str.charCodeAt(n);
                                 // 1570 = آ // Alef with Madda above.
                                 // 1571 = أ // Alef with Hamza above.
                                 // 1573 = إ // Alef with Hamza below.
@@ -225,9 +225,9 @@ const ArLib = {
                         // 1608 = و Waw.
                         // 1610 = ي Yeh.
                         if (((bcc === 1608) || (bcc === 1610)) && (y > 0)) {
-                            const acc = text.charCodeAt(i - 2);
+                            const acc = str.charCodeAt(i - 2);
                             if ((acc >= 1569) && (acc <= 1618)) {
-                                newText += text[i];
+                                newstr += str[i];
                             }
                         }
 
@@ -240,7 +240,7 @@ const ArLib = {
                     {
                         const n = (i + 1);
                         if (n < len) {
-                            const acc = text.charCodeAt(n);
+                            const acc = str.charCodeAt(n);
 
                             // 1608 = و Waw.
                             // 1572 = ؤ Waw or with Hamza above.
@@ -252,13 +252,13 @@ const ArLib = {
                         // Ignore Damma if it's on Shadda, and Shadda is on Waw (with Hamza above or without).
                         // تجاهل الضمة إذا كانت على شدة والشدة على واو، سواء كان على الواو همزة أو لا.
                         if ((bcc === 1617) && (i > 2)) {
-                            const acc = text.charCodeAt(i - 2);
+                            const acc = str.charCodeAt(i - 2);
                             if ((acc === 1608) || (acc === 1572)) {
                                 break;
                             }
                         }
 
-                        newText += text[i];
+                        newstr += str[i];
                         break;
                     }
 
@@ -269,7 +269,7 @@ const ArLib = {
                         const n = (i + 1);
                         if (n < len) {
                             // 1610 = ي Yeh.
-                            if (text.charCodeAt(n) === 1610) {
+                            if (str.charCodeAt(n) === 1610) {
                                 break;
                             }
                         }
@@ -277,14 +277,14 @@ const ArLib = {
                         // Ignore Kasra if it's under Alef with Hamza below.
                         // تجاهل حركة الكسرة التي تحت حرف الألف الذي تحته همزة.
                         if (bcc !== 1573) {
-                            newText += text[i];
+                            newstr += str[i];
                         }
 
                         break;
                     }
 
                     default:
-                        newText += text[i];
+                        newstr += str[i];
                         break;
                 }
 
@@ -292,7 +292,7 @@ const ArLib = {
             }
         }
 
-        return newText;
+        return newstr;
     },
 
     /**
