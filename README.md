@@ -1,5 +1,5 @@
 # JSArabicLib
-مكتبة تحتوي عددًا من الأدوات المصممة خصيصًا للتعامل من اللغة العربية.
+مكتبة تحتوي عددًا من الأدوات المصممة خصيصًا للتعامل مع اللغة العربية.
 
 Library for providing JavaScript with tools specific for Arabic language.
 
