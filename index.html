@@ -25,8 +25,8 @@
                 <label for="ReduceTashkil">تخفيف التشكيل.</label><br />
                 <input type="radio" id="RemoveTatweel" name="options" value="6" />
                 <label for="RemoveTatweel">إزالة التطويل.</label><br />
-                <input type="radio" id="DisconnectChars" name="options" value="7" />
-                <label for="DisconnectChars">تفكيك الحروف.</label><br />
+                <!-- <input type="radio" id="DisconnectChars" name="options" value="7" />
+                <label for="DisconnectChars">تفكيك الحروف.</label><br /> -->
             </fieldset>
         </div>
         <div>
@@ -83,8 +83,8 @@
                                 return ArLib.ReduceTashkil(inputText.value);
                             case 6:
                                 return ArLib.RemoveTatweel(inputText.value);
-                            case 7:
-                                return ArLib.DisconnectChars(inputText.value);
+                            // case 7:
+                            //     return ArLib.DisconnectChars(inputText.value);
                             default:
                                 return "";
                         }

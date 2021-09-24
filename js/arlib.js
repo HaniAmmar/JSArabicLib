@@ -14,30 +14,30 @@ const ArLib = {
      * @param {string} str
      * @return {string}
      */
-    DisconnectChars: function (str) {
-        const len = str.length;
-        let newstr = "";
+    // DisconnectChars: function (str) {
+    //     const len = str.length;
+    //     let newstr = "";
 
-        /**
-         * Arabic Alphabet in the Unicode table are between 1569 -> 1610 (UTF-16BE: dec).
-         * (UTF-16BE: dec) الحروف العربية في جدول الينيكود هي بين 1569 إلى 1610 حسب الترميز.
-         */
-        for (let i = 0; i < len; i++) {
-            const cc = str.charCodeAt(i);
+    //     /**
+    //      * Arabic Alphabet in the Unicode table are between 1569 -> 1610 (UTF-16BE: dec).
+    //      * (UTF-16BE: dec) الحروف العربية في جدول الينيكود هي بين 1569 إلى 1610 حسب الترميز.
+    //      */
+    //     for (let i = 0; i < len; i++) {
+    //         const cc = str.charCodeAt(i);
 
-            if ((cc >= 1569) && (cc <= 1610)) {
-                // Because arrays starts from 0, subtract 1569 from char code; to match the index of isolated form.
-                // بحكم أن المصفوفة تبدأ من العدد 0، يطرح 1569 من رقم الحرف؛ للوصول إلى هيئة الحرف المستقلة.
-                if (cc !== 1600) { // تخطي المدّة.
-                    newstr += String.fromCharCode(this.IsolatedForms[(cc - 1569)]);
-                }
-            } else {
-                newstr += str[i];
-            }
-        }
+    //         if ((cc >= 1569) && (cc <= 1610)) {
+    //             // Because arrays starts from 0, subtract 1569 from char code; to match the index of isolated form.
+    //             // بحكم أن المصفوفة تبدأ من العدد 0، يطرح 1569 من رقم الحرف؛ للوصول إلى هيئة الحرف المستقلة.
+    //             if (cc !== 1600) { // تخطي المدّة.
+    //                 newstr += String.fromCharCode(this.IsolatedForms[(cc - 1569)]);
+    //             }
+    //         } else {
+    //             newstr += str[i];
+    //         }
+    //     }
 
-        return newstr;
-    },
+    //     return newstr;
+    // },
 
     /**
      * Takes string and returns every word without Tashkil.
@@ -293,7 +293,7 @@ const ArLib = {
         }
 
         return newstr;
-    },
+    }
 
     /**
      *  ﺀ ﺁ ﺃ ﺅ ﺇ ﺉ ﺍ ﺏ ﺓ ﺕ ﺙ ﺝ ﺡ ﺥ ﺩ ﺭ ﺯ ﺱ ﺵ ﺹ ﺽ ﻁ ﻅ ﻉ ﻍ ﻑ ﻕ ﻙ ﻝ ﻡ ﻥ ﻩ ﻭ ﻯ ﻱ
@@ -304,7 +304,7 @@ const ArLib = {
      * List of Arabic character in uncontactable form.
      * قائمة بالحروف العربية التي لا تتصل ببعضها.
      */
-    IsolatedForms: [65152, 65153, 65155, 65157, 65159, 65161, 65165, 65167, 65171, 65173, 65177, 65181, 65185,
-        65189, 65193, 65195, 65197, 65199, 65201, 65205, 65209, 65213, 65217, 65221, 65225,
-        65241, 65241, 65263, 65263, 65263, 1600, 65229, 65233, 65237, 65241, 65245, 65249, 65253, 65257, 65261, 65263, 65265]
+    // IsolatedForms: [65152, 65153, 65155, 65157, 65159, 65161, 65165, 65167, 65171, 65173, 65177, 65181, 65185,
+    //     65189, 65193, 65195, 65197, 65199, 65201, 65205, 65209, 65213, 65217, 65221, 65225,
+    //     65241, 65241, 65263, 65263, 65263, 1600, 65229, 65233, 65237, 65241, 65245, 65249, 65253, 65257, 65261, 65263, 65265]
 };
