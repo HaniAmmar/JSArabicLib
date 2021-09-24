@@ -285,6 +285,7 @@ const ArLib = {
         let insertSpace = false;
         let ignoreSpace = false;
         let quotatStart = false;
+        let textStarted = false;
         let newStr = "";
         let bcc = 0;
 
@@ -305,6 +306,7 @@ const ArLib = {
                     if ((bcc !== 32) && !(ignoreSpace)) {
                         insertSpace = true;
                     }
+
                     break;
                 }
 
@@ -372,10 +374,14 @@ const ArLib = {
                 default:
                 {
                     if (insertSpace) {
-                        newStr += String.fromCharCode(32);
+                        if (textStarted && ((i + 1) !== str.length)) {
+                            newStr += String.fromCharCode(32);
+                        }
+
                         insertSpace = false;
                     }
 
+                    textStarted = true;
                     newStr += str[i];
                 }
             }
