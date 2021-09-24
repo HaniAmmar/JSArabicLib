@@ -25,15 +25,15 @@
                 <label for="ReduceTashkil">تخفيف التشكيل.</label><br />
                 <input type="radio" id="RemoveTatweel" name="options" value="6" />
                 <label for="RemoveTatweel">إزالة التطويل.</label><br />
-                <!-- <input type="radio" id="DisconnectChars" name="options" value="7" />
-                <label for="DisconnectChars">تفكيك الحروف.</label><br /> -->
+                <input type="radio" id="ImproveText" name="options" value="7" />
+                <label for="ImproveText">تحسين النص.</label><br />
             </fieldset>
         </div>
         <div>
             <fieldset>
                 <legend>النص:</legend>
                 <textarea rows="5"
-                    id="input_text">ذَهَبَ زَيْدُ إِلَى اَلسُّوقِ فَلَمْ يَعْثُرْ عَلَى مَا كَانَ يُرِيدُ، وَكَانَ الْجَوُّ حِينَهَا جَمِيلًا، وَالسَّمَاءُ صَافِيَةً، والْهَوَاءُ نَقِيًا، فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ.</textarea>
+                    id="input_text">ذَهَـــبَ           زَيْــــدُ إِلَى اَلـسُّوقِ فَلَمْ يَعْثُرْ عَلَى مَا كَانَ يُرِيدُ , وَكَانَ الْـجَوُّ حِينَهَا جَمِيلًا , وَالـسَّمَاءُ صَافِيَةً، والْهَوَاءُ نَقِيًا  ; فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ عند مكان اسمه  : " الجرف " .</textarea>
                 <button type="button" id="execute">تنفيذ</button>
             </fieldset>
         </div>
@@ -83,8 +83,8 @@
                                 return ArLib.ReduceTashkil(inputText.value);
                             case 6:
                                 return ArLib.RemoveTatweel(inputText.value);
-                            // case 7:
-                            //     return ArLib.DisconnectChars(inputText.value);
+                            case 7:
+                                return ArLib.ImproveText(inputText.value);
                             default:
                                 return "";
                         }
