@@ -299,6 +299,7 @@ const ArBasic = {
 
             switch (cc) {
                 case this.CharactersTable.Space:
+                case 9: // tab
                 {
                     // تخطي المسافات المكررة.
                     // Skip duplicate spaces.
