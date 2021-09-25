@@ -54,7 +54,9 @@
         "no-trailing-spaces": 1,
         "eol-last": 1,
         "no-underscore-dangle": 1,
-        "no-alert": 1
+        "no-alert": 1,
+        "no-else-return": 1,
+        "no-continue": 1
     },
     "globals": {
         "Atomics": false,
