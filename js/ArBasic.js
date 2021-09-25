@@ -8,7 +8,7 @@
  */
 
 // eslint-disable-next-line no-unused-vars
-const ArLib = {
+const ArBasic = {
     /**
      * تأخذ نص وتعيد الكلمات دون تشكيل.
      * كما تأخذ قيمة اختبارية تحدد الاحتفاظ بالشدة من عدمه.
@@ -489,7 +489,7 @@ const ArLib = {
                     }
 
                     if (code !== 0) {
-                        if (hasShadda) {
+                        if (hasShadda && (code !== this.CharactersTable.Sukun)) {
                             // 32 (A و a) عدد الحروف بين.
                             // 32 Number of characters between A and a.
                             code -= 32;
@@ -587,3 +587,11 @@ const ArLib = {
     //     65189, 65193, 65195, 65197, 65199, 65201, 65205, 65209, 65213, 65217, 65221, 65225,
     //     65241, 65241, 65263, 65263, 65263, 1600, 65229, 65233, 65237, 65241, 65245, 65249, 65253, 65257, 65261, 65263, 65265]
 };
+
+// كي يمكن استخدام المِلَفّ مع المتصفح
+// To allow this file to be used inside a browser.
+if (typeof module !== "undefined") {
+    module.exports = {
+        ArBasic
+    };
+}

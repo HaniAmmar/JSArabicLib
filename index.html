@@ -85,7 +85,7 @@
             }
 
             const jsElement = document.createElement("script");
-            jsElement.src = "js/arlib.js";
+            jsElement.src = "js/ArBasic.js";
             jsElement.onload = function () {
                 const inputText = document.getElementById("input_text");
                 const resultText = document.getElementById("result_text");
@@ -96,24 +96,24 @@
                         switch (selectedOP) {
                             case 1:
                             case 2:
-                                return ArLib.RemoveTashkil(inputText.value, (selectedOP === 2));
+                                return ArBasic.RemoveTashkil(inputText.value, (selectedOP === 2));
                             case 3:
                             case 4:
-                                return ArLib.LastTashkil(inputText.value, (selectedOP === 3));
+                                return ArBasic.LastTashkil(inputText.value, (selectedOP === 3));
                             case 5:
-                                return ArLib.ReduceTashkil(inputText.value);
+                                return ArBasic.ReduceTashkil(inputText.value);
                             case 6:
-                                return ArLib.RemoveTatweel(inputText.value);
+                                return ArBasic.RemoveTatweel(inputText.value);
                             case 7:
-                                return ArLib.ImproveText(inputText.value);
+                                return ArBasic.ImproveText(inputText.value);
                             case 8:
                                 {
-                                    const ret = ArLib.EncodeTashkil(inputText.value);
+                                    const ret = ArBasic.EncodeTashkil(inputText.value);
                                     tashkilText.value = ret.EncodedTashkil;
                                     return ret.StrippedText;
                                 }
                             case 9:
-                                return ArLib.DecodeTashkil(inputText.resultText, tashkilText.value);
+                                return ArBasic.DecodeTashkil(inputText.resultText, tashkilText.value);
                             default:
                                 return "";
                         }
