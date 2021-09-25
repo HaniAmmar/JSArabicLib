@@ -364,6 +364,22 @@ const ArBasic = {
                     break;
 
                 case this.CharactersTable.Dot: // . Dot نقطة.
+                {
+                    // const y = (i + 1);
+                    // if ((y < len) && (str.charCodeAt(y) === this.CharactersTable.Dot)) {
+                    //     // نقاط مكررة.
+                    //     // Repeated dots.
+                    //     if (insertSpace) {
+                    //         newStr += String.fromCharCode(this.CharactersTable.Space);
+                    //     }
+                    // }
+
+                    newStr += str[i];
+                    insertSpace = true;
+
+                    break;
+                }
+
                 case this.CharactersTable.Colon: // : Colon نقطتان فوق بعص.
                 {
                     newStr += str[i];
@@ -389,7 +405,7 @@ const ArBasic = {
                         if (!(ignoreSpace) && ((i + 1) !== str.length) &&
                         // عدم إضافة مسافة بين علامة التعجب والاستفهام.
                         // Don't add space between ! and ?.
-                            ((bcc !== this.CharactersTable.QuotationMark) && (cc != 33))) {
+                            ((bcc !== this.CharactersTable.QuotationMark) && (cc !== 33))) {
                             newStr += String.fromCharCode(this.CharactersTable.Space);
                         }
 
