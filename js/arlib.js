@@ -428,29 +428,27 @@ const ArLib = {
              * Arabic Tashkil characters are from 1611 to 1618.
              */
             if ((cc >= this.CharactersTable.Hamza) && (cc <= this.CharactersTable.Sukun)) {
-                let y = (i + 1);
                 let hasShadda = false;
                 let harakhChar = 0;
+                let y = (i + 1);
 
-                if (y < len) {
-                    while (y < len) {
-                        const ncc = str.charCodeAt(y);
-                        if ((ncc >= this.CharactersTable.Fathatan) && (ncc <= this.CharactersTable.Sukun)) {
-                            hasTashkil = true;
+                while (y < len) {
+                    const ncc = str.charCodeAt(y);
+                    if ((ncc >= this.CharactersTable.Fathatan) && (ncc <= this.CharactersTable.Sukun)) {
+                        hasTashkil = true;
 
-                            if (ncc !== this.CharactersTable.Shadda) {
-                                harakhChar = ncc;
-                            } else {
-                                hasShadda = true;
-                            }
-
-                            ++i;
+                        if (ncc !== this.CharactersTable.Shadda) {
+                            harakhChar = ncc;
                         } else {
-                            break;
+                            hasShadda = true;
                         }
 
-                        ++y;
+                        ++i;
+                    } else {
+                        break;
                     }
+
+                    ++y;
                 }
 
                 if (hasTashkil) {
