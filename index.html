@@ -10,57 +10,77 @@
 
 <body>
     <div id="main">
-        <div>
-            <fieldset class="options">
-                <legend>الخيارات:</legend>
-                <input type="radio" id="RemoveAllTashkil" name="options" value="1" checked="checked" />
-                <label for="RemoveAllTashkil">إزالة كامل التشكيل.</label><br />
-                <input type="radio" id="RemoveTashkilKeepShadda" name="options" value="2" />
-                <label for="RemoveTashkilKeepShadda">إزالة التشكيل عدا الشدة.</label><br />
-                <input type="radio" id="RemoveLastTashkil" name="options" value="3" />
-                <label for="RemoveLastTashkil">إزالة تشكيل آخر حرف.</label><br />
-                <input type="radio" id="KeepLastTashkilOnly" name="options" value="4" />
-                <label for="KeepLastTashkilOnly">ابقاء تشكيل الحرف الآخير.</label><br />
-                <input type="radio" id="ReduceTashkil" name="options" value="5" />
-                <label for="ReduceTashkil">تخفيف التشكيل.</label><br />
-                <input type="radio" id="RemoveTatweel" name="options" value="6" />
-                <label for="RemoveTatweel">إزالة التطويل.</label><br />
-                <input type="radio" id="ImproveText" name="options" value="7" />
-                <label for="ImproveText">تحسين النص.</label><br />
-            </fieldset>
-        </div>
-        <div>
-            <fieldset>
-                <legend>النص:</legend>
-                <textarea rows="5"
-                    id="input_text">   ذَهَـــبَ           زَيْــــدُ إِلَى اَلـسُّوقِ فَلَمْ يَعْثُرْ عَلَى مَا كَانَ يُرِيدُ , وَكَانَ الْـجَوُّ حِينَهَا جَمِيلًا , وَالـسَّمَاءُ صَافِيَةً، والْهَوَاءُ نَقِيًا  ; فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ عند مكان اسمه  : " الجُرْفُ " . </textarea>
-                <button type="button" id="execute">تنفيذ</button>
-            </fieldset>
-        </div>
-        <div>
-            <fieldset>
-                <legend>الناتج:</legend>
-                <textarea id="result_text" rows="5"></textarea>
-                <!-- <button type="button" onclick="">نسخ</button> -->
-            </fieldset>
-        </div>
+        <fieldset class="options">
+            <legend>الخيارات:</legend>
+            <input type="radio" id="RemoveAllTashkil" name="options" value="1" checked="checked" />
+            <label for="RemoveAllTashkil">إزالة كامل التشكيل.</label>
+            <input type="radio" id="RemoveTashkilKeepShadda" name="options" value="2" />
+            <label for="RemoveTashkilKeepShadda">إزالة التشكيل عدا الشدة.</label>
+            <input type="radio" id="RemoveLastTashkil" name="options" value="3" />
+            <label for="RemoveLastTashkil">إزالة تشكيل آخر حرف.</label>
+            <input type="radio" id="KeepLastTashkilOnly" name="options" value="4" />
+            <label for="KeepLastTashkilOnly">ابقاء تشكيل الحرف الآخير.</label>
+            <input type="radio" id="ReduceTashkil" name="options" value="5" />
+            <label for="ReduceTashkil">تخفيف التشكيل.</label>
+            <input type="radio" id="RemoveTatweel" name="options" value="6" />
+            <label for="RemoveTatweel">إزالة التطويل.</label>
+            <input type="radio" id="ImproveText" name="options" value="7" />
+            <label for="ImproveText">تحسين النص.</label>
+            <input type="radio" id="EncodeTashkil" name="options" value="8" />
+            <label for="EncodeTashkil">ترميز التشكيل.</label>
+            <input type="radio" id="DecodeTashkil" name="options" value="9" />
+            <label for="DecodeTashkil">دمج التشكيل.</label>
+        </fieldset>
+
+        <fieldset id="text_fieldset">
+            <legend>النص:</legend>
+            <textarea rows="5"
+                id="input_text">   ذَهَـــبَ           زَيْــــدُ إِلَى اَلـسُّوقِ فَلَمْ يَعْثُرْ عَلَى مَا كَانَ يُرِيدُ , وَكَانَ الْـجَوُّ حِينَهَا جَمِيلًا , وَالـسَّمَاءُ صَافِيَةً، والْهَوَاءُ نَقِيًا  ; فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ عند مكان اسمه  : " الجُرْفُ " . </textarea>
+            <button type="button" id="execute">تنفيذ</button>
+        </fieldset>
+
+        <fieldset id="result_fieldset">
+            <legend>الناتج:</legend>
+            <textarea id="result_text" rows="5"></textarea>
+            <!-- <button type="button" onclick="">نسخ</button> -->
+        </fieldset>
+
+        <fieldset id="tashkil_fieldset">
+            <legend>رموز التشكيل:</legend>
+            <textarea id="tashkil_text" rows="5" dir="ltr"></textarea>
+        </fieldset>
     </div>
 
     <script>
         "use strict";
         window.onload = function () {
+            const ops = document.getElementsByName("options");
+            const tashkilFieldset = document.getElementById("tashkil_fieldset");
             let selectedOP = 0;
 
-            const ops = document.getElementsByName("options");
-            for (let i = 0; i < ops.length; i++) {
-                const r = ops[i];
 
-                r.addEventListener("change", function () {
+            function CheckTashkilFieldsetDisplay(selectedOP) {
+                switch (selectedOP) {
+                    case 8:
+                    case 9:
+                        tashkilFieldset.style.display = 'block';
+                        break;
+                    default:
+                        tashkilFieldset.style.display = 'none';
+                }
+            }
+
+            for (let i = 0; i < ops.length; i++) {
+                const op = ops[i];
+
+                op.addEventListener("change", function () {
                     selectedOP = parseInt(this.value, 10);
+                    CheckTashkilFieldsetDisplay(selectedOP);
                 });
 
-                if (r.checked) {
-                    selectedOP = parseInt(r.value, 10);
+                if (op.checked) {
+                    selectedOP = parseInt(op.value, 10);
+                    CheckTashkilFieldsetDisplay(selectedOP);
                 }
             }
 
@@ -69,6 +89,7 @@
             jsElement.onload = function () {
                 const inputText = document.getElementById("input_text");
                 const resultText = document.getElementById("result_text");
+                const tashkilText = document.getElementById("tashkil_text");
 
                 document.getElementById("execute").addEventListener("click", function () {
                     resultText.value = (function () {
@@ -85,6 +106,14 @@
                                 return ArLib.RemoveTatweel(inputText.value);
                             case 7:
                                 return ArLib.ImproveText(inputText.value);
+                            case 8:
+                                {
+                                    const ret = ArLib.EncodeTashkil(inputText.value);
+                                    tashkilText.value = ret.EncodeTashkil;
+                                    return ret.StrippedText;
+                                }
+                            case 9:
+                                return ArLib.DecodeTashkil(inputText.resultText, tashkilText.value);
                             default:
                                 return "";
                         }
