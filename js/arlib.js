@@ -283,9 +283,8 @@ const ArLib = {
     ImproveText: function (str) {
         const len = str.length;
         let insertSpace = false;
-        let ignoreSpace = false;
         let quotatStart = false;
-        let textStarted = false;
+        let ignoreSpace = true;
         let newStr = "";
         let bcc = 0;
 
@@ -303,7 +302,7 @@ const ArLib = {
                 {
                     // تخطي المسافات المكررة.
                     // Skip duplicate spaces.
-                    if ((bcc !== this.CharactersTable.Space) && !(ignoreSpace)) {
+                    if (bcc !== this.CharactersTable.Space) {
                         insertSpace = true;
                     }
 
@@ -366,22 +365,34 @@ const ArLib = {
                 case this.CharactersTable.Dot: // . Dot نقطة.
                 case this.CharactersTable.Colon: // : Colon نقطتان فوق بعص.
                 {
-                    newStr += String.fromCharCode(cc);
+                    newStr += str[i];
                     insertSpace = true;
                     break;
                 }
 
+                // case this.CharactersTable.Waw: // و Waw حرف الواو.
+                // {
+                //     if (insertSpace) {
+                //         newStr += String.fromCharCode(this.CharactersTable.Space);
+                //         insertSpace = false;
+                //         ignoreSpace = true;
+                //     }
+
+                //     newStr += str[i];
+                //     break;
+                // }
+
                 default:
                 {
                     if (insertSpace) {
-                        if (textStarted && ((i + 1) !== str.length)) {
+                        if (!(ignoreSpace) && ((i + 1) !== str.length)) {
                             newStr += String.fromCharCode(this.CharactersTable.Space);
                         }
 
                         insertSpace = false;
                     }
 
-                    textStarted = true;
+                    ignoreSpace = false;
                     newStr += str[i];
                 }
             }
