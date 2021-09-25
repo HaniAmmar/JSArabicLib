@@ -495,7 +495,7 @@ const ArLib = {
             }
         }
 
-        return { EncodeTashkil: tashkil, StrippedText: this.RemoveTashkil(str, false) };
+        return { EncodedTashkil: tashkil, StrippedText: this.RemoveTashkil(str, false) };
     },
 
     /**
