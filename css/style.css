@@ -1,7 +1,7 @@
 body {
     background-color: teal;
     color: white;
-    font-family: 'arabic traditional', 'Times New Roman', Times, serif;
+    font-family: "arabic traditional", "Times New Roman", Times, serif;
     line-height: 1.2em;
     font-size: 120%;
 }
@@ -9,12 +9,12 @@ body {
 fieldset {
     border-radius: 1em;
     padding: 1em;
-    margin: 0;
+    margin: 1em;
 }
 
 textarea {
     font-size: 110%;
-    font-family: 'arabic traditional', 'Times New Roman', Times, serif;
+    font-family: "arabic traditional", "Times New Roman", Times, serif;
     border-radius: 0.5em;
     padding: 0.2em;
     margin: 0;
@@ -29,7 +29,7 @@ button {
     font-weight: bold;
     border-radius: 0.4em;
     padding: 0.5em;
-    margin: 0.5em auto 0 auto;
+    margin: 1em auto 0 auto;
 }
 
 #main {
@@ -46,12 +46,21 @@ button {
     margin: 1em auto 0.5em auto;
 }
 
+#tashkil_fieldset {
+    display: none;
+}
+
 .options {
     text-align: right;
 }
 
+.options > label::before,
+.options > label::after {
+    content: " | ";
+}
+
 @media only screen and (max-width: 768px) {
-    #main{
+    #main {
         width: 100%;
         flex-direction: column-reverse;
     }
