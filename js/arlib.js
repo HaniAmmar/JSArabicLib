@@ -446,31 +446,31 @@ const ArLib = {
 
                     switch (harakhChar) {
                         case this.CharactersTable.Fathatan: //  ً Arabic Fathatan فتحتان.
-                            code = 97;
+                            code = 97; // a
                             break;
 
                         case this.CharactersTable.Dammatan: //  ٌ Arabic Dammatan ضمتان.
-                            code = 98;
+                            code = 98; // b
                             break;
 
                         case this.CharactersTable.Kasratan: //  ٍ Arabic Kasratan كسرتان.
-                            code = 99;
+                            code = 99; // c
                             break;
 
                         case this.CharactersTable.Fatha: //  َ Arabic Fatha فتحة.
-                            code = 99;
+                            code = 100; // d
                             break;
 
                         case this.CharactersTable.Damma: //  ُ Arabic Damma ضمة.
-                            code = 101;
+                            code = 101; // e
                             break;
 
                         case this.CharactersTable.Kasra: //  ِ Arabic Kasra كسرة.
-                            code = 102;
+                            code = 102; // f
                             break;
 
                         case this.CharactersTable.Sukun: //  ْ Arabic Sukun سكون.
-                            code = 103;
+                            code = 103; // g
                             break;
 
                         default:
@@ -483,7 +483,7 @@ const ArLib = {
                             code -= 32;
                         }
                     } else if (hasShadda) {
-                        code = 87;
+                        code = 87; // W
                     }
 
                     tashkil += String.fromCharCode(code);
