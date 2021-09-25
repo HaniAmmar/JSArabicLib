@@ -370,17 +370,17 @@ const ArLib = {
                     break;
                 }
 
-                // case this.CharactersTable.Waw: // و Waw حرف الواو.
-                // {
-                //     if (insertSpace) {
-                //         newStr += String.fromCharCode(this.CharactersTable.Space);
-                //         insertSpace = false;
-                //         ignoreSpace = true;
-                //     }
+                case this.CharactersTable.Waw: // و Waw حرف الواو.
+                {
+                    if (insertSpace) {
+                        newStr += String.fromCharCode(this.CharactersTable.Space);
+                        insertSpace = false;
+                        ignoreSpace = true;
+                    }
 
-                //     newStr += str[i];
-                //     break;
-                // }
+                    newStr += str[i];
+                    break;
+                }
 
                 default:
                 {
@@ -392,7 +392,10 @@ const ArLib = {
                         insertSpace = false;
                     }
 
-                    ignoreSpace = false;
+                    if ((cc < this.CharactersTable.Fathatan) || (cc > this.CharactersTable.Sukun)) {
+                        ignoreSpace = false;
+                    }
+
                     newStr += str[i];
                 }
             }
