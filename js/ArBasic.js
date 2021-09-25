@@ -385,7 +385,10 @@ const ArBasic = {
                 default:
                 {
                     if (insertSpace) {
-                        if (!(ignoreSpace) && ((i + 1) !== str.length)) {
+                        if (!(ignoreSpace) && ((i + 1) !== str.length) &&
+                        // عدم إضافة مسافة بين علامة التعجب والاستفهام.
+                        // Don't add space between ! and ?.
+                            ((bcc !== this.CharactersTable.QuotationMark) && (cc != 33))) {
                             newStr += String.fromCharCode(this.CharactersTable.Space);
                         }
 
