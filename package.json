@@ -16,7 +16,7 @@
     "arabic"
   ],
   "author": "Hani Ammar",
-  "license": "GPL-2.0-only",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/HaniAmmar/JSArabicLib/issues"
   },

@@ -4,7 +4,7 @@
  * @Name Arabic library for JavaScript v0.0.1
  * @Source https://github.com/hani-ammar/JSArabicLib
  * @Copyright 2021 Taha Zerrouki, Hani Ammar, and other contributors
- * @License GPL version 2 license https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html
+ * @License MIT license https://opensource.org/licenses/MIT
  */
 
 // eslint-disable-next-line no-unused-vars
