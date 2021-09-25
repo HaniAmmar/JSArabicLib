@@ -1,4 +1,6 @@
-﻿/**
+﻿"use strict";
+
+/**
  * @Name Arabic library for JavaScript v0.0.1
  * @Source https://github.com/hani-ammar/JSArabicLib
  * @Copyright 2021 Taha Zerrouki, Hani Ammar, and other contributors
@@ -28,8 +30,9 @@ const ArLib = {
 
             // الحروف المستخدمة في التشكيل هي من 1611 إلى 1618.
             // Arabic Tashkil characters are from 1611 to 1618.
-            // 1617 = ّ
-            if (((cc < 1611) || (cc > 1618)) || (keepShadda && (cc === 1617))) {
+            // 1617 = ّ  Shadda شدّة
+            if (((cc < this.CharactersTable.Fathatan) || (cc > this.CharactersTable.Sukun)) ||
+                 (keepShadda && (cc === this.CharactersTable.Shadda))) {
                 newStr += str[i];
             }
         }
@@ -46,19 +49,15 @@ const ArLib = {
      * @return {boolean}
      */
     CheckLastTashkilForRemoval: function (cc, bcc) {
-        if ((cc < 1569) || (cc > 1618)) {
-            if ((bcc < 1611) || (bcc === 1617)) {
-                // الرجوع بنعم إذا كان الحرف الحالي ليس عربيًا، وكان السابق ليس من الحركات.
-                // Return true if the current character is not an Arabic one, and the previous one is not Tashkil.
-                return true;
-            }
-        } else if ((bcc < 1611) || (bcc > 1613)) {
-            // التنوين لا يكون إلا لآخر حرف في الكلمة، وهذا الشرط يمرر أي حرف غيره.
-            // This condition will make sure that no Tanween is passed, since Tanween is only for the last char ً ٍ ٌ.
-            return true;
+        if ((cc < this.CharactersTable.Hamza) || (cc > this.CharactersTable.Sukun)) {
+            // الرجوع بنعم إذا كان الحرف الحالي ليس عربيًا، وكان السابق ليس من الحركات.
+            // Return true if the current character is not an Arabic one, and the previous one is not Tashkil.
+            return ((bcc < this.CharactersTable.Fathatan) || (bcc === this.CharactersTable.Shadda));
         }
 
-        return false;
+        // التنوين لا يكون إلا لآخر حرف في الكلمة، وهذا الشرط يمرر أي حرف غيره.
+        // This condition will make sure that no Tanween is passed, since Tanween is only for the last char ً ٍ ٌ.
+        return ((bcc < this.CharactersTable.Fathatan) || (bcc > this.CharactersTable.Kasratan));
     },
 
     /**
@@ -70,13 +69,10 @@ const ArLib = {
      * @return {boolean}
      */
     CheckLastTashkilForKeeping: function (cc, bcc) {
-        if ((cc < 1569) || (cc > 1618)) {
-            return true;
-        } else if ((bcc < 1614) || (bcc === 1617)) {
-            return true;
-        }
-
-        return false;
+        return ((cc < this.CharactersTable.Hamza) ||
+                (cc > this.CharactersTable.Sukun) ||
+                (bcc < this.CharactersTable.Fatha) ||
+                (bcc === this.CharactersTable.Shadda));
     },
 
     /**
@@ -147,32 +143,35 @@ const ArLib = {
                 cc = str.charCodeAt(i);
 
                 switch (cc) {
-                    // case 1618: //  ْ Sukun سكون.
-                    case 1614: //  َ Fatha فتحة.
+                    // case this.CharactersTable.Sukun: //  ْ Sukun سكون.
+                    case this.CharactersTable.Fatha: //  َ Fatha فتحة.
                     {
-                        if (cc === 1614) { // Fatha فتحة.
-                            // تجاهل الفَتْحَة التي تأتي قبل أي ألف.
-                            // Ignore Fatha if it before all types of Alef.
-                            const n = (i + 1);
-                            if (n < len) {
-                                const acc = str.charCodeAt(n);
-                                // 1570 = آ // Alef with Madda above.
-                                // 1571 = أ // Alef with Hamza above.
-                                // 1573 = إ // Alef with Hamza below.
-                                // 1575 = ا // Naked Alef.
-                                if ((acc === 1570) || (acc === 1571) || (acc === 1573) || (acc === 1575)) {
-                                    break;
-                                }
+                        // if (cc === this.CharactersTable.Fatha) { // Fatha فتحة.
+                        // تجاهل الفَتْحَة التي تأتي قبل أي ألف.
+                        // Ignore Fatha if it before all types of Alef.
+                        const n = (i + 1);
+                        if (n < len) {
+                            const acc = str.charCodeAt(n);
+                            // 1570 آ Alef with Madda above ألف ممدودة.
+                            // 1571 أ Alef with Hamza above ألف فوقها همزة.
+                            // 1573 إ Alef with Hamza below ألف تحتها همزة.
+                            // 1575 ا Alef ألف بلا همزة.
+                            if ((acc === this.CharactersTable.AlefMadda) || (acc === this.CharactersTable.AlefHamzaAbove) ||
+                                (acc === this.CharactersTable.AlefHamzaBelow) || (acc === this.CharactersTable.Alef)) {
+                                break;
                             }
                         }
+                        // }
 
-                        // تجاهل حركتي الفَتْحَة والسكون اللتان ليستا على واوٍ أو ياءٍ، أو أنها في بداية الكلمة
+                        // تجاهل حركتي الفَتْحَة والسكون اللتين ليستا على واوٍ أو ياءٍ، أو أنهما في بداية الكلمة
                         // Ignore Fatha and Sukun if it's not on Waw or Yeh, or it's at the beginning of a word.
                         // 1608 = و Waw.
                         // 1610 = ي Yeh.
-                        if (((bcc === 1608) || (bcc === 1610)) && (y > 0)) {
+                        if (((bcc === this.CharactersTable.Waw) || (bcc === this.CharactersTable.WawHamzaAbove) ||
+                            (bcc === this.CharactersTable.Yeh)) && (y > 0)) {
                             const acc = str.charCodeAt(i - 2);
-                            if ((acc >= 1569) && (acc <= 1618)) {
+
+                            if ((acc >= this.CharactersTable.Hamza) && (acc <= this.CharactersTable.Sukun)) {
                                 newStr += str[i];
                             }
                         }
@@ -180,7 +179,7 @@ const ArLib = {
                         break;
                     }
 
-                    case 1615: //  ُ Damma ضمة.
+                    case this.CharactersTable.Damma: //  ُ Damma ضمة.
                     // تجاهل الضمة التي بعدها واوٍ أو واوٍ عليها همزة أو على واو.
                     // Ignore Damma if it comes before Waw or with Hamza above, or it's on Waw.
                     {
@@ -188,18 +187,19 @@ const ArLib = {
                         if (n < len) {
                             const acc = str.charCodeAt(n);
 
+                            // 1572 = ؤ Waw with Hamza above.
                             // 1608 = و Waw.
-                            // 1572 = ؤ Waw or with Hamza above.
-                            if ((acc === 1608) || (acc === 1572) || (bcc === 1608) || (bcc === 1572)) {
+                            if ((acc === this.CharactersTable.Waw) || (acc === this.CharactersTable.WawHamzaAbove) ||
+                                (bcc === this.CharactersTable.Waw) || (bcc === this.CharactersTable.WawHamzaAbove)) {
                                 break;
                             }
                         }
 
                         // تجاهل الضمة إذا كانت على شدة والشدة على واو، سواء كان على الواو همزة أو لا.
                         // Ignore Damma if it's on Shadda, and Shadda is on Waw (with Hamza above or without).
-                        if ((bcc === 1617) && (i > 2)) {
+                        if ((bcc === this.CharactersTable.Shadda) && (i > 2)) {
                             const acc = str.charCodeAt(i - 2);
-                            if ((acc === 1608) || (acc === 1572)) {
+                            if ((acc === this.CharactersTable.Waw) || (acc === this.CharactersTable.WawHamzaAbove)) {
                                 break;
                             }
                         }
@@ -208,21 +208,21 @@ const ArLib = {
                         break;
                     }
 
-                    case 1616: //  ِ Kasra كسرة.
+                    case this.CharactersTable.Kasra: //  ِ Kasra كسرة.
                     {
                         // تجاهل الكسرة إذا كان بعدها ياء.
                         // Ignore Kasra if it comes before Yeh.
                         const n = (i + 1);
                         if (n < len) {
                             // 1610 = ي Yeh.
-                            if (str.charCodeAt(n) === 1610) {
+                            if (str.charCodeAt(n) === this.CharactersTable.Yeh) {
                                 break;
                             }
                         }
 
                         // تجاهل حركة الكسرة التي تحت حرف الألف الذي تحته همزة.
                         // Ignore Kasra if it's under Alef with Hamza below.
-                        if (bcc !== 1573) {
+                        if (bcc !== this.CharactersTable.AlefHamzaBelow) {
                             newStr += str[i];
                         }
 
@@ -250,7 +250,7 @@ const ArLib = {
     IsTatweel: function (cStr) {
         // 1600 = Tatweel ـ
         // 1600 = حرف التطويل ـ
-        return (cStr === 1600);
+        return (cStr === this.CharactersTable.Tatweel);
     },
 
     /**
@@ -299,53 +299,53 @@ const ArLib = {
             const cc = str.charCodeAt(i);
 
             switch (cc) {
-                case 32:
+                case this.CharactersTable.Space:
                 {
                     // تخطي المسافات المكررة.
                     // Skip duplicate spaces.
-                    if ((bcc !== 32) && !(ignoreSpace)) {
+                    if ((bcc !== this.CharactersTable.Space) && !(ignoreSpace)) {
                         insertSpace = true;
                     }
 
                     break;
                 }
 
-                case 1548: // ، Arabic Comma فاصلة عربية.
-                case 44: // , Latin Comma فاصلة أعجمية.
+                case this.CharactersTable.ArabicComma: // ، Arabic Comma فاصلة عربية.
+                case this.CharactersTable.Comma: // , Latin Comma فاصلة أعجمية.
                 {
                     // استبدال الفاصلة الأعجمية بالعربية.
                     // 1548 = ، Arabic Comma.
-                    newStr += String.fromCharCode(1548);
+                    newStr += String.fromCharCode(this.CharactersTable.ArabicComma);
                     insertSpace = true;
                     break;
                 }
 
-                case 1563: // ؛ Arabic Semicolon فاصلة منقوطة عربية.
-                case 59: // ; Latin Semicolon فاصلة منقوطة أعجمية.
+                case this.CharactersTable.ArabicSemicolon: // ؛ Arabic Semicolon فاصلة منقوطة عربية.
+                case this.CharactersTable.Semicolon: // ; Latin Semicolon فاصلة منقوطة أعجمية.
                 {
                     // استبدال الفاصلة المنقوطة الأعجمية بالعربية.
                     // 1563 = ؛ Arabic Semicolon.
-                    newStr += String.fromCharCode(1563);
+                    newStr += String.fromCharCode(this.CharactersTable.ArabicSemicolon);
                     insertSpace = true;
                     break;
                 }
 
-                case 1567: // ؟ Arabic Question Mark علامة استفهام عربية.
-                case 63: // ? Latin Question Mark علامة استفهام أعجمية.
+                case this.CharactersTable.ArabicQuestionMark: // ؟ Arabic Question Mark علامة استفهام عربية.
+                case this.CharactersTable.QuestionMark: // ? Latin Question Mark علامة استفهام أعجمية.
                 {
                     // استبدال علامة الاستفهام الأعجمية بالعربية.
                     // 1567 = ؟ Arabic Question Mark.
-                    newStr += String.fromCharCode(1567);
+                    newStr += String.fromCharCode(this.CharactersTable.ArabicQuestionMark);
                     insertSpace = true;
                     break;
                 }
 
-                case 34: // " Quotation Mark علامة افتباس عادية.
-                case 8220: // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
-                case 8221: // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
+                case this.CharactersTable.QuotationMark: // " Quotation Mark علامة افتباس عادية.
+                case this.CharactersTable.QuotationMarkLeftDouble: // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
+                case this.CharactersTable.QuotationMarkRightDouble: // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
                 {
                     if (!quotatStart) {
-                        newStr += String.fromCharCode(32);
+                        newStr += String.fromCharCode(this.CharactersTable.Space);
                     }
 
                     insertSpace = quotatStart;
@@ -354,17 +354,17 @@ const ArLib = {
 
                     // استبدال علامات الاقتباس الأعجمي بعلامة الاقتباس العادي.
                     // 34 = " Quotation Mark.
-                    newStr += String.fromCharCode(34);
+                    newStr += String.fromCharCode(this.CharactersTable.QuotationMark);
                     break;
                 }
 
                 // تخطي التطويل.
                 // ـ Skip Tatweel.
-                case 1600:
+                case this.CharactersTable.Tatweel:
                     break;
 
-                case 58: // : Colon نقطتان فوق بعص.
-                case 46: // . Full Stop نقطة.
+                case this.CharactersTable.Dot: // . Dot نقطة.
+                case this.CharactersTable.Colon: // : Colon نقطتان فوق بعص.
                 {
                     newStr += String.fromCharCode(cc);
                     insertSpace = true;
@@ -375,7 +375,7 @@ const ArLib = {
                 {
                     if (insertSpace) {
                         if (textStarted && ((i + 1) !== str.length)) {
-                            newStr += String.fromCharCode(32);
+                            newStr += String.fromCharCode(this.CharactersTable.Space);
                         }
 
                         insertSpace = false;
@@ -390,7 +390,113 @@ const ArLib = {
         }
 
         return newStr;
-    }
+    },
+
+    /**
+     * تفصل التشيكل عن النص، وتعيد النص مع التشكيل مرمزًا.
+     * Separates text from Tashkil, and returns text with encoded Tashkil.
+     *
+     * @param {string} str
+     * @return {object} {EncodeTashkil: string, StrippedText: string}
+     */
+    EncodeTashkil: function (str) {
+        const len = str.length;
+        let tashkil = "";
+        let hasTashkil = false;
+
+        for (let i = 0; i < len; i++) {
+            const cc = str.charCodeAt(i);
+
+            /**
+             * (UTF-16BE: dec) الحروف العربية في جدول الينيكود هي بين 1569 إلى 1610 حسب الترميز.
+             * Arabic Alphabet in the Unicode table are between 1569 -> 1610 (UTF-16BE: dec).
+             * الحروف المستخدمة في التشكيل هي من 1611 إلى 1618.
+             * Arabic Tashkil characters are from 1611 to 1618.
+             */
+            if ((cc >= this.CharactersTable.Hamza) && (cc <= this.CharactersTable.Sukun)) {
+                let y = (i + 1);
+                let hasShadda = false;
+                let harakhChar = 0;
+
+                if (y < len) {
+                    while (y < len) {
+                        const ncc = str.charCodeAt(y);
+                        if ((ncc >= this.CharactersTable.Fathatan) && (ncc <= this.CharactersTable.Sukun)) {
+                            hasTashkil = true;
+
+                            if (ncc !== this.CharactersTable.Shadda) {
+                                harakhChar = ncc;
+                            } else {
+                                hasShadda = true;
+                            }
+
+                            ++i;
+                        } else {
+                            break;
+                        }
+
+                        ++y;
+                    }
+                }
+
+                if (hasTashkil) {
+                    hasTashkil = false;
+                    let code = 0;
+                    // 1617 = ّ  Shadda شدّة.
+
+                    switch (harakhChar) {
+                        case this.CharactersTable.Fathatan: //  ً Arabic Fathatan فتحتان.
+                            code = 97;
+                            break;
+
+                        case this.CharactersTable.Dammatan: //  ٌ Arabic Dammatan ضمتان.
+                            code = 98;
+                            break;
+
+                        case this.CharactersTable.Kasratan: //  ٍ Arabic Kasratan كسرتان.
+                            code = 99;
+                            break;
+
+                        case this.CharactersTable.Fatha: //  َ Arabic Fatha فتحة.
+                            code = 99;
+                            break;
+
+                        case this.CharactersTable.Damma: //  ُ Arabic Damma ضمة.
+                            code = 101;
+                            break;
+
+                        case this.CharactersTable.Kasra: //  ِ Arabic Kasra كسرة.
+                            code = 102;
+                            break;
+
+                        case this.CharactersTable.Sukun: //  ْ Arabic Sukun سكون.
+                            code = 103;
+                            break;
+
+                        default:
+                    }
+
+                    if (code !== 0) {
+                        if (hasShadda) {
+                            // 32 (A و a) عدد الحروف بين.
+                            // 32 Number of characters between A and a.
+                            code -= 32;
+                        }
+                    } else if (hasShadda) {
+                        code = 87;
+                    }
+
+                    tashkil += String.fromCharCode(code);
+                } else {
+                    tashkil += "0";
+                }
+            } else {
+                tashkil += str[i];
+            }
+        }
+
+        return { EncodeTashkil: tashkil, StrippedText: this.RemoveTashkil(str, false) };
+    },
 
     /**
      * تأخذ نص وتعيد أحرف الكلمات منفصلة عن بعضها.
@@ -410,11 +516,11 @@ const ArLib = {
     //     for (let i = 0; i < len; i++) {
     //         const cc = str.charCodeAt(i);
 
-    //         if ((cc >= 1569) && (cc <= 1610)) {
+    //         if ((cc >= this.CharactersTable.Hamza) && (cc <= this.CharactersTable.Yeh)) {
     //             // بحكم أن المصفوفة تبدأ من العدد 0، يطرح 1569 من رقم الحرف؛ للوصول إلى هيئة الحرف المستقلة.
     //             // Because arrays starts from 0, subtract 1569 from char code; to match the index of isolated form.
-    //             if (cc !== 1600) { // تخطي المدّة.
-    //                 newStr += String.fromCharCode(this.IsolatedForms[(cc - 1569)]);
+    //             if (cc !== this.CharactersTable.Tatweel) { // تخطي التطويل.
+    //                 newStr += String.fromCharCode(this.IsolatedForms[(cc - this.CharactersTable.Hamza)]);
     //             }
     //         } else {
     //             newStr += str[i];
@@ -423,6 +529,38 @@ const ArLib = {
 
     //     return newStr;
     // },
+
+    CharactersTable: {
+        Space: 32, // Space مسافة.
+        QuotationMark: 34, // " Quotation Mark علامة افتباس عادية.
+        Dot: 46, // . Dot نقطة.
+        Comma: 44, // , Latin Comma فاصلة أعجمية.
+        Colon: 58, // : Colon نقطتان فوق بعص.
+        Semicolon: 59, // ; Latin Semicolon فاصلة منقوطة أعجمية.
+        QuestionMark: 63, // ? Latin Question Mark علامة استفهام أعجمية.
+        ArabicComma: 1548, // ، Arabic Comma فاصلة عربية.
+        ArabicSemicolon: 1563, // ؛ Arabic Semicolon فاصلة منقوطة عربية.
+        ArabicQuestionMark: 1567, // ؟ Arabic Question Mark علامة استفهام عربية.
+        Hamza: 1569, // ء Arabic Letter Hamza همزة.
+        AlefMadda: 1570, // آ Alef with Madda above ألف ممدودة.
+        AlefHamzaAbove: 1571, // أ Alef with Hamza above ألف فوقها همزة.
+        WawHamzaAbove: 1572, // ا Waw with Hamza above واو فوقها همزة.
+        AlefHamzaBelow: 1573, // إ Alef with Hamza below ألف تحتها همزة.
+        Alef: 1575, // ا Alef ألف بلا همزة.
+        Tatweel: 1600, // ـ Tatweel حرف التطويل.
+        Waw: 1608, // و Waw واو.
+        Yeh: 1610, // ي Arabic Letter Yeh ياء.
+        Fathatan: 1611, //  ً Arabic Fathatan فتحتان.
+        Dammatan: 1612, //  ٌ Arabic Dammatan ضمتان.
+        Kasratan: 1613, //  ٍ Arabic Kasratan كسرتان.
+        Fatha: 1614, //  َ Arabic Fatha فتحة.
+        Damma: 1615, //  ُ Arabic Damma ضمة.
+        Kasra: 1616, //  ِ Arabic Kasra كسرة.
+        Shadda: 1617, //  ّ Arabic Shadda شدّة.
+        Sukun: 1618, //  ْ Arabic Sukun سكون.
+        QuotationMarkLeftDouble: 8220, // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
+        QuotationMarkRightDouble: 8221 // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
+    }
 
     /**
      *  ﺀ ﺁ ﺃ ﺅ ﺇ ﺉ ﺍ ﺏ ﺓ ﺕ ﺙ ﺝ ﺡ ﺥ ﺩ ﺭ ﺯ ﺱ ﺵ ﺹ ﺽ ﻁ ﻅ ﻉ ﻍ ﻑ ﻕ ﻙ ﻝ ﻡ ﻥ ﻩ ﻭ ﻯ ﻱ
