@@ -36,6 +36,8 @@
             <label for="UnifyHamzas">توحيد الهمزات.</label>
             <input type="radio" id="UnifyTehMarbutaAlefMaksura" name="options" value="12" />
             <label for="UnifyTehMarbutaAlefMaksura">توحيد التاء المربوطة والألف المقصورة.</label>
+            <input type="radio" id="SimplifyText" name="options" value="13" />
+            <label for="SimplifyText">تبسيط النص.</label>
         </fieldset>
 
         <fieldset id="text_fieldset">
@@ -126,6 +128,8 @@
                                 return ArBasic.UnifyHamzas(inputText.value);
                             case 12:
                                 return ArBasic.UnifyTehMarbutaAlefMaksura(inputText.value);
+                            case 13:
+                                return ArBasic.SimplifyText(inputText.value);
                             default:
                                 return "";
                         }

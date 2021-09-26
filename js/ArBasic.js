@@ -551,6 +551,21 @@ const ArBasic = {
         return newStr;
     },
 
+    /**
+     * تستخدم عددًا من الدوال لتبسيط النص لغرض تسهيل البحث.
+     * Uses a few functions to Simplify text to ease searching.
+     *
+     * @param {string} str
+     * @return {string}
+     */
+    SimplifyText: function (str) {
+        str = this.RemoveTatweel(str, false);
+        str = this.RemoveTashkil(str);
+        str = this.SeparateLamAlef(str);
+        str = this.UnifyHamzas(str);
+        return this.UnifyTehMarbutaAlefMaksura(str);
+    },
+
     // /**
     //  * تأخذ نص وتعيد أحرف الكلمات منفصلة عن بعضها.
     //  * Takes string and return words' characters in disconnected form.
