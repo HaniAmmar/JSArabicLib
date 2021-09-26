@@ -337,6 +337,11 @@ const ArBasic = {
                             newStr += String.fromCharCode(this.LettersTable.Fathatan);
                             ++i;
                         }
+
+                        // إعادة تعيين تجاهل المسافة فيما لو كانت الألف في بداية الكلام.
+                        // Reset ignoreSpace if Alef it at the start.
+                        // "لإصلاح مشكلة عند تحسين الجملة: "واو أو ياء.
+                        ignoreSpace = false;
                     } else {
                         newStr += String.fromCharCode(this.LettersTable.Space);
                         insertSpace = false;
@@ -441,8 +446,8 @@ const ArBasic = {
                     // Skip spaces after Waw that behaves like "and".
                     if (insertSpace) {
                         newStr += String.fromCharCode(this.LettersTable.Space);
-                        insertSpace = false;
                         ignoreSpace = true;
+                        insertSpace = false;
                     }
 
                     newStr += str[i];
