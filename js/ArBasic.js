@@ -365,16 +365,38 @@ const ArBasic = {
 
                 case this.CharactersTable.Dot: // . Dot نقطة.
                 {
-                    // const y = (i + 1);
-                    // if ((y < len) && (str.charCodeAt(y) === this.CharactersTable.Dot)) {
-                    //     // نقاط مكررة.
-                    //     // Repeated dots.
-                    //     if (insertSpace) {
-                    //         newStr += String.fromCharCode(this.CharactersTable.Space);
-                    //     }
-                    // }
+                    let y = (i + 1);
+                    let repeatedDots = false;
 
-                    newStr += str[i];
+                    // التحقق من النقاط المتكررة
+                    // Checking for repeated dots.
+                    while (y < len) {
+                        const ncc = str.charCodeAt(y);
+
+                        if (ncc !== this.CharactersTable.Space) {
+                            if (ncc === this.CharactersTable.Dot) {
+                                repeatedDots = true;
+                            } else {
+                                break;
+                            }
+                        }
+
+                        ++y;
+                    }
+
+                    const s = str[i]; // Dot النقطة.
+
+                    if (repeatedDots) {
+                        newStr += String.fromCharCode(this.CharactersTable.Space);
+                        newStr += s;
+                        newStr += s;
+
+                        // تقدم إلى آخر مسافة أو نقطة.
+                        // Advanced to the last space or dot.
+                        i = (y - 1);
+                    }
+
+                    newStr += s;
                     insertSpace = true;
 
                     break;
@@ -389,6 +411,8 @@ const ArBasic = {
 
                 case this.CharactersTable.Waw: // و Waw حرف الواو.
                 {
+                    // تخطي المسافات بعد واو العطف.
+                    // Skip spaces after Waw that behaves like "and".
                     if (insertSpace) {
                         newStr += String.fromCharCode(this.CharactersTable.Space);
                         insertSpace = false;
@@ -553,7 +577,7 @@ const ArBasic = {
 
     /**
      * تستخدم عددًا من الدوال لتبسيط النص لغرض تسهيل البحث.
-     * Uses a few functions to Simplify text to ease searching.
+     * Uses a few functions to Simplify text for the purpose of easing search.
      *
      * @param {string} str
      * @return {string}
