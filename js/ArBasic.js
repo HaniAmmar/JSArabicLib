@@ -348,8 +348,11 @@ const ArBasic = {
                         newStr += String.fromCharCode(this.CharactersTable.Space);
                     }
 
-                    insertSpace = quotatStart;
                     quotatStart = !(quotatStart);
+
+                    // منع إضافة مسافة بعد بداية الاقتباس.
+                    // Prevent adding space after the start of a quote.
+                    insertSpace = !(quotatStart);
                     ignoreSpace = quotatStart;
 
                     // استبدال علامات الاقتباس الأعجمي بعلامة الاقتباس العادي.
@@ -364,7 +367,6 @@ const ArBasic = {
                 {
                     // عدم إزالة المدة إذا كانت آخر الكلمة.
                     // Don't remove Tatweel if it's at the end of the word.
-
                     let y = (i + 1);
                     let keepTatweel = false;
 
@@ -402,11 +404,11 @@ const ArBasic = {
                         const ncc = str.charCodeAt(y);
 
                         if (ncc !== this.CharactersTable.Space) {
-                            if (ncc === this.CharactersTable.Dot) {
-                                repeatedDots = true;
-                            } else {
+                            if (ncc !== this.CharactersTable.Dot) {
                                 break;
                             }
+
+                            repeatedDots = true;
                         }
 
                         ++y;
@@ -415,9 +417,18 @@ const ArBasic = {
                     const s = str[i]; // Dot النقطة.
 
                     if (repeatedDots) {
+                        // تمكين إضافة مسافة بعد النقط إن لم يكن بعدها اقتباس.
+                        // Enable adding a space after dots if what's after them is not quotation mark.
                         ignoreSpace = false;
 
-                        newStr += String.fromCharCode(this.CharactersTable.Space);
+                        // عدم إضافة مسافة بعد النقط إذا كانت داخل اقتباس.
+                        // Don't add space if the dots are in quotation marks.
+                        if ((bcc !== this.CharactersTable.QuotationMark) &&
+                            (bcc !== this.CharactersTable.QuotationMarkLeftDouble) &&
+                            (bcc !== this.CharactersTable.QuotationMarkRightDouble)) {
+                            newStr += String.fromCharCode(this.CharactersTable.Space);
+                        }
+
                         newStr += s;
                         newStr += s;
 
