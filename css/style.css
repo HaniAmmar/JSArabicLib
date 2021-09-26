@@ -54,11 +54,6 @@ button {
     text-align: right;
 }
 
-.options > label::before,
-.options > label::after {
-    content: " | ";
-}
-
 @media only screen and (max-width: 768px) {
     #main {
         width: 100%;
