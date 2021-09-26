@@ -30,8 +30,12 @@
             <label for="EncodeTashkil">ترميز التشكيل.</label>
             <input type="radio" id="DecodeTashkil" name="options" value="9" />
             <label for="DecodeTashkil">دمج التشكيل.</label>
-            <input type="radio" id="UnifyHamza" name="options" value="10" />
-            <label for="UnifyHamza">توحيد الهمزات</label>
+            <input type="radio" id="SeparateLamAlef" name="options" value="10" />
+            <label for="SeparateLamAlef">فصل اللام عن الألف.</label>
+            <input type="radio" id="UnifyHamzas" name="options" value="11" />
+            <label for="UnifyHamzas">توحيد الهمزات.</label>
+            <input type="radio" id="UnifyTehMarbutaAlefMaksura" name="options" value="12" />
+            <label for="UnifyTehMarbutaAlefMaksura">توحيد التاء المربوطة والألف المقصورة.</label>
         </fieldset>
 
         <fieldset id="text_fieldset">
@@ -117,7 +121,11 @@
                             case 9:
                                 return ArBasic.DecodeTashkil(inputText.resultText, tashkilText.value);
                             case 10:
-                                return ArBasic.UnifyHamza(inputText.value);
+                                return ArBasic.SeparateLamAlef(inputText.value);
+                            case 11:
+                                return ArBasic.UnifyHamzas(inputText.value);
+                            case 12:
+                                return ArBasic.UnifyTehMarbutaAlefMaksura(inputText.value);
                             default:
                                 return "";
                         }

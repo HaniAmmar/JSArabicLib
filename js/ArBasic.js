@@ -423,8 +423,165 @@ const ArBasic = {
             bcc = cc;
         }
 
-        return this.UnifyLamAlef(newStr);
+        return this.SeparateLamAlef(newStr);
     },
+
+    /**
+     * تستبدل اللام و الألف المدمجتين بما يقابلهما من حرفين.
+     * Replaces combined Lam and Alef with their corresponding letters.
+     *
+     * @param {string} str
+     * @return {string}
+     */
+    SeparateLamAlef: function (str) {
+        const len = str.length;
+        let newStr = "";
+
+        for (let i = 0; i < len; i++) {
+            const cc = str.charCodeAt(i);
+
+            switch (cc) {
+                case this.CharactersTable.LamAlefCombined:
+                {
+                    newStr += String.fromCharCode(this.CharactersTable.Lam);
+                    newStr += String.fromCharCode(this.CharactersTable.Alef);
+                    break;
+                }
+
+                case this.CharactersTable.LamAlefMaddaAboveCombined:
+                {
+                    newStr += String.fromCharCode(this.CharactersTable.Lam);
+                    newStr += String.fromCharCode(this.CharactersTable.AlefMaddaAbove);
+                    break;
+                }
+
+                case this.CharactersTable.LamAlefHamzaAboveCombined:
+                {
+                    newStr += String.fromCharCode(this.CharactersTable.Lam);
+                    newStr += String.fromCharCode(this.CharactersTable.AlefHamzaAbove);
+                    break;
+                }
+
+                case this.CharactersTable.LamAlefHamzaBelowCombined:
+                {
+                    newStr += String.fromCharCode(this.CharactersTable.Lam);
+                    newStr += String.fromCharCode(this.CharactersTable.AlefHamzaBelow);
+                    break;
+                }
+
+                default:
+                    newStr += str[i];
+                    break;
+            }
+        }
+
+        return newStr;
+    },
+
+    /**
+     * تستبدل جميع الهمزات المقترنة بألف أو المنفردة بألف
+     * وتستبدل الهمزة التي على الواو والياء بهمزة على السطر.
+     * Uses Alef to replaces all Hamzas that are paired with Alef,
+     * and uses single Hamza (Hamza on line) to replace any Waw or
+     * Yah with HamzaAbove.
+     *
+     * @param {string} str
+     * @return {string}
+     */
+    UnifyHamzas: function (str) {
+        const len = str.length;
+        let newStr = "";
+
+        for (let i = 0; i < len; i++) {
+            const cc = str.charCodeAt(i);
+
+            switch (cc) {
+                case this.CharactersTable.AlefMaddaAbove:
+                case this.CharactersTable.AlefHamzaAbove:
+                case this.CharactersTable.AlefHamzaBelow:
+                case this.CharactersTable.MaddaAbove:
+                case this.CharactersTable.HamzaAbove:
+                case this.CharactersTable.HamzaBelow:
+                    newStr += String.fromCharCode(this.CharactersTable.Alef);
+                    break;
+
+                case this.CharactersTable.WawHamzaAbove:
+                case this.CharactersTable.YehHamzaAbove:
+                    newStr += String.fromCharCode(this.CharactersTable.Hamza);
+                    break;
+
+                default:
+                    newStr += str[i];
+                    break;
+            }
+        }
+
+        return newStr;
+    },
+
+    /**
+     * تستبدل التاء المربوطة بهاء، والألف المقصورة بياء (أخطاء إملائية شائعة).
+     * Replaces Teh Marbuta (ة) with Heh (ه), and Alef Maksura (ى) with Yeh (ي); common misspellings.
+     *
+     * @param {string} str
+     * @return {string}
+     */
+    UnifyTehMarbutaAlefMaksura: function (str) {
+        const len = str.length;
+        let newStr = "";
+
+        for (let i = 0; i < len; i++) {
+            const cc = str.charCodeAt(i);
+
+            switch (cc) {
+                case this.CharactersTable.TehMarbuta:
+                    newStr += String.fromCharCode(this.CharactersTable.Heh);
+                    break;
+
+                case this.CharactersTable.AlefMaksura:
+                    newStr += String.fromCharCode(this.CharactersTable.Yeh);
+                    break;
+
+                default:
+                    newStr += str[i];
+                    break;
+            }
+        }
+
+        return newStr;
+    },
+
+    // /**
+    //  * تأخذ نص وتعيد أحرف الكلمات منفصلة عن بعضها.
+    //  * Takes string and return words' characters in disconnected form.
+    //  *
+    //  * @param {string} str
+    //  * @return {string}
+    //  */
+    // DisconnectChars: function (str) {
+    //     const len = str.length;
+    //     let newStr = "";
+
+    //     /**
+    //      * (UTF-16BE: dec) الحروف العربية في جدول الينيكود هي بين 1569 إلى 1610 حسب الترميز.
+    //      * Arabic Alphabet in the Unicode table are between 1569 -> 1610 (UTF-16BE: dec).
+    //      */
+    //     for (let i = 0; i < len; i++) {
+    //         const cc = str.charCodeAt(i);
+
+    //         if ((cc >= this.CharactersTable.Hamza) && (cc <= this.CharactersTable.Yeh)) {
+    //             // بحكم أن المصفوفة تبدأ من العدد 0، يطرح 1569 من رقم الحرف؛ للوصول إلى هيئة الحرف المستقلة.
+    //             // Because arrays starts from 0, subtract 1569 from char code; to match the index of isolated form.
+    //             if (cc !== this.CharactersTable.Tatweel) { // تخطي التطويل.
+    //                 newStr += String.fromCharCode(this.IsolatedForms[(cc - this.CharactersTable.Hamza)]);
+    //             }
+    //         } else {
+    //             newStr += str[i];
+    //         }
+    //     }
+
+    //     return newStr;
+    // },
 
     /**
      * تفصل التشيكل عن النص، وتعيد النص مع التشكيل مرمزًا.
@@ -530,131 +687,6 @@ const ArBasic = {
         return { EncodedTashkil: tashkil, StrippedText: this.RemoveTashkil(str, false) };
     },
 
-    /**
-     * تستبدل جميع الهمزات المقترنة بألف أو المنفردة بألف
-     * وتستبدل الهمزة التي على الواو والياء بهمزة على السطر.
-     * Uses Alef to replaces all Hamzas that are paired with Alef,
-     * and uses single Hamza (Hamza on line) to replace any Waw or
-     * Yah with HamzaAbove.
-     *
-     * @param {string} str
-     * @return {string}
-     */
-    UnifyHamza: function (str) {
-        const len = str.length;
-        let newStr = "";
-
-        for (let i = 0; i < len; i++) {
-            const cc = str.charCodeAt(i);
-
-            switch (cc) {
-                case this.CharactersTable.AlefMaddaAbove:
-                case this.CharactersTable.AlefHamzaAbove:
-                case this.CharactersTable.AlefHamzaBelow:
-                case this.CharactersTable.MaddaAbove:
-                case this.CharactersTable.HamzaAbove:
-                case this.CharactersTable.HamzaBelow:
-                    newStr += String.fromCharCode(this.CharactersTable.Alef);
-                    break;
-
-                case this.CharactersTable.WawHamzaAbove:
-                case this.CharactersTable.YehHamzaAbove:
-                    newStr += String.fromCharCode(this.CharactersTable.Hamza);
-                    break;
-
-                default:
-                    newStr += str[i];
-                    break;
-            }
-        }
-
-        return newStr;
-    },
-
-    /**
-     * تستبدل اللام و الألف المدمجتين بحرفين مقابلين.
-     * Replaces combined Lam and Alef with their corresponding letters.
-     *
-     * @param {string} str
-     * @return {string}
-     */
-    UnifyLamAlef: function (str) {
-        const len = str.length;
-        let newStr = "";
-
-        for (let i = 0; i < len; i++) {
-            const cc = str.charCodeAt(i);
-
-            switch (cc) {
-                case this.CharactersTable.LamAlefCombined:
-                {
-                    newStr += String.fromCharCode(this.CharactersTable.Lam);
-                    newStr += String.fromCharCode(this.CharactersTable.Alef);
-                    break;
-                }
-
-                case this.CharactersTable.LamAlefMaddaAboveCombined:
-                {
-                    newStr += String.fromCharCode(this.CharactersTable.Lam);
-                    newStr += String.fromCharCode(this.CharactersTable.AlefMaddaAbove);
-                    break;
-                }
-
-                case this.CharactersTable.LamAlefHamzaAboveCombined:
-                {
-                    newStr += String.fromCharCode(this.CharactersTable.Lam);
-                    newStr += String.fromCharCode(this.CharactersTable.AlefHamzaAbove);
-                    break;
-                }
-
-                case this.CharactersTable.LamAlefHamzaBelowCombined:
-                {
-                    newStr += String.fromCharCode(this.CharactersTable.Lam);
-                    newStr += String.fromCharCode(this.CharactersTable.AlefHamzaBelow);
-                    break;
-                }
-
-                default:
-                    newStr += str[i];
-                    break;
-            }
-        }
-
-        return newStr;
-    },
-
-    /**
-     * تأخذ نص وتعيد أحرف الكلمات منفصلة عن بعضها.
-     * Takes string and return words' characters in disconnected form.
-     *
-     * @param {string} str
-     * @return {string}
-     */
-    // DisconnectChars: function (str) {
-    //     const len = str.length;
-    //     let newStr = "";
-
-    //     /**
-    //      * (UTF-16BE: dec) الحروف العربية في جدول الينيكود هي بين 1569 إلى 1610 حسب الترميز.
-    //      * Arabic Alphabet in the Unicode table are between 1569 -> 1610 (UTF-16BE: dec).
-    //      */
-    //     for (let i = 0; i < len; i++) {
-    //         const cc = str.charCodeAt(i);
-
-    //         if ((cc >= this.CharactersTable.Hamza) && (cc <= this.CharactersTable.Yeh)) {
-    //             // بحكم أن المصفوفة تبدأ من العدد 0، يطرح 1569 من رقم الحرف؛ للوصول إلى هيئة الحرف المستقلة.
-    //             // Because arrays starts from 0, subtract 1569 from char code; to match the index of isolated form.
-    //             if (cc !== this.CharactersTable.Tatweel) { // تخطي التطويل.
-    //                 newStr += String.fromCharCode(this.IsolatedForms[(cc - this.CharactersTable.Hamza)]);
-    //             }
-    //         } else {
-    //             newStr += str[i];
-    //         }
-    //     }
-
-    //     return newStr;
-    // },
-
     CharactersTable: {
         Space: 32, // Space مسافة.
         QuotationMark: 34, // " Quotation Mark علامة افتباس عادية.
@@ -673,9 +705,12 @@ const ArBasic = {
         AlefHamzaBelow: 1573, // إ Arabic Alef with Hamza below ألف تحتها همزة.
         YehHamzaAbove: 1574, // ئ Arabic Letter Yeh with Hamza Above ياء فقوها همزة.
         Alef: 1575, // ا Arabic Alef ألف بلا همزة.
+        TehMarbuta: 1577, // ة Arabic Letter Teh Marbuta تاء مربوطة.
         Tatweel: 1600, // ـ Arabic Tatweel حرف التطويل.
         Lam: 1604, // ل Arabic Letter Lam لام.
+        Heh: 1607, // ه Arabic Letter Heh هاء.
         Waw: 1608, // و Arabic Waw واو.
+        AlefMaksura: 1609, // ى Arabic Letter Alef Maksura ألف مكسورة.
         Yeh: 1610, // ي Arabic Letter Yeh ياء.
         Fathatan: 1611, //  ً Arabic Fathatan فتحتان.
         Dammatan: 1612, //  ٌ Arabic Dammatan ضمتان.
