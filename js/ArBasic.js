@@ -51,7 +51,7 @@ const ArBasic = {
     CheckLastTashkilForRemoval: function (cc, bcc) {
         if ((cc < this.LettersTable.Hamza) || (cc > this.LettersTable.Sukun)) {
             // الرجوع بنعم إذا كان الحرف الحالي ليس عربيًا، وكان السابق ليس من الحركات.
-            // Return true if the current character is not an Arabic one, and the previous one is not Tashkil.
+            // Return true if the current letter is not an Arabic one, and the previous one is not Tashkil.
             return ((bcc < this.LettersTable.Fathatan) || (bcc === this.LettersTable.Shadda));
         }
 
@@ -123,134 +123,95 @@ const ArBasic = {
     },
 
     /**
-     * حذف التشكيل الواضح نطقًا.
+     * حذف التشكيل الواضح نطقه.
      * Removes Tashkil if it's obvious to pronounce.
      *
      * @param {string} str
      * @return {string}
      */
     ReduceTashkil: function (str) {
-        const len = str.length;
+        const len = (str.length - 1);
         let newStr = "";
 
-        if (len !== 0) {
-            let cc = 0;
-            let y = 0;
-            let bcc = str.charCodeAt(0);
-            newStr += str[0];
-
-            for (let i = 1; i < len; i++, y++) {
-                cc = str.charCodeAt(i);
-
-                switch (cc) {
-                    // case this.LettersTable.Sukun: //  ْ Sukun سكون.
-                    case this.LettersTable.Fatha: //  َ Fatha فتحة.
-                    {
-                        // if (cc === this.LettersTable.Fatha) { // Fatha فتحة.
-                        // تجاهل الفَتْحَة التي تأتي قبل أي ألف.
-                        // Ignore Fatha if it before all types of Alef.
-                        const n = (i + 1);
-                        if (n < len) {
-                            const acc = str.charCodeAt(n);
-                            // 1570 آ Alef with Madda above ألف ممدودة.
-                            // 1571 أ Alef with Hamza above ألف فوقها همزة.
-                            // 1573 إ Alef with Hamza below ألف تحتها همزة.
-                            // 1575 ا Alef ألف بلا همزة.
-                            if ((acc === this.LettersTable.AlefMaddaAbove) || (acc === this.LettersTable.AlefHamzaAbove) ||
-                                (acc === this.LettersTable.AlefHamzaBelow) || (acc === this.LettersTable.Alef)) {
-                                break;
-                            }
-                        }
-                        // }
-
-                        // تجاهل حركتي الفَتْحَة والسكون اللتين ليستا على واوٍ أو ياءٍ، أو أنهما في بداية الكلمة
-                        // Ignore Fatha and Sukun if it's not on Waw or Yeh, or it's at the beginning of a word.
-                        // 1608 = و Waw.
-                        // 1610 = ي Yeh.
-                        if (((bcc === this.LettersTable.Waw) || (bcc === this.LettersTable.WawHamzaAbove) ||
-                            (bcc === this.LettersTable.Yeh)) && (y > 0)) {
-                            const acc = str.charCodeAt(i - 2);
-
-                            if ((acc >= this.LettersTable.Hamza) && (acc <= this.LettersTable.Sukun)) {
-                                newStr += str[i];
-                            }
-                        }
-
-                        break;
-                    }
-
-                    case this.LettersTable.Damma: //  ُ Damma ضمة.
-                    // تجاهل الضمة التي بعدها واوٍ أو واوٍ عليها همزة أو على واو.
-                    // Ignore Damma if it comes before Waw or with Hamza above, or it's on Waw.
-                    {
-                        const n = (i + 1);
-                        if (n < len) {
-                            const acc = str.charCodeAt(n);
-
-                            // 1572 = ؤ Waw with Hamza above.
-                            // 1608 = و Waw.
-                            if ((acc === this.LettersTable.Waw) || (acc === this.LettersTable.WawHamzaAbove) ||
-                                (bcc === this.LettersTable.Waw) || (bcc === this.LettersTable.WawHamzaAbove)) {
-                                break;
-                            }
-                        }
-
-                        // تجاهل الضمة إذا كانت على شدة والشدة على واو، سواء كان على الواو همزة أو لا.
-                        // Ignore Damma if it's on Shadda, and Shadda is on Waw (with Hamza above or without).
-                        if ((bcc === this.LettersTable.Shadda) && (i > 2)) {
-                            const acc = str.charCodeAt(i - 2);
-                            if ((acc === this.LettersTable.Waw) || (acc === this.LettersTable.WawHamzaAbove)) {
-                                break;
-                            }
-                        }
-
-                        newStr += str[i];
-                        break;
-                    }
-
-                    case this.LettersTable.Kasra: //  ِ Kasra كسرة.
-                    {
-                        // تجاهل الكسرة إذا كان بعدها ياء.
-                        // Ignore Kasra if it comes before Yeh.
-                        const n = (i + 1);
-                        if (n < len) {
-                            // 1610 = ي Yeh.
-                            if (str.charCodeAt(n) === this.LettersTable.Yeh) {
-                                break;
-                            }
-                        }
-
-                        // تجاهل حركة الكسرة التي تحت حرف الألف الذي تحته همزة.
-                        // Ignore Kasra if it's under Alef with Hamza below.
-                        if (bcc !== this.LettersTable.AlefHamzaBelow) {
-                            newStr += str[i];
-                        }
-
-                        break;
-                    }
-
-                    default:
-                        newStr += str[i];
-                }
-
-                bcc = cc;
-            }
+        if (len < 2) {
+            return;
         }
 
-        return newStr;
-    },
+        let bcc = str.charCodeAt(0);
+        let cc = str.charCodeAt(1);
+        newStr += str[0];
 
-    /**
-     * تتحقق فيما إذا كان الحرف المعطى هو حرف تطويل أو لا.
-     * Checks if the given character is Tatweel ـ.
-     *
-     * @param {char} str
-     * @return {boolean}
-     */
-    IsTatweel: function (cStr) {
-        // 1600 = Tatweel ـ
-        // 1600 = حرف التطويل ـ
-        return (cStr === this.LettersTable.Tatweel);
+        for (let i = 1, y = 2; i < len; i++, y++) {
+            const ncc = str.charCodeAt(y);
+
+            switch (cc) {
+                case this.LettersTable.Fatha: //  َ Fatha فَتحة.
+                {
+                    // إضافة الفَتحة فقط إذا كانت في آخر الكلمة، أو على واو أو بعدها واو،
+                    // أو على ياء أو بعدها ياء، أو تحت ألف مجردة من الهزمة.
+                    // Add Fatha only if at the end of a word, or on Waw or what's after it is Waw,
+                    // or on Yeh or what's after it is Yeh, or if it's under Alef.
+                    if ((bcc === this.LettersTable.Waw) || (bcc === this.LettersTable.Yeh) ||
+                        (bcc === this.LettersTable.Alef) ||
+                        (ncc === this.LettersTable.Waw) || (ncc === this.LettersTable.Yeh) ||
+                        ((ncc < this.LettersTable.Hamza) || (ncc > this.LettersTable.Sukun))) {
+                        newStr += str[i];
+                    }
+
+                    break;
+                }
+
+                case this.LettersTable.Damma: //  ُ Damma ضمة.
+                {
+                    // إضافة الضمة في حالة لم تكن على واو أو بعدها واو.
+                    // Add Damma if it's not on Waw or there is Waw after it.
+                    if ((bcc !== this.LettersTable.Waw) &&
+                        (ncc !== this.LettersTable.Waw)) {
+                        newStr += str[i];
+                    }
+
+                    break;
+                }
+
+                case this.LettersTable.Kasra: //  ِ Kasra كسرة.
+                {
+                    // إضافة الكسرة إن لم تكن على ياء أو بعدها ياء، أو على همزة على ياء،
+                    // أو لم تكن تحت ألف همزتها تحت.
+                    // Add Kasra if it's not under Yeh or Yeh is not after it,
+                    // or under Yeh with Hamza above it, or not under Alef with Hamza Below it.
+                    if ((bcc !== this.LettersTable.Yeh) && (bcc !== this.LettersTable.AlefHamzaBelow) &&
+                        (bcc !== this.LettersTable.YehHamzaAbove) &&
+                        (ncc !== this.LettersTable.Yeh)) {
+                        newStr += str[i];
+                    }
+
+                    break;
+                }
+
+                case this.LettersTable.Shadda:
+                {
+                    newStr += str[i];
+                    break;
+                }
+
+                case this.LettersTable.Sukun:
+                {
+                    newStr += str[i];
+                    break;
+                }
+
+                default:
+                {
+                    bcc = cc;
+                    newStr += str[i];
+                }
+            }
+
+            cc = ncc;
+        }
+
+        newStr += str[len];
+        return newStr;
     },
 
     /**
@@ -265,7 +226,7 @@ const ArBasic = {
         let newStr = "";
 
         for (let i = 0; i < len; i++) {
-            if (!(this.IsTatweel(str.charCodeAt(i)))) {
+            if (str.charCodeAt(i) !== this.LettersTable.Tatweel) {
                 newStr += str[i];
             }
         }
@@ -752,7 +713,7 @@ const ArBasic = {
                             code = 99; // c
                             break;
 
-                        case this.LettersTable.Fatha: //  َ Arabic Fatha فتحة.
+                        case this.LettersTable.Fatha: //  َ Arabic Fatha فَتحة.
                             code = 100; // d
                             break;
 
@@ -821,7 +782,7 @@ const ArBasic = {
         Fathatan: 1611, //  ً Arabic Fathatan فتحتان.
         Dammatan: 1612, //  ٌ Arabic Dammatan ضمتان.
         Kasratan: 1613, //  ٍ Arabic Kasratan كسرتان.
-        Fatha: 1614, //  َ Arabic Fatha فتحة.
+        Fatha: 1614, //  َ Arabic Fatha فَتحة.
         Damma: 1615, //  ُ Arabic Damma ضمة.
         Kasra: 1616, //  ِ Arabic Kasra كسرة.
         Shadda: 1617, //  ّ Arabic Shadda شدّة.
