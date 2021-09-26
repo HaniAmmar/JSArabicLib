@@ -531,6 +531,47 @@ const ArBasic = {
     },
 
     /**
+     * تستبدل جميع الهمزات المقترنة بألف أو المنفردة بألف
+     * وتستبدل الهمزة التي على الواو والياء بهمزة على السطر.
+     * Uses Alef to replaces all Hamzas that are paired with Alef,
+     * and uses single Hamza (Hamza on line) to replace any Waw or
+     * Yah with HamzaAbove.
+     *
+     * @param {string} str
+     * @return {string}
+     */
+    UnifyHamza: function (str) {
+        const len = str.length;
+        let newStr = "";
+
+        for (let i = 0; i < len; i++) {
+            const cc = str.charCodeAt(i);
+
+            switch (cc) {
+                case this.CharactersTable.AlefMadda:
+                case this.CharactersTable.AlefHamzaAbove:
+                case this.CharactersTable.AlefHamzaBelow:
+                case this.CharactersTable.MaddaAbove:
+                case this.CharactersTable.HamzaAbove:
+                case this.CharactersTable.HamzaBelow:
+                    newStr += String.fromCharCode(this.CharactersTable.Alef);
+                    break;
+
+                case this.CharactersTable.WawHamzaAbove:
+                case this.CharactersTable.YehHamzaAbove:
+                    newStr += String.fromCharCode(this.CharactersTable.Hamza);
+                    break;
+
+                default:
+                    newStr += str[i];
+                    break;
+            }
+        }
+
+        return newStr;
+    },
+
+    /**
      * تأخذ نص وتعيد أحرف الكلمات منفصلة عن بعضها.
      * Takes string and return words' characters in disconnected form.
      *
@@ -574,13 +615,14 @@ const ArBasic = {
         ArabicSemicolon: 1563, // ؛ Arabic Semicolon فاصلة منقوطة عربية.
         ArabicQuestionMark: 1567, // ؟ Arabic Question Mark علامة استفهام عربية.
         Hamza: 1569, // ء Arabic Letter Hamza همزة.
-        AlefMadda: 1570, // آ Alef with Madda above ألف ممدودة.
-        AlefHamzaAbove: 1571, // أ Alef with Hamza above ألف فوقها همزة.
-        WawHamzaAbove: 1572, // ا Waw with Hamza above واو فوقها همزة.
-        AlefHamzaBelow: 1573, // إ Alef with Hamza below ألف تحتها همزة.
-        Alef: 1575, // ا Alef ألف بلا همزة.
-        Tatweel: 1600, // ـ Tatweel حرف التطويل.
-        Waw: 1608, // و Waw واو.
+        AlefMadda: 1570, // آ Arabic Alef with Madda above ألف ممدودة.
+        AlefHamzaAbove: 1571, // أ Arabic Alef with Hamza above ألف فوقها همزة.
+        WawHamzaAbove: 1572, // ا Arabic Waw with Hamza above واو فوقها همزة.
+        AlefHamzaBelow: 1573, // إ Arabic Alef with Hamza below ألف تحتها همزة.
+        YehHamzaAbove: 1574, // ئ Arabic Letter Yeh with Hamza Above ياء فقوها همزة.
+        Alef: 1575, // ا Arabic Alef ألف بلا همزة.
+        Tatweel: 1600, // ـ Arabic Tatweel حرف التطويل.
+        Waw: 1608, // و Arabic Waw واو.
         Yeh: 1610, // ي Arabic Letter Yeh ياء.
         Fathatan: 1611, //  ً Arabic Fathatan فتحتان.
         Dammatan: 1612, //  ٌ Arabic Dammatan ضمتان.
@@ -590,6 +632,9 @@ const ArBasic = {
         Kasra: 1616, //  ِ Arabic Kasra كسرة.
         Shadda: 1617, //  ّ Arabic Shadda شدّة.
         Sukun: 1618, //  ْ Arabic Sukun سكون.
+        MaddaAbove: 1619, //  ٓ Arabic Madda Above مدة علوية.
+        HamzaAbove: 1620, //  ٔ Arabic Hamza Above همزة علوية.
+        HamzaBelow: 1621, //  ٕ Arabic Hamza Below همزة سفلية.
         QuotationMarkLeftDouble: 8220, // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
         QuotationMarkRightDouble: 8221 // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
     }

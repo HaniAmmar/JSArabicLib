@@ -30,6 +30,8 @@
             <label for="EncodeTashkil">ترميز التشكيل.</label>
             <input type="radio" id="DecodeTashkil" name="options" value="9" />
             <label for="DecodeTashkil">دمج التشكيل.</label>
+            <input type="radio" id="UnifyHamza" name="options" value="10" />
+            <label for="UnifyHamza">توحيد الهمزات</label>
         </fieldset>
 
         <fieldset id="text_fieldset">
@@ -114,6 +116,8 @@
                                 }
                             case 9:
                                 return ArBasic.DecodeTashkil(inputText.resultText, tashkilText.value);
+                            case 10:
+                                return ArBasic.UnifyHamza(inputText.value);
                             default:
                                 return "";
                         }
