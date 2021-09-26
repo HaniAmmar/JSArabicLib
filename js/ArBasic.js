@@ -361,6 +361,30 @@ const ArBasic = {
                     break;
                 }
 
+                // نقل الفتحتين إلى قبل الألف.
+                // Move Fathatan to be before Alef.
+                case this.LettersTable.Alef:
+                {
+                    const s = str[i];
+
+                    // إذا كانت هناك مسافة قبل الألف، فإن الألف في بداية الكلمة.
+                    // If "insertSpace" is true, then Alef is at the start of a word.
+                    if (!(insertSpace)) {
+                        const y = (i + 1);
+
+                        if ((y < len) && (str.charCodeAt(y) === this.LettersTable.Fathatan)) {
+                            newStr += String.fromCharCode(this.LettersTable.Fathatan);
+                            ++i;
+                        }
+                    } else {
+                        newStr += String.fromCharCode(this.LettersTable.Space);
+                        insertSpace = false;
+                    }
+
+                    newStr += s;
+                    break;
+                }
+
                 // تخطي التطويل.
                 // ـ Skip Tatweel.
                 case this.LettersTable.Tatweel:
