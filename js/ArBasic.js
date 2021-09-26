@@ -29,10 +29,10 @@ const ArBasic = {
             const cc = str.charCodeAt(i);
 
             // الحروف المستخدمة في التشكيل هي من 1611 إلى 1618.
-            // Arabic Tashkil characters are from 1611 to 1618.
+            // Arabic Tashkil letters are from 1611 to 1618.
             // 1617 = ّ  Shadda شدّة
-            if (((cc < this.CharactersTable.Fathatan) || (cc > this.CharactersTable.Sukun)) ||
-                 (keepShadda && (cc === this.CharactersTable.Shadda))) {
+            if (((cc < this.LettersTable.Fathatan) || (cc > this.LettersTable.Sukun)) ||
+                 (keepShadda && (cc === this.LettersTable.Shadda))) {
                 newStr += str[i];
             }
         }
@@ -49,15 +49,15 @@ const ArBasic = {
      * @return {boolean}
      */
     CheckLastTashkilForRemoval: function (cc, bcc) {
-        if ((cc < this.CharactersTable.Hamza) || (cc > this.CharactersTable.Sukun)) {
+        if ((cc < this.LettersTable.Hamza) || (cc > this.LettersTable.Sukun)) {
             // الرجوع بنعم إذا كان الحرف الحالي ليس عربيًا، وكان السابق ليس من الحركات.
             // Return true if the current character is not an Arabic one, and the previous one is not Tashkil.
-            return ((bcc < this.CharactersTable.Fathatan) || (bcc === this.CharactersTable.Shadda));
+            return ((bcc < this.LettersTable.Fathatan) || (bcc === this.LettersTable.Shadda));
         }
 
         // التنوين لا يكون إلا لآخر حرف في الكلمة، وهذا الشرط يمرر أي حرف غيره.
         // This condition will make sure that no Tanween is passed, since Tanween is only for the last char ً ٍ ٌ.
-        return ((bcc < this.CharactersTable.Fathatan) || (bcc > this.CharactersTable.Kasratan));
+        return ((bcc < this.LettersTable.Fathatan) || (bcc > this.LettersTable.Kasratan));
     },
 
     /**
@@ -69,10 +69,10 @@ const ArBasic = {
      * @return {boolean}
      */
     CheckLastTashkilForKeeping: function (cc, bcc) {
-        return ((cc < this.CharactersTable.Hamza) ||
-                (cc > this.CharactersTable.Sukun) ||
-                (bcc < this.CharactersTable.Fatha) ||
-                (bcc === this.CharactersTable.Shadda));
+        return ((cc < this.LettersTable.Hamza) ||
+                (cc > this.LettersTable.Sukun) ||
+                (bcc < this.LettersTable.Fatha) ||
+                (bcc === this.LettersTable.Shadda));
     },
 
     /**
@@ -143,10 +143,10 @@ const ArBasic = {
                 cc = str.charCodeAt(i);
 
                 switch (cc) {
-                    // case this.CharactersTable.Sukun: //  ْ Sukun سكون.
-                    case this.CharactersTable.Fatha: //  َ Fatha فتحة.
+                    // case this.LettersTable.Sukun: //  ْ Sukun سكون.
+                    case this.LettersTable.Fatha: //  َ Fatha فتحة.
                     {
-                        // if (cc === this.CharactersTable.Fatha) { // Fatha فتحة.
+                        // if (cc === this.LettersTable.Fatha) { // Fatha فتحة.
                         // تجاهل الفَتْحَة التي تأتي قبل أي ألف.
                         // Ignore Fatha if it before all types of Alef.
                         const n = (i + 1);
@@ -156,8 +156,8 @@ const ArBasic = {
                             // 1571 أ Alef with Hamza above ألف فوقها همزة.
                             // 1573 إ Alef with Hamza below ألف تحتها همزة.
                             // 1575 ا Alef ألف بلا همزة.
-                            if ((acc === this.CharactersTable.AlefMaddaAbove) || (acc === this.CharactersTable.AlefHamzaAbove) ||
-                                (acc === this.CharactersTable.AlefHamzaBelow) || (acc === this.CharactersTable.Alef)) {
+                            if ((acc === this.LettersTable.AlefMaddaAbove) || (acc === this.LettersTable.AlefHamzaAbove) ||
+                                (acc === this.LettersTable.AlefHamzaBelow) || (acc === this.LettersTable.Alef)) {
                                 break;
                             }
                         }
@@ -167,11 +167,11 @@ const ArBasic = {
                         // Ignore Fatha and Sukun if it's not on Waw or Yeh, or it's at the beginning of a word.
                         // 1608 = و Waw.
                         // 1610 = ي Yeh.
-                        if (((bcc === this.CharactersTable.Waw) || (bcc === this.CharactersTable.WawHamzaAbove) ||
-                            (bcc === this.CharactersTable.Yeh)) && (y > 0)) {
+                        if (((bcc === this.LettersTable.Waw) || (bcc === this.LettersTable.WawHamzaAbove) ||
+                            (bcc === this.LettersTable.Yeh)) && (y > 0)) {
                             const acc = str.charCodeAt(i - 2);
 
-                            if ((acc >= this.CharactersTable.Hamza) && (acc <= this.CharactersTable.Sukun)) {
+                            if ((acc >= this.LettersTable.Hamza) && (acc <= this.LettersTable.Sukun)) {
                                 newStr += str[i];
                             }
                         }
@@ -179,7 +179,7 @@ const ArBasic = {
                         break;
                     }
 
-                    case this.CharactersTable.Damma: //  ُ Damma ضمة.
+                    case this.LettersTable.Damma: //  ُ Damma ضمة.
                     // تجاهل الضمة التي بعدها واوٍ أو واوٍ عليها همزة أو على واو.
                     // Ignore Damma if it comes before Waw or with Hamza above, or it's on Waw.
                     {
@@ -189,17 +189,17 @@ const ArBasic = {
 
                             // 1572 = ؤ Waw with Hamza above.
                             // 1608 = و Waw.
-                            if ((acc === this.CharactersTable.Waw) || (acc === this.CharactersTable.WawHamzaAbove) ||
-                                (bcc === this.CharactersTable.Waw) || (bcc === this.CharactersTable.WawHamzaAbove)) {
+                            if ((acc === this.LettersTable.Waw) || (acc === this.LettersTable.WawHamzaAbove) ||
+                                (bcc === this.LettersTable.Waw) || (bcc === this.LettersTable.WawHamzaAbove)) {
                                 break;
                             }
                         }
 
                         // تجاهل الضمة إذا كانت على شدة والشدة على واو، سواء كان على الواو همزة أو لا.
                         // Ignore Damma if it's on Shadda, and Shadda is on Waw (with Hamza above or without).
-                        if ((bcc === this.CharactersTable.Shadda) && (i > 2)) {
+                        if ((bcc === this.LettersTable.Shadda) && (i > 2)) {
                             const acc = str.charCodeAt(i - 2);
-                            if ((acc === this.CharactersTable.Waw) || (acc === this.CharactersTable.WawHamzaAbove)) {
+                            if ((acc === this.LettersTable.Waw) || (acc === this.LettersTable.WawHamzaAbove)) {
                                 break;
                             }
                         }
@@ -208,21 +208,21 @@ const ArBasic = {
                         break;
                     }
 
-                    case this.CharactersTable.Kasra: //  ِ Kasra كسرة.
+                    case this.LettersTable.Kasra: //  ِ Kasra كسرة.
                     {
                         // تجاهل الكسرة إذا كان بعدها ياء.
                         // Ignore Kasra if it comes before Yeh.
                         const n = (i + 1);
                         if (n < len) {
                             // 1610 = ي Yeh.
-                            if (str.charCodeAt(n) === this.CharactersTable.Yeh) {
+                            if (str.charCodeAt(n) === this.LettersTable.Yeh) {
                                 break;
                             }
                         }
 
                         // تجاهل حركة الكسرة التي تحت حرف الألف الذي تحته همزة.
                         // Ignore Kasra if it's under Alef with Hamza below.
-                        if (bcc !== this.CharactersTable.AlefHamzaBelow) {
+                        if (bcc !== this.LettersTable.AlefHamzaBelow) {
                             newStr += str[i];
                         }
 
@@ -250,7 +250,7 @@ const ArBasic = {
     IsTatweel: function (cStr) {
         // 1600 = Tatweel ـ
         // 1600 = حرف التطويل ـ
-        return (cStr === this.CharactersTable.Tatweel);
+        return (cStr === this.LettersTable.Tatweel);
     },
 
     /**
@@ -298,54 +298,54 @@ const ArBasic = {
             const cc = str.charCodeAt(i);
 
             switch (cc) {
-                case this.CharactersTable.Space:
+                case this.LettersTable.Space:
                 case 9: // tab
                 {
                     // تخطي المسافات المكررة.
                     // Skip duplicate spaces.
-                    if (bcc !== this.CharactersTable.Space) {
+                    if (bcc !== this.LettersTable.Space) {
                         insertSpace = true;
                     }
 
                     break;
                 }
 
-                case this.CharactersTable.ArabicComma: // ، Arabic Comma فاصلة عربية.
-                case this.CharactersTable.Comma: // , Latin Comma فاصلة أعجمية.
+                case this.LettersTable.ArabicComma: // ، Arabic Comma فاصلة عربية.
+                case this.LettersTable.Comma: // , Latin Comma فاصلة أعجمية.
                 {
                     // استبدال الفاصلة الأعجمية بالعربية.
                     // 1548 = ، Arabic Comma.
-                    newStr += String.fromCharCode(this.CharactersTable.ArabicComma);
+                    newStr += String.fromCharCode(this.LettersTable.ArabicComma);
                     insertSpace = true;
                     break;
                 }
 
-                case this.CharactersTable.ArabicSemicolon: // ؛ Arabic Semicolon فاصلة منقوطة عربية.
-                case this.CharactersTable.Semicolon: // ; Latin Semicolon فاصلة منقوطة أعجمية.
+                case this.LettersTable.ArabicSemicolon: // ؛ Arabic Semicolon فاصلة منقوطة عربية.
+                case this.LettersTable.Semicolon: // ; Latin Semicolon فاصلة منقوطة أعجمية.
                 {
                     // استبدال الفاصلة المنقوطة الأعجمية بالعربية.
                     // 1563 = ؛ Arabic Semicolon.
-                    newStr += String.fromCharCode(this.CharactersTable.ArabicSemicolon);
+                    newStr += String.fromCharCode(this.LettersTable.ArabicSemicolon);
                     insertSpace = true;
                     break;
                 }
 
-                case this.CharactersTable.ArabicQuestionMark: // ؟ Arabic Question Mark علامة استفهام عربية.
-                case this.CharactersTable.QuestionMark: // ? Latin Question Mark علامة استفهام أعجمية.
+                case this.LettersTable.ArabicQuestionMark: // ؟ Arabic Question Mark علامة استفهام عربية.
+                case this.LettersTable.QuestionMark: // ? Latin Question Mark علامة استفهام أعجمية.
                 {
                     // استبدال علامة الاستفهام الأعجمية بالعربية.
                     // 1567 = ؟ Arabic Question Mark.
-                    newStr += String.fromCharCode(this.CharactersTable.ArabicQuestionMark);
+                    newStr += String.fromCharCode(this.LettersTable.ArabicQuestionMark);
                     insertSpace = true;
                     break;
                 }
 
-                case this.CharactersTable.QuotationMark: // " Quotation Mark علامة افتباس عادية.
-                case this.CharactersTable.QuotationMarkLeftDouble: // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
-                case this.CharactersTable.QuotationMarkRightDouble: // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
+                case this.LettersTable.QuotationMark: // " Quotation Mark علامة افتباس عادية.
+                case this.LettersTable.QuotationMarkLeftDouble: // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
+                case this.LettersTable.QuotationMarkRightDouble: // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
                 {
                     if (!quotatStart) {
-                        newStr += String.fromCharCode(this.CharactersTable.Space);
+                        newStr += String.fromCharCode(this.LettersTable.Space);
                     }
 
                     quotatStart = !(quotatStart);
@@ -357,13 +357,13 @@ const ArBasic = {
 
                     // استبدال علامات الاقتباس الأعجمي بعلامة الاقتباس العادي.
                     // 34 = " Quotation Mark.
-                    newStr += String.fromCharCode(this.CharactersTable.QuotationMark);
+                    newStr += String.fromCharCode(this.LettersTable.QuotationMark);
                     break;
                 }
 
                 // تخطي التطويل.
                 // ـ Skip Tatweel.
-                case this.CharactersTable.Tatweel:
+                case this.LettersTable.Tatweel:
                 {
                     // عدم إزالة المدة إذا كانت آخر الكلمة.
                     // Don't remove Tatweel if it's at the end of the word.
@@ -373,8 +373,8 @@ const ArBasic = {
                     while (y < len) {
                         const ncc = str.charCodeAt(y);
 
-                        if (((ncc < this.CharactersTable.Fathatan) || (ncc > this.CharactersTable.Sukun)) &&
-                              ncc !== this.CharactersTable.Tatweel) {
+                        if (((ncc < this.LettersTable.Fathatan) || (ncc > this.LettersTable.Sukun)) &&
+                              ncc !== this.LettersTable.Tatweel) {
                             keepTatweel = true;
                             break;
                         }
@@ -383,7 +383,7 @@ const ArBasic = {
                     }
 
                     if (keepTatweel) {
-                        newStr += String.fromCharCode(this.CharactersTable.Tatweel);
+                        newStr += String.fromCharCode(this.LettersTable.Tatweel);
 
                         // تقدم إلى آخر تطويل.
                         // Advanced to the last Tatweel.
@@ -393,7 +393,7 @@ const ArBasic = {
                     break;
                 }
 
-                case this.CharactersTable.Dot: // . Dot نقطة.
+                case this.LettersTable.Dot: // . Dot نقطة.
                 {
                     let y = (i + 1);
                     let repeatedDots = false;
@@ -403,8 +403,8 @@ const ArBasic = {
                     while (y < len) {
                         const ncc = str.charCodeAt(y);
 
-                        if (ncc !== this.CharactersTable.Space) {
-                            if (ncc !== this.CharactersTable.Dot) {
+                        if (ncc !== this.LettersTable.Space) {
+                            if (ncc !== this.LettersTable.Dot) {
                                 break;
                             }
 
@@ -423,10 +423,10 @@ const ArBasic = {
 
                         // عدم إضافة مسافة بعد النقط إذا كانت داخل اقتباس.
                         // Don't add space if the dots are in quotation marks.
-                        if ((bcc !== this.CharactersTable.QuotationMark) &&
-                            (bcc !== this.CharactersTable.QuotationMarkLeftDouble) &&
-                            (bcc !== this.CharactersTable.QuotationMarkRightDouble)) {
-                            newStr += String.fromCharCode(this.CharactersTable.Space);
+                        if ((bcc !== this.LettersTable.QuotationMark) &&
+                            (bcc !== this.LettersTable.QuotationMarkLeftDouble) &&
+                            (bcc !== this.LettersTable.QuotationMarkRightDouble)) {
+                            newStr += String.fromCharCode(this.LettersTable.Space);
                         }
 
                         newStr += s;
@@ -443,19 +443,19 @@ const ArBasic = {
                     break;
                 }
 
-                case this.CharactersTable.Colon: // : Colon نقطتان فوق بعص.
+                case this.LettersTable.Colon: // : Colon نقطتان فوق بعص.
                 {
                     newStr += str[i];
                     insertSpace = true;
                     break;
                 }
 
-                case this.CharactersTable.Waw: // و Waw حرف الواو.
+                case this.LettersTable.Waw: // و Waw حرف الواو.
                 {
                     // تخطي المسافات بعد واو العطف.
                     // Skip spaces after Waw that behaves like "and".
                     if (insertSpace) {
-                        newStr += String.fromCharCode(this.CharactersTable.Space);
+                        newStr += String.fromCharCode(this.LettersTable.Space);
                         insertSpace = false;
                         ignoreSpace = true;
                     }
@@ -470,14 +470,16 @@ const ArBasic = {
                         if (!(ignoreSpace) && ((i + 1) !== str.length) &&
                         // عدم إضافة مسافة بين علامة التعجب والاستفهام.
                         // Don't add space between ! and ?.
-                            ((bcc !== this.CharactersTable.QuotationMark) && (cc !== 33))) {
-                            newStr += String.fromCharCode(this.CharactersTable.Space);
+                            ((bcc !== this.LettersTable.QuotationMark) && (cc !== 33))) {
+                            newStr += String.fromCharCode(this.LettersTable.Space);
                         }
 
                         insertSpace = false;
                     }
 
-                    if ((cc < this.CharactersTable.Fathatan) || (cc > this.CharactersTable.Sukun)) {
+                    if ((cc < this.LettersTable.Fathatan) || (cc > this.LettersTable.Sukun)) {
+                        // تفعيل المسافات إذا كان الحرف ليس تشكلًا.
+                        // Enable spacing the letter is not Tashkil.
                         ignoreSpace = false;
                     }
 
@@ -506,31 +508,31 @@ const ArBasic = {
             const cc = str.charCodeAt(i);
 
             switch (cc) {
-                case this.CharactersTable.LamAlefCombined:
+                case this.LettersTable.LamAlefCombined:
                 {
-                    newStr += String.fromCharCode(this.CharactersTable.Lam);
-                    newStr += String.fromCharCode(this.CharactersTable.Alef);
+                    newStr += String.fromCharCode(this.LettersTable.Lam);
+                    newStr += String.fromCharCode(this.LettersTable.Alef);
                     break;
                 }
 
-                case this.CharactersTable.LamAlefMaddaAboveCombined:
+                case this.LettersTable.LamAlefMaddaAboveCombined:
                 {
-                    newStr += String.fromCharCode(this.CharactersTable.Lam);
-                    newStr += String.fromCharCode(this.CharactersTable.AlefMaddaAbove);
+                    newStr += String.fromCharCode(this.LettersTable.Lam);
+                    newStr += String.fromCharCode(this.LettersTable.AlefMaddaAbove);
                     break;
                 }
 
-                case this.CharactersTable.LamAlefHamzaAboveCombined:
+                case this.LettersTable.LamAlefHamzaAboveCombined:
                 {
-                    newStr += String.fromCharCode(this.CharactersTable.Lam);
-                    newStr += String.fromCharCode(this.CharactersTable.AlefHamzaAbove);
+                    newStr += String.fromCharCode(this.LettersTable.Lam);
+                    newStr += String.fromCharCode(this.LettersTable.AlefHamzaAbove);
                     break;
                 }
 
-                case this.CharactersTable.LamAlefHamzaBelowCombined:
+                case this.LettersTable.LamAlefHamzaBelowCombined:
                 {
-                    newStr += String.fromCharCode(this.CharactersTable.Lam);
-                    newStr += String.fromCharCode(this.CharactersTable.AlefHamzaBelow);
+                    newStr += String.fromCharCode(this.LettersTable.Lam);
+                    newStr += String.fromCharCode(this.LettersTable.AlefHamzaBelow);
                     break;
                 }
 
@@ -561,18 +563,18 @@ const ArBasic = {
             const cc = str.charCodeAt(i);
 
             switch (cc) {
-                case this.CharactersTable.AlefMaddaAbove:
-                case this.CharactersTable.AlefHamzaAbove:
-                case this.CharactersTable.AlefHamzaBelow:
-                case this.CharactersTable.MaddaAbove:
-                case this.CharactersTable.HamzaAbove:
-                case this.CharactersTable.HamzaBelow:
-                    newStr += String.fromCharCode(this.CharactersTable.Alef);
+                case this.LettersTable.AlefMaddaAbove:
+                case this.LettersTable.AlefHamzaAbove:
+                case this.LettersTable.AlefHamzaBelow:
+                case this.LettersTable.MaddaAbove:
+                case this.LettersTable.HamzaAbove:
+                case this.LettersTable.HamzaBelow:
+                    newStr += String.fromCharCode(this.LettersTable.Alef);
                     break;
 
-                case this.CharactersTable.WawHamzaAbove:
-                case this.CharactersTable.YehHamzaAbove:
-                    newStr += String.fromCharCode(this.CharactersTable.Hamza);
+                case this.LettersTable.WawHamzaAbove:
+                case this.LettersTable.YehHamzaAbove:
+                    newStr += String.fromCharCode(this.LettersTable.Hamza);
                     break;
 
                 default:
@@ -599,12 +601,12 @@ const ArBasic = {
             const cc = str.charCodeAt(i);
 
             switch (cc) {
-                case this.CharactersTable.TehMarbuta:
-                    newStr += String.fromCharCode(this.CharactersTable.Heh);
+                case this.LettersTable.TehMarbuta:
+                    newStr += String.fromCharCode(this.LettersTable.Heh);
                     break;
 
-                case this.CharactersTable.AlefMaksura:
-                    newStr += String.fromCharCode(this.CharactersTable.Yeh);
+                case this.LettersTable.AlefMaksura:
+                    newStr += String.fromCharCode(this.LettersTable.Yeh);
                     break;
 
                 default:
@@ -633,7 +635,7 @@ const ArBasic = {
 
     // /**
     //  * تأخذ نص وتعيد أحرف الكلمات منفصلة عن بعضها.
-    //  * Takes string and return words' characters in disconnected form.
+    //  * Takes string and return words' letters in disconnected form.
     //  *
     //  * @param {string} str
     //  * @return {string}
@@ -649,11 +651,11 @@ const ArBasic = {
     //     for (let i = 0; i < len; i++) {
     //         const cc = str.charCodeAt(i);
 
-    //         if ((cc >= this.CharactersTable.Hamza) && (cc <= this.CharactersTable.Yeh)) {
+    //         if ((cc >= this.LettersTable.Hamza) && (cc <= this.LettersTable.Yeh)) {
     //             // بحكم أن المصفوفة تبدأ من العدد 0، يطرح 1569 من رقم الحرف؛ للوصول إلى هيئة الحرف المستقلة.
     //             // Because arrays starts from 0, subtract 1569 from char code; to match the index of isolated form.
-    //             if (cc !== this.CharactersTable.Tatweel) { // تخطي التطويل.
-    //                 newStr += String.fromCharCode(this.IsolatedForms[(cc - this.CharactersTable.Hamza)]);
+    //             if (cc !== this.LettersTable.Tatweel) { // تخطي التطويل.
+    //                 newStr += String.fromCharCode(this.IsolatedForms[(cc - this.LettersTable.Hamza)]);
     //             }
     //         } else {
     //             newStr += str[i];
@@ -682,19 +684,19 @@ const ArBasic = {
              * (UTF-16BE: dec) الحروف العربية في جدول الينيكود هي بين 1569 إلى 1610 حسب الترميز.
              * Arabic Alphabet in the Unicode table are between 1569 -> 1610 (UTF-16BE: dec).
              * الحروف المستخدمة في التشكيل هي من 1611 إلى 1618.
-             * Arabic Tashkil characters are from 1611 to 1618.
+             * Arabic Tashkil letters are from 1611 to 1618.
              */
-            if ((cc >= this.CharactersTable.Hamza) && (cc <= this.CharactersTable.Sukun)) {
+            if ((cc >= this.LettersTable.Hamza) && (cc <= this.LettersTable.Sukun)) {
                 let hasShadda = false;
                 let harakhChar = 0;
                 let y = (i + 1);
 
                 while (y < len) {
                     const ncc = str.charCodeAt(y);
-                    if ((ncc >= this.CharactersTable.Fathatan) && (ncc <= this.CharactersTable.Sukun)) {
+                    if ((ncc >= this.LettersTable.Fathatan) && (ncc <= this.LettersTable.Sukun)) {
                         hasTashkil = true;
 
-                        if (ncc !== this.CharactersTable.Shadda) {
+                        if (ncc !== this.LettersTable.Shadda) {
                             harakhChar = ncc;
                         } else {
                             hasShadda = true;
@@ -714,31 +716,31 @@ const ArBasic = {
                     // 1617 = ّ  Shadda شدّة.
 
                     switch (harakhChar) {
-                        case this.CharactersTable.Fathatan: //  ً Arabic Fathatan فتحتان.
+                        case this.LettersTable.Fathatan: //  ً Arabic Fathatan فتحتان.
                             code = 97; // a
                             break;
 
-                        case this.CharactersTable.Dammatan: //  ٌ Arabic Dammatan ضمتان.
+                        case this.LettersTable.Dammatan: //  ٌ Arabic Dammatan ضمتان.
                             code = 98; // b
                             break;
 
-                        case this.CharactersTable.Kasratan: //  ٍ Arabic Kasratan كسرتان.
+                        case this.LettersTable.Kasratan: //  ٍ Arabic Kasratan كسرتان.
                             code = 99; // c
                             break;
 
-                        case this.CharactersTable.Fatha: //  َ Arabic Fatha فتحة.
+                        case this.LettersTable.Fatha: //  َ Arabic Fatha فتحة.
                             code = 100; // d
                             break;
 
-                        case this.CharactersTable.Damma: //  ُ Arabic Damma ضمة.
+                        case this.LettersTable.Damma: //  ُ Arabic Damma ضمة.
                             code = 101; // e
                             break;
 
-                        case this.CharactersTable.Kasra: //  ِ Arabic Kasra كسرة.
+                        case this.LettersTable.Kasra: //  ِ Arabic Kasra كسرة.
                             code = 102; // f
                             break;
 
-                        case this.CharactersTable.Sukun: //  ْ Arabic Sukun سكون.
+                        case this.LettersTable.Sukun: //  ْ Arabic Sukun سكون.
                             code = 103; // g
                             break;
 
@@ -746,9 +748,9 @@ const ArBasic = {
                     }
 
                     if (code !== 0) {
-                        if (hasShadda && (code !== this.CharactersTable.Sukun)) {
+                        if (hasShadda && (code !== this.LettersTable.Sukun)) {
                             // 32 (A و a) عدد الحروف بين.
-                            // 32 Number of characters between A and a.
+                            // 32 Number of letters between A and a.
                             code -= 32;
                         }
                     } else if (hasShadda) {
@@ -767,7 +769,7 @@ const ArBasic = {
         return { EncodedTashkil: tashkil, StrippedText: this.RemoveTashkil(str, false) };
     },
 
-    CharactersTable: {
+    LettersTable: {
         Space: 32, // Space مسافة.
         QuotationMark: 34, // " Quotation Mark علامة افتباس عادية.
         Dot: 46, // . Dot نقطة.
@@ -779,17 +781,17 @@ const ArBasic = {
         ArabicSemicolon: 1563, // ؛ Arabic Semicolon فاصلة منقوطة عربية.
         ArabicQuestionMark: 1567, // ؟ Arabic Question Mark علامة استفهام عربية.
         Hamza: 1569, // ء Arabic Letter Hamza همزة.
-        AlefMaddaAbove: 1570, // آ Arabic Alef with Madda above ألف فوقها مدة.
-        AlefHamzaAbove: 1571, // أ Arabic Alef with Hamza above ألف فوقها همزة.
-        WawHamzaAbove: 1572, // ا Arabic Waw with Hamza above واو فوقها همزة.
-        AlefHamzaBelow: 1573, // إ Arabic Alef with Hamza below ألف تحتها همزة.
+        AlefMaddaAbove: 1570, // آ Arabic Letter Alef with Madda above ألف فوقها مدة.
+        AlefHamzaAbove: 1571, // أ Arabic Letter Alef with Hamza above ألف فوقها همزة.
+        WawHamzaAbove: 1572, // ا Arabic Letter Waw with Hamza above واو فوقها همزة.
+        AlefHamzaBelow: 1573, // إ Arabic Letter Alef with Hamza below ألف تحتها همزة.
         YehHamzaAbove: 1574, // ئ Arabic Letter Yeh with Hamza Above ياء فقوها همزة.
-        Alef: 1575, // ا Arabic Alef ألف بلا همزة.
+        Alef: 1575, // ا Arabic Letter Alef ألف بلا همزة.
         TehMarbuta: 1577, // ة Arabic Letter Teh Marbuta تاء مربوطة.
         Tatweel: 1600, // ـ Arabic Tatweel حرف التطويل.
         Lam: 1604, // ل Arabic Letter Lam لام.
         Heh: 1607, // ه Arabic Letter Heh هاء.
-        Waw: 1608, // و Arabic Waw واو.
+        Waw: 1608, // و Arabic Letter Waw واو.
         AlefMaksura: 1609, // ى Arabic Letter Alef Maksura ألف مكسورة.
         Yeh: 1610, // ي Arabic Letter Yeh ياء.
         Fathatan: 1611, //  ً Arabic Fathatan فتحتان.
@@ -803,10 +805,10 @@ const ArBasic = {
         MaddaAbove: 1619, //  ٓ Arabic Madda Above مدة علوية.
         HamzaAbove: 1620, //  ٔ Arabic Hamza Above همزة علوية.
         HamzaBelow: 1621, //  ٕ Arabic Hamza Below همزة سفلية.
-        LamAlefCombined: 65275, // ﻻ Arabic Lam with Alef (combined Form) لام مدمجة مع ألف.
-        LamAlefMaddaAboveCombined: 65269, // ﻵ Arabic Lam with Alef with Madda Above (combined Form) لام مدمجة مع ألف فوقها مدة.
-        LamAlefHamzaAboveCombined: 65271, // ﻷ Arabic Lam with Alef with Hamza Above (combined Form) لام مدمجة مع ألف فوقها همزة.
-        LamAlefHamzaBelowCombined: 65273, // ﻹ Arabic Lam with Alef with Hamza Below (combined Form) لام مدمجة مع ألف فوقها همزة.
+        LamAlefCombined: 65275, // ﻻ Arabic Letter Lam with Alef (combined Form) لام مدمجة مع ألف.
+        LamAlefMaddaAboveCombined: 65269, // ﻵ Arabic Letter Lam with Alef with Madda Above (combined Form) لام مدمجة مع ألف فوقها مدة.
+        LamAlefHamzaAboveCombined: 65271, // ﻷ Arabic Letter Lam with Alef with Hamza Above (combined Form) لام مدمجة مع ألف فوقها همزة.
+        LamAlefHamzaBelowCombined: 65273, // ﻹ Arabic Letter Lam with Alef with Hamza Below (combined Form) لام مدمجة مع ألف فوقها همزة.
         QuotationMarkLeftDouble: 8220, // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
         QuotationMarkRightDouble: 8221 // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
     }
