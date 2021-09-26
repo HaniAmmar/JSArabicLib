@@ -156,7 +156,7 @@ const ArBasic = {
                             // 1571 أ Alef with Hamza above ألف فوقها همزة.
                             // 1573 إ Alef with Hamza below ألف تحتها همزة.
                             // 1575 ا Alef ألف بلا همزة.
-                            if ((acc === this.CharactersTable.AlefMadda) || (acc === this.CharactersTable.AlefHamzaAbove) ||
+                            if ((acc === this.CharactersTable.AlefMaddaAbove) || (acc === this.CharactersTable.AlefHamzaAbove) ||
                                 (acc === this.CharactersTable.AlefHamzaBelow) || (acc === this.CharactersTable.Alef)) {
                                 break;
                             }
@@ -423,7 +423,7 @@ const ArBasic = {
             bcc = cc;
         }
 
-        return newStr;
+        return this.UnifyLamAlef(newStr);
     },
 
     /**
@@ -548,7 +548,7 @@ const ArBasic = {
             const cc = str.charCodeAt(i);
 
             switch (cc) {
-                case this.CharactersTable.AlefMadda:
+                case this.CharactersTable.AlefMaddaAbove:
                 case this.CharactersTable.AlefHamzaAbove:
                 case this.CharactersTable.AlefHamzaBelow:
                 case this.CharactersTable.MaddaAbove:
@@ -561,6 +561,58 @@ const ArBasic = {
                 case this.CharactersTable.YehHamzaAbove:
                     newStr += String.fromCharCode(this.CharactersTable.Hamza);
                     break;
+
+                default:
+                    newStr += str[i];
+                    break;
+            }
+        }
+
+        return newStr;
+    },
+
+    /**
+     * تستبدل اللام و الألف المدمجتين بحرفين مقابلين.
+     * Replaces combined Lam and Alef with their corresponding letters.
+     *
+     * @param {string} str
+     * @return {string}
+     */
+    UnifyLamAlef: function (str) {
+        const len = str.length;
+        let newStr = "";
+
+        for (let i = 0; i < len; i++) {
+            const cc = str.charCodeAt(i);
+
+            switch (cc) {
+                case this.CharactersTable.LamAlefCombined:
+                {
+                    newStr += String.fromCharCode(this.CharactersTable.Lam);
+                    newStr += String.fromCharCode(this.CharactersTable.Alef);
+                    break;
+                }
+
+                case this.CharactersTable.LamAlefMaddaAboveCombined:
+                {
+                    newStr += String.fromCharCode(this.CharactersTable.Lam);
+                    newStr += String.fromCharCode(this.CharactersTable.AlefMaddaAbove);
+                    break;
+                }
+
+                case this.CharactersTable.LamAlefHamzaAboveCombined:
+                {
+                    newStr += String.fromCharCode(this.CharactersTable.Lam);
+                    newStr += String.fromCharCode(this.CharactersTable.AlefHamzaAbove);
+                    break;
+                }
+
+                case this.CharactersTable.LamAlefHamzaBelowCombined:
+                {
+                    newStr += String.fromCharCode(this.CharactersTable.Lam);
+                    newStr += String.fromCharCode(this.CharactersTable.AlefHamzaBelow);
+                    break;
+                }
 
                 default:
                     newStr += str[i];
@@ -615,13 +667,14 @@ const ArBasic = {
         ArabicSemicolon: 1563, // ؛ Arabic Semicolon فاصلة منقوطة عربية.
         ArabicQuestionMark: 1567, // ؟ Arabic Question Mark علامة استفهام عربية.
         Hamza: 1569, // ء Arabic Letter Hamza همزة.
-        AlefMadda: 1570, // آ Arabic Alef with Madda above ألف ممدودة.
+        AlefMaddaAbove: 1570, // آ Arabic Alef with Madda above ألف فوقها مدة.
         AlefHamzaAbove: 1571, // أ Arabic Alef with Hamza above ألف فوقها همزة.
         WawHamzaAbove: 1572, // ا Arabic Waw with Hamza above واو فوقها همزة.
         AlefHamzaBelow: 1573, // إ Arabic Alef with Hamza below ألف تحتها همزة.
         YehHamzaAbove: 1574, // ئ Arabic Letter Yeh with Hamza Above ياء فقوها همزة.
         Alef: 1575, // ا Arabic Alef ألف بلا همزة.
         Tatweel: 1600, // ـ Arabic Tatweel حرف التطويل.
+        Lam: 1604, // ل Arabic Letter Lam لام.
         Waw: 1608, // و Arabic Waw واو.
         Yeh: 1610, // ي Arabic Letter Yeh ياء.
         Fathatan: 1611, //  ً Arabic Fathatan فتحتان.
@@ -635,6 +688,10 @@ const ArBasic = {
         MaddaAbove: 1619, //  ٓ Arabic Madda Above مدة علوية.
         HamzaAbove: 1620, //  ٔ Arabic Hamza Above همزة علوية.
         HamzaBelow: 1621, //  ٕ Arabic Hamza Below همزة سفلية.
+        LamAlefCombined: 65275, // ﻻ Arabic Lam with Alef (combined Form) لام مدمجة مع ألف.
+        LamAlefMaddaAboveCombined: 65269, // ﻵ Arabic Lam with Alef with Madda Above (combined Form) لام مدمجة مع ألف فوقها مدة.
+        LamAlefHamzaAboveCombined: 65271, // ﻷ Arabic Lam with Alef with Hamza Above (combined Form) لام مدمجة مع ألف فوقها همزة.
+        LamAlefHamzaBelowCombined: 65273, // ﻹ Arabic Lam with Alef with Hamza Below (combined Form) لام مدمجة مع ألف فوقها همزة.
         QuotationMarkLeftDouble: 8220, // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
         QuotationMarkRightDouble: 8221 // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
     }
