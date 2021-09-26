@@ -361,7 +361,35 @@ const ArBasic = {
                 // تخطي التطويل.
                 // ـ Skip Tatweel.
                 case this.CharactersTable.Tatweel:
+                {
+                    // عدم إزالة المدة إذا كانت آخر الكلمة.
+                    // Don't remove Tatweel if it's at the end of the word.
+
+                    let y = (i + 1);
+                    let keepTatweel = false;
+
+                    while (y < len) {
+                        const ncc = str.charCodeAt(y);
+
+                        if (((ncc < this.CharactersTable.Fathatan) || (ncc > this.CharactersTable.Sukun)) &&
+                              ncc !== this.CharactersTable.Tatweel) {
+                            keepTatweel = true;
+                            break;
+                        }
+
+                        ++y;
+                    }
+
+                    if (keepTatweel) {
+                        newStr += String.fromCharCode(this.CharactersTable.Tatweel);
+
+                        // تقدم إلى آخر تطويل.
+                        // Advanced to the last Tatweel.
+                        i = (y - 1);
+                    }
+
                     break;
+                }
 
                 case this.CharactersTable.Dot: // . Dot نقطة.
                 {
@@ -387,6 +415,8 @@ const ArBasic = {
                     const s = str[i]; // Dot النقطة.
 
                     if (repeatedDots) {
+                        ignoreSpace = false;
+
                         newStr += String.fromCharCode(this.CharactersTable.Space);
                         newStr += s;
                         newStr += s;
