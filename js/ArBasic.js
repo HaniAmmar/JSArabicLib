@@ -148,11 +148,10 @@ const ArBasic = {
                 case this.LettersTable.Fatha: //  َ Fatha فَتحة.
                 {
                     // إضافة الفَتحة فقط إذا كانت في آخر الكلمة، أو على واو أو بعدها واو،
-                    // أو على ياء أو بعدها ياء، أو تحت ألف مجردة من الهزمة.
+                    // أو على ياء أو بعدها ياء.
                     // Add Fatha only if at the end of a word, or on Waw or what's after it is Waw,
-                    // or on Yeh or what's after it is Yeh, or if it's under Alef.
+                    // or on Yeh or what's after it is Yeh.
                     if ((bcc === this.LettersTable.Waw) || (bcc === this.LettersTable.Yeh) ||
-                        (bcc === this.LettersTable.Alef) ||
                         (ncc === this.LettersTable.Waw) || (ncc === this.LettersTable.Yeh) ||
                         ((ncc < this.LettersTable.Hamza) || (ncc > this.LettersTable.Sukun))) {
                         newStr += str[i];
