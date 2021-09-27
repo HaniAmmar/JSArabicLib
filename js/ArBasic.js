@@ -341,7 +341,7 @@ const ArBasic = {
                         // Reset ignoreSpace if Alef it at the start.
                         // "لإصلاح مشكلة عند تحسين الجملة: "واو أو ياء.
                         ignoreSpace = false;
-                    } else {
+                    } else if (!(ignoreSpace)) {
                         newStr += String.fromCharCode(this.LettersTable.Space);
                         insertSpace = false;
                     }
