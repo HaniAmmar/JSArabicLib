@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 /**
  * @Name Arabic library for JavaScript v0.0.1
@@ -672,8 +672,8 @@ const ArBasic = {
      */
     EncodeTashkil: function (str) {
         const len = str.length;
-        let tashkil = "";
-        let hasTashkil = false;
+        let isTashkil = false;
+        let tCode = "";
 
         for (let i = 0; i < len; i++) {
             const cc = str.charCodeAt(i);
@@ -684,15 +684,16 @@ const ArBasic = {
              * الحروف المستخدمة في التشكيل هي من 1611 إلى 1618.
              * Arabic Tashkil letters are from 1611 to 1618.
              */
-            if ((cc >= this.LettersTable.Hamza) && (cc <= this.LettersTable.Sukun)) {
+            if ((cc >= this.LettersTable.Hamza) && (cc <= this.LettersTable.HamzaBelow)) {
                 let hasShadda = false;
                 let harakhChar = 0;
                 let y = (i + 1);
 
                 while (y < len) {
                     const ncc = str.charCodeAt(y);
+
                     if ((ncc >= this.LettersTable.Fathatan) && (ncc <= this.LettersTable.Sukun)) {
-                        hasTashkil = true;
+                        isTashkil = true;
 
                         if (ncc !== this.LettersTable.Shadda) {
                             harakhChar = ncc;
@@ -708,10 +709,8 @@ const ArBasic = {
                     ++y;
                 }
 
-                if (hasTashkil) {
-                    hasTashkil = false;
+                if (isTashkil) {
                     let code = 0;
-                    // 1617 = ّ  Shadda شدّة.
 
                     switch (harakhChar) {
                         case this.LettersTable.Fathatan: //  ً Arabic Fathatan فتحتان.
@@ -755,16 +754,18 @@ const ArBasic = {
                         code = 87; // W
                     }
 
-                    tashkil += String.fromCharCode(code);
-                } else {
-                    tashkil += "0";
+                    tCode += String.fromCharCode(code);
                 }
-            } else {
-                tashkil += str[i];
             }
+
+            if (!isTashkil) {
+                tCode += "0";
+            }
+
+            isTashkil = false;
         }
 
-        return { EncodedTashkil: tashkil, StrippedText: this.RemoveTashkil(str, false) };
+        return { EncodedTashkil: tCode, StrippedText: this.RemoveTashkil(str, false) };
     },
 
     LettersTable: {
