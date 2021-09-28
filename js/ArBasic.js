@@ -381,7 +381,7 @@ const ArBasic = {
                     }
 
                     // تقدم إلى آخر تطويل.
-                    // Advanced to the last Tatweel.
+                    // Advanced to last Tatweel.
                     i = (y - 1);
 
                     if (keepTatweel) {
