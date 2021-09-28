@@ -133,16 +133,18 @@ const ArBasic = {
         const len = (str.length - 1);
         let newStr = "";
 
-        if (len < 2) {
+        if (len < 3) {
+            // يجب أن يكون طول النص 3 أحرف كحدٍ أقل.
+            // String has to be at least 3 characters in length.
             return;
         }
 
-        let bcc = str.charCodeAt(0);
-        let cc = str.charCodeAt(1);
+        let bcc = str.charCodeAt(0); // Previous letter الحرف السابق.
+        let cc = str.charCodeAt(1); // Current char الحرف الحالي.
         newStr += str[0];
 
         for (let i = 1, y = 2; i < len; i++, y++) {
-            const ncc = str.charCodeAt(y);
+            const ncc = str.charCodeAt(y); // Next char الحرف التالي.
 
             switch (cc) {
                 case this.LettersTable.Fatha: //  َ Fatha فَتحة.
@@ -189,18 +191,21 @@ const ArBasic = {
 
                 case this.LettersTable.Shadda:
                 {
+                    // Kepp Shadda الإبقاء على الشدة.
                     newStr += str[i];
                     break;
                 }
 
                 case this.LettersTable.Sukun:
                 {
+                    // Kepp Sukun الإبقاء على السكون.
                     newStr += str[i];
                     break;
                 }
 
                 default:
                 {
+                    // "bcc" only stores letter المتغير التالي يخزن الحروف فقط.
                     bcc = cc;
                     newStr += str[i];
                 }
@@ -305,6 +310,8 @@ const ArBasic = {
                 case this.LettersTable.QuotationMarkRightDouble: // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
                 {
                     if (!quotatStart) {
+                        // إضافة مسافة في بداية أي اقتباس.
+                        // Add a space before the start of any quote.
                         newStr += String.fromCharCode(this.LettersTable.Space);
                     }
 
@@ -354,14 +361,14 @@ const ArBasic = {
                 // ـ Skip Tatweel.
                 case this.LettersTable.Tatweel:
                 {
-                    // عدم إزالة المدة إذا كانت آخر الكلمة.
-                    // Don't remove Tatweel if it's at the end of the word.
                     let y = (i + 1);
                     let keepTatweel = false;
 
                     while (y < len) {
                         const ncc = str.charCodeAt(y);
 
+                        // عدم إزالة المدة إذا كانت آخر الكلمة.
+                        // Don't remove Tatweel if it's at the end of the word.
                         if (((ncc < this.LettersTable.Fathatan) || (ncc > this.LettersTable.Sukun)) &&
                               ncc !== this.LettersTable.Tatweel) {
                             keepTatweel = true;
