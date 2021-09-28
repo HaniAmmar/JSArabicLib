@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 /**
  * @Name Arabic library for JavaScript v0.0.1
@@ -49,7 +49,7 @@ const ArBasic = {
      * @return {boolean}
      */
     CheckLastTashkilForRemoval: function (cc, bcc) {
-        if ((cc < this.LettersTable.Hamza) || (cc > this.LettersTable.Sukun)) {
+        if ((cc < this.LettersTable.Hamza) || (cc > this.LettersTable.HamzaBelow)) {
             // الرجوع بنعم إذا كان الحرف الحالي ليس عربيًا، وكان السابق ليس من الحركات.
             // Return true if the current letter is not an Arabic one, and the previous one is not Tashkil.
             return ((bcc < this.LettersTable.Fathatan) || (bcc === this.LettersTable.Shadda));
@@ -70,7 +70,7 @@ const ArBasic = {
      */
     CheckLastTashkilForKeeping: function (cc, bcc) {
         return ((cc < this.LettersTable.Hamza) ||
-                (cc > this.LettersTable.Sukun) ||
+                (cc > this.LettersTable.HamzaBelow) ||
                 (bcc < this.LettersTable.Fatha) ||
                 (bcc === this.LettersTable.Shadda));
     },
@@ -155,7 +155,7 @@ const ArBasic = {
                     // or on Yeh or what's after it is Yeh.
                     if ((bcc === this.LettersTable.Waw) || (bcc === this.LettersTable.Yeh) ||
                         (ncc === this.LettersTable.Waw) || (ncc === this.LettersTable.Yeh) ||
-                        ((ncc < this.LettersTable.Hamza) || (ncc > this.LettersTable.Sukun))) {
+                        ((ncc < this.LettersTable.Hamza) || (ncc > this.LettersTable.HamzaBelow))) {
                         newStr += str[i];
                     }
 
@@ -369,21 +369,23 @@ const ArBasic = {
 
                         // عدم إزالة المدة إذا كانت آخر الكلمة.
                         // Don't remove Tatweel if it's at the end of the word.
-                        if (((ncc < this.LettersTable.Fathatan) || (ncc > this.LettersTable.Sukun)) &&
-                              ncc !== this.LettersTable.Tatweel) {
-                            keepTatweel = true;
+                        if (ncc !== this.LettersTable.Tatweel) {
+                            if ((ncc < this.LettersTable.Hamza) || (ncc > this.LettersTable.HamzaBelow)) {
+                                keepTatweel = true;
+                            }
+
                             break;
                         }
 
                         ++y;
                     }
 
+                    // تقدم إلى آخر تطويل.
+                    // Advanced to the last Tatweel.
+                    i = (y - 1);
+
                     if (keepTatweel) {
                         newStr += String.fromCharCode(this.LettersTable.Tatweel);
-
-                        // تقدم إلى آخر تطويل.
-                        // Advanced to the last Tatweel.
-                        i = (y - 1);
                     }
 
                     break;
