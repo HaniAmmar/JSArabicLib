@@ -14,14 +14,14 @@
             <legend>الخيارات:</legend>
             <input type="radio" id="RemoveAllTashkil" name="options" value="1" checked="checked" />
             <label for="RemoveAllTashkil">إزالة كامل التشكيل.</label>
-            <input type="radio" id="RemoveTashkilKeepShadda" name="options" value="2" />
-            <label for="RemoveTashkilKeepShadda">إزالة التشكيل عدا الشدة.</label>
-            <input type="radio" id="RemoveLastTashkil" name="options" value="3" />
-            <label for="RemoveLastTashkil">إزالة تشكيل آخر حرف.</label>
-            <input type="radio" id="KeepLastTashkilOnly" name="options" value="4" />
-            <label for="KeepLastTashkilOnly">ابقاء تشكيل الحرف الآخير.</label>
-            <input type="radio" id="ReduceTashkil" name="options" value="5" />
+            <input type="radio" id="ReduceTashkil" name="options" value="2" />
             <label for="ReduceTashkil">تخفيف التشكيل.</label>
+            <input type="radio" id="RemoveTashkilKeepShadda" name="options" value="3" />
+            <label for="RemoveTashkilKeepShadda">إزالة التشكيل عدا الشدة.</label>
+            <input type="radio" id="RemoveLastTashkil" name="options" value="4" />
+            <label for="RemoveLastTashkil">إزالة تشكيل آخر حرف.</label>
+            <input type="radio" id="KeepLastTashkilOnly" name="options" value="5" />
+            <label for="KeepLastTashkilOnly">ابقاء تشكيل الحرف الآخير.</label>
             <input type="radio" id="RemoveTatweel" name="options" value="6" />
             <label for="RemoveTatweel">إزالة التطويل.</label>
             <input type="radio" id="ImproveText" name="options" value="7" />
@@ -103,13 +103,13 @@
                     resultText.value = (function () {
                         switch (selectedOP) {
                             case 1:
-                            case 2:
-                                return ArBasic.RemoveTashkil(inputText.value, (selectedOP === 2));
                             case 3:
-                            case 4:
-                                return ArBasic.LastTashkil(inputText.value, (selectedOP === 3));
-                            case 5:
+                                return ArBasic.RemoveTashkil(inputText.value, (selectedOP === 3));
+                            case 2:
                                 return ArBasic.ReduceTashkil(inputText.value);
+                            case 4:
+                            case 5:
+                                return ArBasic.LastTashkil(inputText.value, (selectedOP === 4));
                             case 6:
                                 return ArBasic.RemoveTatweel(inputText.value);
                             case 7:
