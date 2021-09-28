@@ -12,7 +12,9 @@
     <div id="main">
         <fieldset class="options">
             <legend>الخيارات:</legend>
-            <input type="radio" id="RemoveAllTashkil" name="options" value="1" checked="checked" />
+            <input type="radio" id="ImproveText" name="options" value="0" checked="checked" />
+            <label for="ImproveText">تحسين النص.</label>
+            <input type="radio" id="RemoveAllTashkil" name="options" value="1" />
             <label for="RemoveAllTashkil">إزالة كامل التشكيل.</label>
             <input type="radio" id="ReduceTashkil" name="options" value="2" />
             <label for="ReduceTashkil">تخفيف التشكيل.</label>
@@ -24,8 +26,6 @@
             <label for="KeepLastTashkilOnly">ابقاء تشكيل الحرف الآخير.</label>
             <input type="radio" id="RemoveTatweel" name="options" value="6" />
             <label for="RemoveTatweel">إزالة التطويل.</label>
-            <input type="radio" id="ImproveText" name="options" value="7" />
-            <label for="ImproveText">تحسين النص.</label>
             <input type="radio" id="EncodeTashkil" name="options" value="8" />
             <label for="EncodeTashkil">ترميز التشكيل.</label>
             <input type="radio" id="DecodeTashkil" name="options" value="9" />
@@ -43,7 +43,7 @@
         <fieldset id="text_fieldset">
             <legend>النص:</legend>
             <textarea rows="5"
-                id="input_text">   ذَهَـــبَ           زَيْــــدٌ إِلَى اَلـسُّوقِ فَلَمْ يَعْثُرْ عَلَى . . . . مَا كَانَ يُرِيدٌ , وَكَانَ الْـجَوُّ حِينَهَا جَمِيلاً , وَ     الـسَّمَاءُ صَافِيَةً،والْهَوَاءُ نَقِيًا  ; فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ عند مكان اسمه  : " الجُرْفُ " . </textarea>
+                id="input_text">   ذَهَـــبَ           زَيْــــدٌ إِلَى اَلـسُّوقِ فَلَمْ يَعْثُرْ عَلَى . . . . مَا كَانَ يُرِيدُ , وَكَانَ الْـجَوُّ حِينَهَا جَمِيلاً , وَ     الـسَّمَاءُ صَافِيَةً،والْهَوَاءُ نَقِيًا  ; فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ عند مكان اسمه  : " الجُرْف " . </textarea>
             <button type="button" id="execute">تنفيذ</button>
         </fieldset>
 
@@ -102,6 +102,8 @@
                 document.getElementById("execute").addEventListener("click", function () {
                     resultText.value = (function () {
                         switch (selectedOP) {
+                            case 0:
+                                return ArBasic.ImproveText(inputText.value);
                             case 1:
                             case 3:
                                 return ArBasic.RemoveTashkil(inputText.value, (selectedOP === 3));
@@ -112,8 +114,6 @@
                                 return ArBasic.LastTashkil(inputText.value, (selectedOP === 4));
                             case 6:
                                 return ArBasic.RemoveTatweel(inputText.value);
-                            case 7:
-                                return ArBasic.ImproveText(inputText.value);
                             case 8:
                                 {
                                     const ret = ArBasic.EncodeTashkil(inputText.value);
