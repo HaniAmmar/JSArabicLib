@@ -150,13 +150,42 @@ const ArBasic = {
                 case this.LettersTable.Fatha: //  َ Fatha فَتحة.
                 {
                     // إضافة الفَتحة فقط إذا كانت في آخر الكلمة، أو على واو أو بعدها واو،
-                    // أو على ياء أو بعدها ياء.
+                    // أو على ياء أو بعدها ياء، والواو بهمزة أو بدونها: فقط في حال لم يكن بعد الفتحة ألفٌ.
+                    // أو كان الواو و الياء في بداية الكلمة.
                     // Add Fatha only if at the end of a word, or on Waw or what's after it is Waw,
-                    // or on Yeh or what's after it is Yeh.
-                    if ((bcc === this.LettersTable.Waw) || (bcc === this.LettersTable.Yeh) ||
-                        (ncc === this.LettersTable.Waw) || (ncc === this.LettersTable.Yeh) ||
-                        ((ncc < this.LettersTable.Hamza) || (ncc > this.LettersTable.HamzaBelow))) {
+                    // or on Yeh or what's after it is Yeh, and Waw is with Hamza or without:
+                    // Only if there is not Alef after it, or Waw Yeh are not at the start of a word.
+                    if ((ncc < this.LettersTable.Hamza) || (ncc > this.LettersTable.HamzaBelow)) {
                         newStr += str[i];
+                    } else if (i > 1) {
+                        switch (bcc) {
+                            case this.LettersTable.Waw:
+                            case this.LettersTable.WawHamzaAbove:
+                            case this.LettersTable.Yeh:
+                            {
+                                const bbcc = str.charCodeAt(i - 2);
+
+                                if (((bbcc >= this.LettersTable.Hamza) && (bbcc <= this.LettersTable.HamzaBelow)) &&
+                                     (ncc !== this.LettersTable.Alef) && (ncc !== this.LettersTable.AlefHamzaAbove)) {
+                                    newStr += str[i];
+                                }
+
+                                break;
+                            }
+
+                            default: {
+                                switch (ncc) {
+                                    case this.LettersTable.Waw:
+                                    case this.LettersTable.WawHamzaAbove:
+                                    case this.LettersTable.Yeh:
+                                        if ((bcc !== this.LettersTable.Alef) && (bcc !== this.LettersTable.AlefHamzaAbove)) {
+                                            newStr += str[i];
+                                        }
+                                        break;
+                                    default:
+                                }
+                            }
+                        }
                     }
 
                     break;
@@ -164,10 +193,11 @@ const ArBasic = {
 
                 case this.LettersTable.Damma: //  ُ Damma ضمة.
                 {
-                    // إضافة الضمة في حالة لم تكن على واو أو بعدها واو.
-                    // Add Damma if it's not on Waw or there is Waw after it.
-                    if ((bcc !== this.LettersTable.Waw) &&
-                        (ncc !== this.LettersTable.Waw)) {
+                    // إضافة الضمة في حالة لم تكن على واو أو بعدها واو, أو في آخر الكلمة.
+                    // Add Damma if it's not on Waw or there is Waw after it, or at the end of a word.
+                    if ((ncc < this.LettersTable.Hamza) || (ncc > this.LettersTable.HamzaBelow) ||
+                        ((bcc !== this.LettersTable.Waw) && (bcc !== this.LettersTable.WawHamzaAbove) &&
+                        (ncc !== this.LettersTable.Waw) && (ncc !== this.LettersTable.WawHamzaAbove))) {
                         newStr += str[i];
                     }
 
@@ -180,9 +210,9 @@ const ArBasic = {
                     // أو لم تكن تحت ألف همزتها تحت.
                     // Add Kasra if it's not under Yeh or Yeh is not after it,
                     // or under Yeh with Hamza above it, or not under Alef with Hamza Below it.
-                    if ((bcc !== this.LettersTable.Yeh) && (bcc !== this.LettersTable.AlefHamzaBelow) &&
+                    if ((bcc === this.LettersTable.Alef) || ((bcc !== this.LettersTable.Yeh) && (bcc !== this.LettersTable.AlefHamzaBelow) &&
                         (bcc !== this.LettersTable.YehHamzaAbove) &&
-                        (ncc !== this.LettersTable.Yeh)) {
+                        (ncc !== this.LettersTable.Yeh))) {
                         newStr += str[i];
                     }
 
