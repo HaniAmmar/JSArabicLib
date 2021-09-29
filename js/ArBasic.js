@@ -315,6 +315,32 @@ const ArBasic = {
                     break;
                 }
 
+                case this.LettersTable.LeftParenthesis: // ( Left Parenthesis بداية القوس.
+                case this.LettersTable.LeftSquareParenthesis: // [ Left Square Parenthesis بداية القوس المربع.
+                case this.LettersTable.LeftCurlyBracket: // { Left Curly Bracket بداية القوس المجعد.
+                {
+                    // إضافة مسافة قبل الأقواس.
+                    // Add space before ( { [.
+                    newStr += String.fromCharCode(this.LettersTable.Space);
+                    newStr += str[i];
+                    insertSpace = false;
+                    ignoreSpace = true;
+                    break;
+                }
+
+                case this.LettersTable.RightParenthesis: // ) Right Parenthesis نهاية القوس.
+                case this.LettersTable.RightSquareParenthesis: // ] Right Square Parenthesis نهاية القوس المربع.
+                case this.LettersTable.RightCurlyBracket: // } Right Curly Bracket نهاية القوس المجعد.
+                {
+                    newStr += str[i];
+                    // إضافة مسافة بعد الأقواس.
+                    // Add space after ( { [.
+                    newStr += String.fromCharCode(this.LettersTable.Space);
+                    insertSpace = false;
+                    ignoreSpace = true;
+                    break;
+                }
+
                 case this.LettersTable.ArabicSemicolon: // ؛ Arabic Semicolon فاصلة منقوطة عربية.
                 case this.LettersTable.Semicolon: // ; Latin Semicolon فاصلة منقوطة أعجمية.
                 {
@@ -347,14 +373,21 @@ const ArBasic = {
 
                     quotatStart = !(quotatStart);
 
-                    // منع إضافة مسافة بعد بداية الاقتباس.
-                    // Prevent adding space after the start of a quote.
-                    insertSpace = !(quotatStart);
-                    ignoreSpace = quotatStart;
-
                     // استبدال علامات الاقتباس الأعجمي بعلامة الاقتباس العادي.
                     // 34 = " Quotation Mark.
                     newStr += String.fromCharCode(this.LettersTable.QuotationMark);
+
+                    // منع إضافة مسافة بعد بداية الاقتباس.
+                    // Prevent adding space after quote start.
+                    insertSpace = false;
+                    ignoreSpace = true;
+
+                    if (!quotatStart) {
+                        // إضافة مسافة بعد الاقتباس.
+                        // Add space after quote end
+                        newStr += String.fromCharCode(this.LettersTable.Space);
+                    }
+
                     break;
                 }
 
@@ -482,7 +515,7 @@ const ArBasic = {
                 {
                     // تخطي المسافات بعد واو العطف.
                     // Skip spaces after Waw that behaves like "and".
-                    if (insertSpace) {
+                    if (insertSpace && !(ignoreSpace)) {
                         newStr += String.fromCharCode(this.LettersTable.Space);
                         ignoreSpace = true;
                         insertSpace = false;
@@ -506,7 +539,7 @@ const ArBasic = {
                     }
 
                     if ((cc < this.LettersTable.Fathatan) || (cc > this.LettersTable.Sukun)) {
-                        // تفعيل المسافات إذا كان الحرف ليس تشكلًا.
+                        // تفعيل المسافات إذا كان الحرف ليس من الحركات.
                         // Enable spacing the letter is not Tashkil.
                         ignoreSpace = false;
                     }
@@ -801,11 +834,17 @@ const ArBasic = {
     LettersTable: {
         Space: 32, // Space مسافة.
         QuotationMark: 34, // " Quotation Mark علامة افتباس عادية.
+        LeftParenthesis: 40, // ( Left Parenthesis بداية القوس.
+        RightParenthesis: 41, // ) Right Parenthesis نهاية القوس.
         Dot: 46, // . Dot نقطة.
         Comma: 44, // , Latin Comma فاصلة أعجمية.
         Colon: 58, // : Colon نقطتان فوق بعص.
         Semicolon: 59, // ; Latin Semicolon فاصلة منقوطة أعجمية.
         QuestionMark: 63, // ? Latin Question Mark علامة استفهام أعجمية.
+        LeftSquareParenthesis: 91, // [ Left Square Parenthesis بداية القوس المربع.
+        RightSquareParenthesis: 93, // ] Right Square Parenthesis نهاية القوس المربع.
+        LeftCurlyBracket: 123, // { Left Curly Bracket بداية القوس المجعد.
+        RightCurlyBracket: 125, // } Right Curly Bracket نهاية القوس المجعد.
         ArabicComma: 1548, // ، Arabic Comma فاصلة عربية.
         ArabicSemicolon: 1563, // ؛ Arabic Semicolon فاصلة منقوطة عربية.
         ArabicQuestionMark: 1567, // ؟ Arabic Question Mark علامة استفهام عربية.
