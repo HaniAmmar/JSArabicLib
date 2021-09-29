@@ -605,16 +605,17 @@ const ArBasic = {
     },
 
     /**
-     * تستبدل جميع الهمزات المقترنة بألف أو المنفردة بألف
+     * تستبدل التاء المربوطة بهاء، والألف المقصورة بياء (أخطاء إملائية شائعة).
+     * كما تستبدل جميع الهمزات المقترنة بألف أو المنفردة بألف
      * وتستبدل الهمزة التي على الواو والياء بهمزة على السطر.
-     * Uses Alef to replaces all Hamzas that are paired with Alef,
+     * Replaces Teh Marbuta (ة) with Heh (ه), and Alef Maksura (ى) with Yeh (ي); common misspellings.
+     * Also, Uses Alef to replaces all Hamzas that are paired with Alef,
      * and uses single Hamza (Hamza on line) to replace any Waw or
      * Yah with HamzaAbove.
-     *
      * @param {string} str
      * @return {string}
      */
-    UnifyHamzas: function (str) {
+    UnifyLetters: function (str) {
         const len = str.length;
         let newStr = "";
 
@@ -622,6 +623,14 @@ const ArBasic = {
             const cc = str.charCodeAt(i);
 
             switch (cc) {
+                case this.CharacterTable.TehMarbuta:
+                    newStr += String.fromCharCode(this.CharacterTable.Heh);
+                    break;
+
+                case this.CharacterTable.AlefMaksura:
+                    newStr += String.fromCharCode(this.CharacterTable.Yeh);
+                    break;
+
                 case this.CharacterTable.AlefMaddaAbove:
                 case this.CharacterTable.AlefHamzaAbove:
                 case this.CharacterTable.AlefHamzaBelow:
@@ -646,38 +655,6 @@ const ArBasic = {
     },
 
     /**
-     * تستبدل التاء المربوطة بهاء، والألف المقصورة بياء (أخطاء إملائية شائعة).
-     * Replaces Teh Marbuta (ة) with Heh (ه), and Alef Maksura (ى) with Yeh (ي); common misspellings.
-     *
-     * @param {string} str
-     * @return {string}
-     */
-    UnifyTehMarbutaAlefMaksura: function (str) {
-        const len = str.length;
-        let newStr = "";
-
-        for (let i = 0; i < len; i++) {
-            const cc = str.charCodeAt(i);
-
-            switch (cc) {
-                case this.CharacterTable.TehMarbuta:
-                    newStr += String.fromCharCode(this.CharacterTable.Heh);
-                    break;
-
-                case this.CharacterTable.AlefMaksura:
-                    newStr += String.fromCharCode(this.CharacterTable.Yeh);
-                    break;
-
-                default:
-                    newStr += str[i];
-                    break;
-            }
-        }
-
-        return newStr;
-    },
-
-    /**
      * تستخدم عددًا من الدوال لتبسيط النص لغرض تسهيل البحث.
      * Uses a few functions to Simplify text for the purpose of easing search.
      *
@@ -688,8 +665,7 @@ const ArBasic = {
         str = this.RemoveTatweel(str, false);
         str = this.RemoveTashkil(str);
         str = this.SeparateLamAlef(str);
-        str = this.UnifyHamzas(str);
-        return this.UnifyTehMarbutaAlefMaksura(str);
+        return this.UnifyLetters(str);
     },
 
     // /**
