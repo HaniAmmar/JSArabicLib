@@ -5,7 +5,6 @@
  * @License MIT license https://opensource.org/licenses/MIT
  */
 
-// eslint-disable-next-line no-unused-vars
 export const ArBasic = {
     /**
      * تأخذ نص وتعيد الكلمات دون تشكيل.
@@ -15,7 +14,7 @@ export const ArBasic = {
      *
      * @param {string} str
      * @param {boolean} [keepShadda = false]
-     * @return {string}
+     * @returns {string}
      */
     RemoveTashkil: function (str, keepShadda = false) {
         const len = str.length;
@@ -44,7 +43,7 @@ export const ArBasic = {
      *
      * @param {number} cc
      * @param {number} bcc
-     * @return {boolean}
+     * @returns {boolean}
      */
     CheckLastTashkilForRemoval: function (cc, bcc) {
         if ((cc < this.CharacterTable.Hamza) || (cc > this.CharacterTable.HamzaBelow)) {
@@ -64,7 +63,7 @@ export const ArBasic = {
      *
      * @param {number} cc
      * @param {number} bcc
-     * @return {boolean}
+     * @returns {boolean}
      */
     CheckLastTashkilForKeeping: function (cc, bcc) {
         return ((cc < this.CharacterTable.Hamza) ||
@@ -81,7 +80,7 @@ export const ArBasic = {
      *
      * @param {string} str
      * @param {boolean} [remove = true]
-     * @return {string}
+     * @returns {string}
      */
     LastTashkil: function (str, remove = true) {
         const len = str.length;
@@ -125,7 +124,7 @@ export const ArBasic = {
      * Removes Tashkil if it's obvious to pronounce.
      *
      * @param {string} str
-     * @return {string}
+     * @returns {string}
      */
     ReduceTashkil: function (str) {
         const len = (str.length - 1);
@@ -251,7 +250,7 @@ export const ArBasic = {
      * Removes Tatweel form words ـ .
      *
      * @param {string} str
-     * @return {string}
+     * @returns {string}
      */
     RemoveTatweel: function (str) {
         const len = str.length;
@@ -271,7 +270,7 @@ export const ArBasic = {
      * Removes extra spaces, Tatweel and replaces foreign marks.
      *
      * @param {string} str
-     * @return {string}
+     * @returns {string}
      */
     ImproveText: function (str) {
         const len = str.length;
@@ -562,7 +561,7 @@ export const ArBasic = {
      * Replaces combined Lam and Alef with their corresponding letters.
      *
      * @param {string} str
-     * @return {string}
+     * @returns {string}
      */
     SeparateLamAlef: function (str) {
         const len = str.length;
@@ -618,7 +617,7 @@ export const ArBasic = {
      * and uses single Hamza (Hamza on line) to replace any Waw or
      * Yah with HamzaAbove.
      * @param {string} str
-     * @return {string}
+     * @returns {string}
      */
     UnifyLetters: function (str) {
         const len = str.length;
@@ -664,7 +663,7 @@ export const ArBasic = {
      * Uses a few functions to Simplify text for the purpose of easing search.
      *
      * @param {string} str
-     * @return {string}
+     * @returns {string}
      */
     SimplifyText: function (str) {
         str = this.RemoveTatweel(str, false);
@@ -678,7 +677,7 @@ export const ArBasic = {
     //  * Takes string and return words' letters in disconnected form.
     //  *
     //  * @param {string} str
-    //  * @return {string}
+    //  * @returns {string}
     //  */
     // DisconnectChars: function (str) {
     //     const len = str.length;
@@ -710,7 +709,7 @@ export const ArBasic = {
      * Separates text from Tashkil, and returns text with encoded Tashkil.
      *
      * @param {string} str
-     * @return {object} {EncodeTashkil: string, StrippedText: string}
+     * @returns {object} {EncodeTashkil: string, StrippedText: string}
      */
     EncodeTashkil: function (str) {
         const len = str.length;
