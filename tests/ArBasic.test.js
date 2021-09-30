@@ -45,11 +45,11 @@ const ArBasicTest = {
             { In: "ءآأؤإئابةتثجحخدذرزسشصضطظعغػؼؽؾؿـفقكلمنهوىيّٓٔ", Out: "ءآأؤإئابةتثجحخدذرزسشصضطظعغػؼؽؾؿـفقكلمنهوىيّٓٔ" }
         ];
 
-        RunTest("RemoveTashkil[keepShadda = false]", data1, function (value) {
+        RunTest("RemoveTashkil [keepShadda=false]", data1, function (value) {
             return ArBasic.RemoveTashkil(value, false);
         });
 
-        RunTest("RemoveTashkil[keepShadda = true]", data2, function (value) {
+        RunTest("RemoveTashkil [keepShadda=true]", data2, function (value) {
             return ArBasic.RemoveTashkil(value, true);
         });
     },

@@ -11,9 +11,8 @@ export const ArBasic = {
      * كما تأخذ قيمة اختبارية تحدد الاحتفاظ بالشدة من عدمه.
      * Takes string and returns every word without Tashkil.
      * It also takes an optional boolean to keep Shadda or not.
-     *
      * @param {string} str
-     * @param {boolean} [keepShadda = false]
+     * @param {boolean} [keepShadda=false]
      * @returns {string}
      */
     RemoveTashkil: function (str, keepShadda = false) {
@@ -40,7 +39,6 @@ export const ArBasic = {
     /**
      * تعود بلا إذا كان التشكيل آخر الكلمة.
      * It returns false if Tashkil is at the end of the word.
-     *
      * @param {number} cc
      * @param {number} bcc
      * @returns {boolean}
@@ -60,7 +58,6 @@ export const ArBasic = {
     /**
      * تعود بلا إذا كان التشكيل ليس آخر الكلمة.
      * It returns false if Tashkil is not at the end of the word.
-     *
      * @param {number} cc
      * @param {number} bcc
      * @returns {boolean}
@@ -77,9 +74,8 @@ export const ArBasic = {
      * عدا ذلك فإنها تبقي التشكيل الأخير للكلمات.
      * It removes the last Tashkil for every word in a given string if “remove” is set to true,
      * otherwise if keeps only the last Tashkil.
-     *
      * @param {string} str
-     * @param {boolean} [remove = true]
+     * @param {boolean} [remove=true]
      * @returns {string}
      */
     LastTashkil: function (str, remove = true) {
@@ -122,7 +118,6 @@ export const ArBasic = {
     /**
      * حذف التشكيل الواضح نطقه.
      * Removes Tashkil if it's obvious to pronounce.
-     *
      * @param {string} str
      * @returns {string}
      */
@@ -248,7 +243,6 @@ export const ArBasic = {
     /**
      * تحذف التطويل من الكلمات.
      * Removes Tatweel form words ـ .
-     *
      * @param {string} str
      * @returns {string}
      */
@@ -268,7 +262,6 @@ export const ArBasic = {
     /**
      * تزيل المسافات الزائدة والتطويل وتستبدل العلامات الأعجمية بالعربية.
      * Removes extra spaces, Tatweel and replaces foreign marks.
-     *
      * @param {string} str
      * @returns {string}
      */
@@ -559,7 +552,6 @@ export const ArBasic = {
     /**
      * تستبدل اللام و الألف المدمجتين بما يقابلهما من حرفين.
      * Replaces combined Lam and Alef with their corresponding letters.
-     *
      * @param {string} str
      * @returns {string}
      */
@@ -661,7 +653,6 @@ export const ArBasic = {
     /**
      * تستخدم عددًا من الدوال لتبسيط النص لغرض تسهيل البحث.
      * Uses a few functions to Simplify text for the purpose of easing search.
-     *
      * @param {string} str
      * @returns {string}
      */
@@ -707,7 +698,6 @@ export const ArBasic = {
     /**
      * تفصل التشيكل عن النص، وتعيد النص مع التشكيل مرمزًا.
      * Separates text from Tashkil, and returns text with encoded Tashkil.
-     *
      * @param {string} str
      * @returns {object} {EncodeTashkil: string, StrippedText: string}
      */
