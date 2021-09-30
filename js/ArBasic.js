@@ -321,7 +321,10 @@ const ArBasic = {
                 {
                     // إضافة مسافة قبل الأقواس.
                     // Add space before ( { [.
-                    newStr += String.fromCharCode(this.CharacterTable.Space);
+                    if (!(ignoreSpace)) {
+                        newStr += String.fromCharCode(this.CharacterTable.Space);
+                    }
+
                     newStr += str[i];
                     insertSpace = false;
                     ignoreSpace = true;
@@ -369,22 +372,15 @@ const ArBasic = {
                         newStr += String.fromCharCode(this.CharacterTable.Space);
                     }
 
+                    // منع إضافة مسافة بعد بداية الاقتباس.
+                    // Prevent adding space after quote start.
+                    insertSpace = quotatStart;
                     quotatStart = !(quotatStart);
+                    ignoreSpace = quotatStart;
 
                     // استبدال علامات الاقتباس الأعجمي بعلامة الاقتباس العادي.
                     // 34 = " Quotation Mark.
                     newStr += String.fromCharCode(this.CharacterTable.QuotationMark);
-
-                    // منع إضافة مسافة بعد بداية الاقتباس.
-                    // Prevent adding space after quote start.
-                    insertSpace = false;
-                    ignoreSpace = true;
-
-                    if (!quotatStart) {
-                        // إضافة مسافة بعد الاقتباس.
-                        // Add space after quote end
-                        newStr += String.fromCharCode(this.CharacterTable.Space);
-                    }
 
                     break;
                 }
