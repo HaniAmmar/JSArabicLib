@@ -12,48 +12,48 @@
     <div id="main">
         <fieldset class="options">
             <legend>الخيارات:</legend>
-            <input type="radio" id="ImproveText" name="options" value="0" checked="checked" />
-            <label for="ImproveText">تحسين النص.</label>
-            <input type="radio" id="RemoveAllTashkil" name="options" value="1" />
-            <label for="RemoveAllTashkil">إزالة كامل التشكيل.</label>
-            <input type="radio" id="ReduceTashkil" name="options" value="2" />
-            <label for="ReduceTashkil">تخفيف التشكيل.</label>
-            <input type="radio" id="RemoveTashkilKeepShadda" name="options" value="3" />
-            <label for="RemoveTashkilKeepShadda">إزالة التشكيل عدا الشدة.</label>
-            <input type="radio" id="RemoveLastTashkil" name="options" value="4" />
-            <label for="RemoveLastTashkil">إزالة تشكيل آخر حرف.</label>
-            <input type="radio" id="KeepLastTashkilOnly" name="options" value="5" />
-            <label for="KeepLastTashkilOnly">ابقاء تشكيل الحرف الآخير.</label>
-            <input type="radio" id="RemoveTatweel" name="options" value="6" />
-            <label for="RemoveTatweel">إزالة التطويل.</label>
-            <input type="radio" id="EncodeTashkil" name="options" value="8" />
-            <label for="EncodeTashkil">ترميز التشكيل.</label>
-            <input type="radio" id="DecodeTashkil" name="options" value="9" />
-            <label for="DecodeTashkil">دمج التشكيل.</label>
-            <input type="radio" id="SeparateLamAlef" name="options" value="10" />
-            <label for="SeparateLamAlef">فصل اللام عن الألف.</label>
-            <input type="radio" id="UnifyLetters" name="options" value="11" />
-            <label for="UnifyLetters">توحيد الحروف.</label>
-            <input type="radio" id="SimplifyText" name="options" value="12" />
-            <label for="SimplifyText">تبسيط النص.</label>
+            <input type="radio" id="improveText" name="options" value="0" checked="checked" />
+            <label for="improveText">تحسين النص.</label>
+            <input type="radio" id="removeAllTashkil" name="options" value="1" />
+            <label for="removeAllTashkil">إزالة كامل التشكيل.</label>
+            <input type="radio" id="reduceTashkil" name="options" value="2" />
+            <label for="reduceTashkil">تخفيف التشكيل.</label>
+            <input type="radio" id="removeTashkilKeepShadda" name="options" value="3" />
+            <label for="removeTashkilKeepShadda">إزالة التشكيل عدا الشدة.</label>
+            <input type="radio" id="removeLastTashkil" name="options" value="4" />
+            <label for="removeLastTashkil">إزالة تشكيل آخر حرف.</label>
+            <input type="radio" id="keepLastTashkilOnly" name="options" value="5" />
+            <label for="keepLastTashkilOnly">ابقاء تشكيل الحرف الآخير.</label>
+            <input type="radio" id="removeTatweel" name="options" value="6" />
+            <label for="removeTatweel">إزالة التطويل.</label>
+            <input type="radio" id="encodeTashkil" name="options" value="8" />
+            <label for="encodeTashkil">ترميز التشكيل.</label>
+            <input type="radio" id="decodeTashkil" name="options" value="9" />
+            <label for="decodeTashkil">دمج التشكيل.</label>
+            <input type="radio" id="separateLamAlef" name="options" value="10" />
+            <label for="separateLamAlef">فصل اللام عن الألف.</label>
+            <input type="radio" id="unifyLetters" name="options" value="11" />
+            <label for="unifyLetters">توحيد الحروف.</label>
+            <input type="radio" id="simplifyText" name="options" value="12" />
+            <label for="simplifyText">تبسيط النص.</label>
         </fieldset>
 
-        <fieldset id="text_fieldset">
+        <fieldset id="textFieldset">
             <legend>النص:</legend>
             <textarea rows="3"
-                id="input_text">   ذَهَـــبَ           زَيْــــدٌ إِلَى اَلـسُّوقِ فَلَمْ يَعْثُرْ عَلَى . . . . مَا كَانَ يُرِيدُ , وَكَانَ الْـجَوُّ حِينَهَا جَمِيلاً , وَ     الـسَّمَاءُ صَافِيَةً،والْهَوَاءُ نَقِيًا  ; فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ عند مكان اسمه  : " الجُرْف " . </textarea>
+                id="inputText">   ذَهَـــبَ           زَيْــــدٌ إِلَى اَلـسُّوقِ فَلَمْ يَعْثُرْ عَلَى . . . . مَا كَانَ يُرِيدُ , وَكَانَ الْـجَوُّ حِينَهَا جَمِيلاً , وَ     الـسَّمَاءُ صَافِيَةً،والْهَوَاءُ نَقِيًا  ; فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ عند مكان اسمه  : " الجُرْف " . </textarea>
             <button type="button" id="execute">تنفيذ</button>
         </fieldset>
 
-        <fieldset id="result_fieldset">
+        <fieldset id="resultFieldset">
             <legend>الناتج:</legend>
-            <textarea id="result_text" rows="3"></textarea>
-            <!-- <button type="button" onclick="">نسخ</button> -->
+            <textarea id="resultText" rows="3"></textarea>
+            <button id="copyResultText" type="button">نسخ</button>
         </fieldset>
 
-        <fieldset id="tashkil_fieldset">
+        <fieldset id="tashkilFieldset">
             <legend>رموز التشكيل:</legend>
-            <textarea id="tashkil_text" rows="3" dir="ltr"></textarea>
+            <textarea id="tashkilText" rows="3" dir="ltr"></textarea>
         </fieldset>
     </div>
 
@@ -62,9 +62,13 @@
 
         window.onload = function () {
             const ops = document.getElementsByName("options");
-            const tashkilFieldset = document.getElementById("tashkil_fieldset");
+            const tashkilFieldset = document.getElementById("tashkilFieldset");
             let selectedOP = 0;
 
+            function copyToClipboard(tag) {
+                tag.select();
+                document.execCommand('copy');
+            }
 
             function CheckTashkilFieldsetDisplay(selectedOP) {
                 switch (selectedOP) {
@@ -91,9 +95,13 @@
                 }
             }
 
-            const inputText = document.getElementById("input_text");
-            const resultText = document.getElementById("result_text");
-            const tashkilText = document.getElementById("tashkil_text");
+            const inputText = document.getElementById("inputText");
+            const resultText = document.getElementById("resultText");
+            const tashkilText = document.getElementById("tashkilText");
+
+            document.getElementById("copyResultText").addEventListener("click", function () {
+                copyToClipboard(resultText);
+            });
 
             document.getElementById("execute").addEventListener("click", function () {
                 resultText.value = (function () {
