@@ -14,9 +14,9 @@ export function RunTest (name, data, callback) {
             failed = true;
             console.error("\x1b[31mFailed\x1b[0m:", name);
 
-            console.error("    Given: `", value.In, "`");
-            console.error("    Returned: `", returned, "`");
-            console.error("    Expected: `", value.Out, "`\n");
+            console.error("    Given: `%s`", value.In);
+            console.error("    Returned: `%s`", returned);
+            console.error("    Expected: `%s`\n", value.Out);
             break;
         }
     }
