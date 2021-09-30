@@ -307,9 +307,20 @@ export const ArBasic = {
                 case this.CharacterTable.Comma: // , Latin Comma فاصلة أعجمية.
                 {
                     // استبدال الفاصلة الأعجمية بالعربية.
-                    // 1548 = ، Arabic Comma.
+                    // Replace Latin Comma with Arabic Comma.
                     newStr += String.fromCharCode(this.CharacterTable.ArabicComma);
                     insertSpace = true;
+                    break;
+                }
+
+                case this.CharacterTable.Solidus: // / Solidus شرطة.
+                case this.CharacterTable.ReverseSolidus: // \ Reverse Solidus شرطة معكوسة.
+                {
+                    // استبدال الشرطة المعكوسة بشرطة عادية، مع إزالة المسافات التي قبلها وبعدها.
+                    // Replace Reverse Solidus with Solidus, and remove any spaces before or after it.
+                    newStr += String.fromCharCode(this.CharacterTable.Solidus);
+                    insertSpace = false;
+                    ignoreSpace = true;
                     break;
                 }
 
@@ -344,7 +355,7 @@ export const ArBasic = {
                 case this.CharacterTable.Semicolon: // ; Latin Semicolon فاصلة منقوطة أعجمية.
                 {
                     // استبدال الفاصلة المنقوطة الأعجمية بالعربية.
-                    // 1563 = ؛ Arabic Semicolon.
+                    // Replace Latin Semicolon with Arabic Semicolon.
                     newStr += String.fromCharCode(this.CharacterTable.ArabicSemicolon);
                     insertSpace = true;
                     break;
@@ -354,7 +365,7 @@ export const ArBasic = {
                 case this.CharacterTable.QuestionMark: // ? Latin Question Mark علامة استفهام أعجمية.
                 {
                     // استبدال علامة الاستفهام الأعجمية بالعربية.
-                    // 1567 = ؟ Arabic Question Mark.
+                    // Replace Latin Question Mark with Arabic Question Mark.
                     newStr += String.fromCharCode(this.CharacterTable.ArabicQuestionMark);
                     insertSpace = true;
                     break;
@@ -383,8 +394,8 @@ export const ArBasic = {
                     break;
                 }
 
-                // نقل الفتحتين إلى قبل الألف.
-                // Move Fathatan to be before Alef.
+                // نقل الفتحتين إلى ما قبل الألف.
+                // Move Fathatan to the letter that is before Alef.
                 case this.CharacterTable.Alef:
                 {
                     const s = str[i];
@@ -806,11 +817,13 @@ export const ArBasic = {
         LeftParenthesis: 40, // ( Left Parenthesis بداية القوس.
         RightParenthesis: 41, // ) Right Parenthesis نهاية القوس.
         Dot: 46, // . Dot نقطة.
+        Solidus: 47, // / Solidus شرطة.
         Comma: 44, // , Latin Comma فاصلة أعجمية.
         Colon: 58, // : Colon نقطتان فوق بعص.
         Semicolon: 59, // ; Latin Semicolon فاصلة منقوطة أعجمية.
         QuestionMark: 63, // ? Latin Question Mark علامة استفهام أعجمية.
         LeftSquareParenthesis: 91, // [ Left Square Parenthesis بداية القوس المربع.
+        ReverseSolidus: 92, // \ Reverse Solidus شرطة معكوسة.
         RightSquareParenthesis: 93, // ] Right Square Parenthesis نهاية القوس المربع.
         LeftCurlyBracket: 123, // { Left Curly Bracket بداية القوس المجعد.
         RightCurlyBracket: 125, // } Right Curly Bracket نهاية القوس المجعد.
