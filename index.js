@@ -1,5 +1,2 @@
-const ArBasic = require("./js/ArBasic.js").ArBasic;
-
-module.exports = {
-    ArBasic
-};
+import { ArBasic } from "./js/ArBasic.js";
+export { ArBasic };

@@ -1,6 +1,4 @@
-﻿"use strict";
-
-/**
+﻿/**
  * @Name Arabic library for JavaScript v0.0.1
  * @Source https://github.com/hani-ammar/JSArabicLib
  * @Copyright 2021 Taha Zerrouki, Hani Ammar, and other contributors
@@ -8,7 +6,7 @@
  */
 
 // eslint-disable-next-line no-unused-vars
-const ArBasic = {
+export const ArBasic = {
     /**
      * تأخذ نص وتعيد الكلمات دون تشكيل.
      * كما تأخذ قيمة اختبارية تحدد الاحتفاظ بالشدة من عدمه.
@@ -865,11 +863,3 @@ const ArBasic = {
     //     65189, 65193, 65195, 65197, 65199, 65201, 65205, 65209, 65213, 65217, 65221, 65225,
     //     65241, 65241, 65263, 65263, 65263, 1600, 65229, 65233, 65237, 65241, 65245, 65249, 65253, 65257, 65261, 65263, 65265]
 };
-
-// كي يمكن استخدام المِلَفّ مع المتصفح
-// To allow this file to be used inside a browser.
-if (typeof module !== "undefined") {
-    module.exports = {
-        ArBasic
-    };
-}

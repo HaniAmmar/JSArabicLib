@@ -57,8 +57,9 @@
         </fieldset>
     </div>
 
-    <script>
-        "use strict";
+    <script type="module">
+        import { ArBasic } from "./js/ArBasic.js";
+
         window.onload = function () {
             const ops = document.getElementsByName("options");
             const tashkilFieldset = document.getElementById("tashkil_fieldset");
@@ -90,50 +91,44 @@
                 }
             }
 
-            const jsElement = document.createElement("script");
-            jsElement.src = "js/ArBasic.js";
-            jsElement.onload = function () {
-                const inputText = document.getElementById("input_text");
-                const resultText = document.getElementById("result_text");
-                const tashkilText = document.getElementById("tashkil_text");
+            const inputText = document.getElementById("input_text");
+            const resultText = document.getElementById("result_text");
+            const tashkilText = document.getElementById("tashkil_text");
 
-                document.getElementById("execute").addEventListener("click", function () {
-                    resultText.value = (function () {
-                        switch (selectedOP) {
-                            case 0:
-                                return ArBasic.ImproveText(inputText.value);
-                            case 1:
-                            case 3:
-                                return ArBasic.RemoveTashkil(inputText.value, (selectedOP === 3));
-                            case 2:
-                                return ArBasic.ReduceTashkil(inputText.value);
-                            case 4:
-                            case 5:
-                                return ArBasic.LastTashkil(inputText.value, (selectedOP === 4));
-                            case 6:
-                                return ArBasic.RemoveTatweel(inputText.value);
-                            case 8:
-                                {
-                                    const ret = ArBasic.EncodeTashkil(inputText.value);
-                                    tashkilText.value = ret.EncodedTashkil;
-                                    return ret.StrippedText;
-                                }
-                            case 9:
-                                return ArBasic.DecodeTashkil(inputText.resultText, tashkilText.value);
-                            case 10:
-                                return ArBasic.SeparateLamAlef(inputText.value);
-                            case 11:
-                                return ArBasic.UnifyLetters(inputText.value);
-                            case 12:
-                                return ArBasic.SimplifyText(inputText.value);
-                            default:
-                                return "";
-                        }
-                    })();
-                });
-            };
-
-            document.body.appendChild(jsElement);
+            document.getElementById("execute").addEventListener("click", function () {
+                resultText.value = (function () {
+                    switch (selectedOP) {
+                        case 0:
+                            return ArBasic.ImproveText(inputText.value);
+                        case 1:
+                        case 3:
+                            return ArBasic.RemoveTashkil(inputText.value, (selectedOP === 3));
+                        case 2:
+                            return ArBasic.ReduceTashkil(inputText.value);
+                        case 4:
+                        case 5:
+                            return ArBasic.LastTashkil(inputText.value, (selectedOP === 4));
+                        case 6:
+                            return ArBasic.RemoveTatweel(inputText.value);
+                        case 8:
+                            {
+                                const ret = ArBasic.EncodeTashkil(inputText.value);
+                                tashkilText.value = ret.EncodedTashkil;
+                                return ret.StrippedText;
+                            }
+                        case 9:
+                            return ArBasic.DecodeTashkil(inputText.resultText, tashkilText.value);
+                        case 10:
+                            return ArBasic.SeparateLamAlef(inputText.value);
+                        case 11:
+                            return ArBasic.UnifyLetters(inputText.value);
+                        case 12:
+                            return ArBasic.SimplifyText(inputText.value);
+                        default:
+                            return "";
+                    }
+                })();
+            });
         };
     </script>
 </body>
