@@ -41,7 +41,7 @@ textarea {
 
 button {
     font-family: var(--main-font-family);
-    display: block;
+    display: inline-block;
     text-align: center;
     color: darkcyan;
     font-size: 100%;
