@@ -12,6 +12,12 @@
         url("../fonts/uthman_b.ttf") format("truetype");
 }
 
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
 :root {
     --main-font-family: "KFGQPC Uthman Taha Naskh", Tahoma, Verdana, sans-serif;
 }
@@ -20,7 +26,7 @@ body {
     font-family: var(--main-font-family);
     font-size: 150%;
     background-color: teal;
-    color: white;
+    color: snow;
     line-height: 1.2em;
 }
 
@@ -37,6 +43,20 @@ textarea {
     padding: 0.2em;
     margin: 0;
     width: 95%;
+    background-color: aliceblue;
+    border: 0.1em solid snow;
+}
+
+textarea::selection {
+    background-color: rgb(100, 167, 167);
+}
+
+textarea:focus {
+    background-color: rgb(220, 235, 248);
+}
+
+input[type="radio"]:checked + label {
+    font-weight: bold;
 }
 
 button {
@@ -50,6 +70,11 @@ button {
     border-radius: 0.4em;
     padding: 0.4em;
     margin: 0.5em 0 0 0.5em;
+    background-color: aliceblue;
+}
+
+button:hover {
+    background-color: rgb(207, 222, 230);
 }
 
 #main {
