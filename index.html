@@ -40,7 +40,7 @@
 
         <fieldset id="textFieldset">
             <legend>النص:</legend>
-            <textarea rows="3"
+            <textarea rows="3" placeholder="اكتب النص هنا."
                 id="inputText">   ذَهَـــبَ           زَيْــــدٌ إِلَى اَلـسُّوقِ فَلَمْ يَعْثُرْ عَلَى . . . . مَا كَانَ يُرِيدُ , وَكَانَ الْـجَوُّ حِينَهَا جَمِيلاً , وَ     الـسَّمَاءُ صَافِيَةً،والْهَوَاءُ نَقِيًا  ; فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ عند مكان اسمه  : " الجُرْف " . </textarea>
             <button id="execute">تنفيذ</button>
             <button id="clearInputText">تفريغ الحقل</button>
@@ -113,6 +113,10 @@
             });
 
             document.getElementById("execute").addEventListener("click", function () {
+                if (inputText.value.length === 0) {
+                    return;
+                }
+
                 resultText.value = (function () {
                     switch (selectedOP) {
                         case 0:
