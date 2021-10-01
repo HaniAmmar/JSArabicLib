@@ -113,10 +113,6 @@
             });
 
             document.getElementById("execute").addEventListener("click", function () {
-                if (inputText.value.length === 0) {
-                    return;
-                }
-
                 resultText.value = (function () {
                     switch (selectedOP) {
                         case 0:

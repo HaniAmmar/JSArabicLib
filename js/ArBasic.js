@@ -128,7 +128,7 @@ export const ArBasic = {
         if (len < 3) {
             // يجب أن يكون طول النص 3 أحرف كحدٍ أقل.
             // String has to be at least 3 characters in length.
-            return;
+            return "";
         }
 
         let bcc = str.charCodeAt(0); // Previous letter الحرف السابق.
