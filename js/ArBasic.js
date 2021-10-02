@@ -1,7 +1,7 @@
 ﻿/**
  * @Name Arabic library for JavaScript v0.0.1
  * @Source https://github.com/hani-ammar/JSArabicLib
- * @Copyright 2021 Taha Zerrouki, Hani Ammar, and other contributors
+ * @Copyright 2021 Hani Ammar, Taha Zerrouki, and other contributors
  * @License MIT license https://opensource.org/licenses/MIT
  */
 

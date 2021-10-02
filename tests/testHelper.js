@@ -22,6 +22,6 @@ export function RunTest (name, data, callback) {
     }
 
     if (!(failed)) {
-        console.info("\x1b[32mPassed\x1b[0m", name);
+        console.info("\x1b[32mPass\x1b[0m:", name);
     }
 };
