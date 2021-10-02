@@ -255,9 +255,9 @@ export const ArBasic = {
         let newStr = "";
         let bcc = 0;
 
-        if (len === 1) {
+        if (len < 2) {
             // يجب أن يكون النص أطول من حرف.
-            // String length has to be longer than 1.
+            // String length has to be bigger than 1.
             return str;
         }
 
