@@ -7,6 +7,16 @@
 
 export const ArBasic = {
     /**
+     * تحذف التطويل من الكلمات.
+     * Removes Tatweel form words ـ .
+     * @param {string} str
+     * @returns {string}
+     */
+    RemoveTatweel: function (str) {
+        return str.replaceAll(String.fromCharCode(this.CharacterTable.Tatweel), "");
+    },
+
+    /**
      * تأخذ نص وتعيد الكلمات دون تشكيل.
      * كما تأخذ قيمة اختبارية تحدد الاحتفاظ بالشدة من عدمه.
      * Takes string and returns every word without Tashkil.
@@ -16,99 +26,20 @@ export const ArBasic = {
      * @returns {string}
      */
     RemoveTashkil: function (str, keepShadda = false) {
-        let tashkil = String.fromCharCode(
-            this.CharacterTable.Fathatan,
-            this.CharacterTable.Dammatan,
-            this.CharacterTable.Kasratan,
-            this.CharacterTable.Fatha,
-            this.CharacterTable.Damma,
-            this.CharacterTable.Kasra,
-            this.CharacterTable.Sukun);
+        let tashkil =
+            this.CharacterTable2.Fathatan +
+            this.CharacterTable2.Dammatan +
+            this.CharacterTable2.Kasratan +
+            this.CharacterTable2.Fatha +
+            this.CharacterTable2.Damma +
+            this.CharacterTable2.Kasra +
+            this.CharacterTable2.Sukun;
 
         if (!(keepShadda)) {
-            tashkil += String.fromCharCode(this.CharacterTable.Shadda);
+            tashkil += this.CharacterTable2.Shadda;
         }
 
         return str.replaceAll(new RegExp(tashkil.split("").join("|"), "g"), "");
-    },
-
-    /**
-     * تعود بلا إذا كان التشكيل آخر الكلمة.
-     * It returns false if Tashkil is at the end of the word.
-     * @param {number} cc
-     * @param {number} bcc
-     * @returns {boolean}
-     */
-    CheckLastTashkilForRemoval: function (cc, bcc) {
-        if ((cc < this.CharacterTable.Hamza) || (cc > this.CharacterTable.HamzaBelow)) {
-            // الرجوع بنعم إذا كان الحرف الحالي ليس عربيًا، وكان السابق ليس من الحركات.
-            // Return true if the current letter is not an Arabic one, and the previous one is not Tashkil.
-            return ((bcc < this.CharacterTable.Fathatan) || (bcc === this.CharacterTable.Shadda));
-        }
-
-        // التنوين لا يكون إلا لآخر حرف في الكلمة، وهذا الشرط يمرر أي حرف غيره.
-        // This condition will make sure that no Tanween is passed, since Tanween is only for the last char ً ٍ ٌ.
-        return ((bcc < this.CharacterTable.Fathatan) || (bcc > this.CharacterTable.Kasratan));
-    },
-
-    /**
-     * تعود بلا إذا كان التشكيل ليس آخر الكلمة.
-     * It returns false if Tashkil is not at the end of the word.
-     * @param {number} cc
-     * @param {number} bcc
-     * @returns {boolean}
-     */
-    CheckLastTashkilForKeeping: function (cc, bcc) {
-        return ((cc < this.CharacterTable.Hamza) ||
-                (cc > this.CharacterTable.HamzaBelow) ||
-                (bcc < this.CharacterTable.Fatha) ||
-                (bcc === this.CharacterTable.Shadda));
-    },
-
-    /**
-     * تزيل التشكيل الأخير لجميع الكلمات في نص معطى في حال كان المتغير الثاني remove قيمته true,
-     * عدا ذلك فإنها تبقي التشكيل الأخير للكلمات.
-     * It removes the last Tashkil for every word in a given string if “remove” is set to true,
-     * otherwise if keeps only the last Tashkil.
-     * @param {string} str
-     * @param {boolean} [remove=true]
-     * @returns {string}
-     */
-    LastTashkil: function (str, remove = true) {
-        const len = str.length;
-        let newStr = "";
-
-        if (len !== 0) {
-            let cc = 0;
-            let y = 0;
-            let bcc = str.charCodeAt(0);
-
-            for (let i = 1; i < len; i++, y++) {
-                cc = str.charCodeAt(i);
-
-                if (remove) {
-                    if (this.CheckLastTashkilForRemoval(cc, bcc)) {
-                        newStr += str[y];
-                    }
-                } else if (this.CheckLastTashkilForKeeping(cc, bcc)) {
-                    newStr += str[y];
-                }
-
-                bcc = cc;
-            }
-
-            // آخر حرف.
-            // last char.
-            if (remove) {
-                if (this.CheckLastTashkilForRemoval(cc, bcc)) {
-                    newStr += str[y];
-                }
-            } else if (this.CheckLastTashkilForKeeping(cc, bcc)) {
-                newStr += str[y];
-            }
-        }
-
-        return newStr;
     },
 
     /**
@@ -229,16 +160,6 @@ export const ArBasic = {
 
         newStr += str[len];
         return newStr;
-    },
-
-    /**
-     * تحذف التطويل من الكلمات.
-     * Removes Tatweel form words ـ .
-     * @param {string} str
-     * @returns {string}
-     */
-    RemoveTatweel: function (str) {
-        return str.replaceAll(String.fromCharCode(this.CharacterTable.Tatweel), "");
     },
 
     /**
@@ -600,34 +521,29 @@ export const ArBasic = {
      * @returns {object} {EncodeTashkil: string, StrippedText: string}
      */
     EncodeTashkil: function (str) {
+        const fathatan = this.CharacterTable2.Fathatan.charCodeAt(0);
         const len = str.length;
-        let isTashkil = false;
-        let tCode = "";
+        let strCode = "";
+        let hasTashkil = false;
+        let hasShadda = false;
+        let tashkilCode = 0;
 
         for (let i = 0; i < len; i++) {
-            const cc = str.charCodeAt(i);
+            const cChar = str[i];
 
-            /**
-             * (UTF-16BE: dec) الحروف العربية في جدول الينيكود هي بين 1569 إلى 1610 حسب الترميز.
-             * Arabic Alphabet in the Unicode table are between 1569 -> 1610 (UTF-16BE: dec).
-             * الحروف المستخدمة في التشكيل هي من 1611 إلى 1618.
-             * Arabic Tashkil letters are from 1611 to 1618.
-             */
-            if ((cc >= this.CharacterTable.Hamza) && (cc <= this.CharacterTable.HamzaBelow)) {
-                let hasShadda = false;
-                let harakhChar = 0;
+            if ((cChar >= this.CharacterTable2.Hamza) && (cChar <= this.CharacterTable2.HamzaBelow)) {
                 let y = (i + 1);
 
                 while (y < len) {
-                    const ncc = str.charCodeAt(y);
+                    const hChar = str[y];
 
-                    if ((ncc >= this.CharacterTable.Fathatan) && (ncc <= this.CharacterTable.Sukun)) {
-                        isTashkil = true;
+                    if ((hChar >= this.CharacterTable2.Fathatan) && (hChar <= this.CharacterTable2.Sukun)) {
+                        hasTashkil = true;
 
-                        if (ncc !== this.CharacterTable.Shadda) {
-                            harakhChar = ncc;
-                        } else {
+                        if (hChar === this.CharacterTable2.Shadda) {
                             hasShadda = true;
+                        } else {
+                            tashkilCode = (str.charCodeAt(y) - fathatan);
                         }
 
                         ++i;
@@ -637,64 +553,33 @@ export const ArBasic = {
 
                     ++y;
                 }
+            }
 
-                if (isTashkil) {
-                    let code = 0;
+            if (!(hasTashkil)) {
+                strCode += "0";
+            } else {
+                if (hasShadda) {
+                    hasShadda = false;
 
-                    switch (harakhChar) {
-                        case this.CharacterTable.Fathatan: //  ً Arabic Fathatan فتحتان.
-                            code = 97; // a
-                            break;
-
-                        case this.CharacterTable.Dammatan: //  ٌ Arabic Dammatan ضمتان.
-                            code = 98; // b
-                            break;
-
-                        case this.CharacterTable.Kasratan: //  ٍ Arabic Kasratan كسرتان.
-                            code = 99; // c
-                            break;
-
-                        case this.CharacterTable.Fatha: //  َ Arabic Fatha فَتحة.
-                            code = 100; // d
-                            break;
-
-                        case this.CharacterTable.Damma: //  ُ Arabic Damma ضمة.
-                            code = 101; // e
-                            break;
-
-                        case this.CharacterTable.Kasra: //  ِ Arabic Kasra كسرة.
-                            code = 102; // f
-                            break;
-
-                        case this.CharacterTable.Sukun: //  ْ Arabic Sukun سكون.
-                            code = 103; // g
-                            break;
-
-                        default:
+                    if (tashkilCode === 0) {
+                        strCode += "g";
+                    } else {
+                        // 64 is "A"; ASCII
+                        strCode += String.fromCharCode(tashkilCode + 65);
                     }
-
-                    if (code !== 0) {
-                        if (hasShadda && (code !== this.CharacterTable.Sukun)) {
-                            // 32 (A و a) عدد الحروف بين.
-                            // 32 Number of letters between A and a.
-                            code -= 32;
-                        }
-                    } else if (hasShadda) {
-                        code = 87; // W
-                    }
-
-                    tCode += String.fromCharCode(code);
+                } else {
+                    // 97 is "a"; ASCII
+                    strCode += String.fromCharCode(tashkilCode + 97);
                 }
+
+                tashkilCode = 0;
+                hasTashkil = false;
             }
 
-            if (!isTashkil) {
-                tCode += "0";
-            }
-
-            isTashkil = false;
+            hasTashkil = false;
         }
 
-        return { EncodedTashkil: tCode, StrippedText: this.RemoveTashkil(str, false) };
+        return { EncodedTashkil: strCode, StrippedText: this.RemoveTashkil(str, false) };
     },
 
     /**
@@ -712,42 +597,18 @@ export const ArBasic = {
             newStr += str[i];
 
             let tCode = tashkilCode.charCodeAt(i);
+            const capitalChar = ((tCode >= 65) && (tCode <= 71));
 
-            if ((tCode < 97) && (tCode >= 65)) {
-                newStr += String.fromCharCode(this.CharacterTable.Shadda);
-                tCode += 32;
-            }
+            // a-h or A-G
+            if (capitalChar || ((tCode >= 97) && (tCode <= 104))) {
+                if (capitalChar) {
+                    newStr += this.CharacterTable2.Shadda;
+                    tCode -= 65;
+                } else {
+                    tCode -= 97;
+                }
 
-            switch (tCode) {
-                case 97:
-                    newStr += String.fromCharCode(this.CharacterTable.Fathatan);
-                    break;
-
-                case 98:
-                    newStr += String.fromCharCode(this.CharacterTable.Dammatan);
-                    break;
-
-                case 99:
-                    newStr += String.fromCharCode(this.CharacterTable.Kasratan);
-                    break;
-
-                case 100:
-                    newStr += String.fromCharCode(this.CharacterTable.Fatha);
-                    break;
-
-                case 101:
-                    newStr += String.fromCharCode(this.CharacterTable.Damma);
-                    break;
-
-                case 102:
-                    newStr += String.fromCharCode(this.CharacterTable.Kasra);
-                    break;
-
-                case 103:
-                    newStr += String.fromCharCode(this.CharacterTable.Sukun);
-                    break;
-
-                default:
+                newStr += this.EncodedTashkilTable[tCode];
             }
         }
 
@@ -805,5 +666,31 @@ export const ArBasic = {
         LamAlefHamzaBelowCombined: 65273, // ﻹ Arabic Letter Lam with Alef with Hamza Below (combined Form) لام مدمجة مع ألف فوقها همزة.
         QuotationMarkLeftDouble: 8220, // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
         QuotationMarkRightDouble: 8221 // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
-    }
+    },
+
+    CharacterTable2: {
+        Hamza: "\u0621", // ء Arabic Letter Hamza همزة.
+
+        Fathatan: "\u064B", //  ً Arabic Fathatan فتحتان.
+        Dammatan: "\u064C", //  ٌ Arabic Dammatan ضمتان.
+        Kasratan: "\u064D", //  ٍ Arabic Kasratan كسرتان.
+        Fatha: "\u064E", //  َ Arabic Fatha فَتحة.
+        Damma: "\u064F", //  ُ Arabic Damma ضمة.
+        Kasra: "\u0650", //  ِ Arabic Kasra كسرة.
+        Shadda: "\u0651", //  ّ Arabic Shadda شدّة.
+        Sukun: "\u0652", //  ْ Arabic Sukun سكون.
+
+        HamzaBelow: "\u0655" //  ٕ Arabic Hamza Below همزة سفلية.
+    },
+
+    EncodedTashkilTable: [
+        "\u064B", //  ً Arabic Fathatan فتحتان.
+        "\u064C", //  ٌ Arabic Dammatan ضمتان.
+        "\u064D", //  ٍ Arabic Kasratan كسرتان.
+        "\u064E", //  َ Arabic Fatha فَتحة.
+        "\u064F", //  ُ Arabic Damma ضمة.
+        "\u0650", //  ِ Arabic Kasra كسرة.
+        "\u0651", //  ّ Arabic Shadda شدّة.
+        "\u0652" //  ْ Arabic Sukun سكون.
+    ]
 };

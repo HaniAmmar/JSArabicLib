@@ -12,30 +12,26 @@
     <div id="main">
         <fieldset class="options">
             <legend>الخيارات:</legend>
-            <input type="radio" id="improveText" name="options" value="0" checked="checked" />
+            <input type="radio" id="improveText" name="options" value="1" checked="checked" />
             <label for="improveText">تحسين النص.</label>
-            <input type="radio" id="removeAllTashkil" name="options" value="1" />
-            <label for="removeAllTashkil">إزالة كامل التشكيل.</label>
             <input type="radio" id="reduceTashkil" name="options" value="2" />
             <label for="reduceTashkil">تخفيف التشكيل.</label>
-            <input type="radio" id="removeTashkilKeepShadda" name="options" value="3" />
+            <input type="radio" id="removeAllTashkil" name="options" value="3" />
+            <label for="removeAllTashkil">إزالة كامل التشكيل.</label>
+            <input type="radio" id="removeTashkilKeepShadda" name="options" value="4" />
             <label for="removeTashkilKeepShadda">إزالة التشكيل عدا الشدة.</label>
-            <input type="radio" id="removeLastTashkil" name="options" value="4" />
-            <label for="removeLastTashkil">إزالة تشكيل آخر حرف.</label>
-            <input type="radio" id="keepLastTashkilOnly" name="options" value="5" />
-            <label for="keepLastTashkilOnly">إبقاء تشكيل الحرف الأخير.</label>
-            <input type="radio" id="removeTatweel" name="options" value="6" />
+            <input type="radio" id="removeTatweel" name="options" value="5" />
             <label for="removeTatweel">إزالة التطويل.</label>
-            <input type="radio" id="encodeTashkil" name="options" value="8" />
-            <label for="encodeTashkil">ترميز التشكيل.</label>
-            <input type="radio" id="decodeTashkil" name="options" value="9" />
-            <label for="decodeTashkil">دمج التشكيل.</label>
-            <input type="radio" id="separateLamAlef" name="options" value="10" />
+            <input type="radio" id="separateLamAlef" name="options" value="6" />
             <label for="separateLamAlef">فصل اللام عن الألف.</label>
-            <input type="radio" id="unifyLetters" name="options" value="11" />
+            <input type="radio" id="unifyLetters" name="options" value="7" />
             <label for="unifyLetters">توحيد الحروف.</label>
-            <input type="radio" id="simplifyText" name="options" value="12" />
+            <input type="radio" id="simplifyText" name="options" value="8" />
             <label for="simplifyText">تبسيط النص.</label>
+            <input type="radio" id="encodeTashkil" name="options" value="9" />
+            <label for="encodeTashkil">ترميز التشكيل.</label>
+            <input type="radio" id="decodeTashkil" name="options" value="10" />
+            <label for="decodeTashkil">دمج التشكيل.</label>
         </fieldset>
 
         <fieldset id="textFieldset">
@@ -80,8 +76,8 @@
 
             function CheckTashkilFieldsetDisplay(selectedOP) {
                 switch (selectedOP) {
-                    case 8:
                     case 9:
+                    case 10:
                         tashkilFieldset.style.display = "block";
                         break;
                     default:
@@ -114,41 +110,37 @@
 
             document.getElementById("execute").addEventListener("click", function () {
                 switch (selectedOP) {
-                    case 0:
-                        resultText.value = ArBasic.ImproveText(inputText.value);
-                        break;
                     case 1:
-                    case 3:
-                        resultText.value = ArBasic.RemoveTashkil(inputText.value, (selectedOP === 3));
+                        resultText.value = ArBasic.ImproveText(inputText.value);
                         break;
                     case 2:
                         resultText.value = ArBasic.ReduceTashkil(inputText.value);
                         break;
+                    case 3:
                     case 4:
-                    case 5:
-                        resultText.value = ArBasic.LastTashkil(inputText.value, (selectedOP === 4));
+                        resultText.value = ArBasic.RemoveTashkil(inputText.value, (selectedOP === 4));
                         break;
-                    case 6:
+                    case 5:
                         resultText.value = ArBasic.RemoveTatweel(inputText.value);
                         break;
+                    case 6:
+                        resultText.value = ArBasic.SeparateLamAlef(inputText.value);
+                        break;
+                    case 7:
+                        resultText.value = ArBasic.UnifyLetters(inputText.value);
+                        break;
                     case 8:
+                        resultText.value = ArBasic.SimplifyText(inputText.value);
+                        break;
+                    case 9:
                         {
                             const ret = ArBasic.EncodeTashkil(inputText.value);
                             tashkilText.value = ret.EncodedTashkil;
                             resultText.value = ret.StrippedText;
                             break;
                         }
-                    case 9:
-                        inputText.value = ArBasic.DecodeTashkil(resultText.value, tashkilText.value);
-                        break;
                     case 10:
-                        resultText.value = ArBasic.SeparateLamAlef(inputText.value);
-                        break;
-                    case 11:
-                        resultText.value = ArBasic.UnifyLetters(inputText.value);
-                        break;
-                    case 12:
-                        resultText.value = ArBasic.SimplifyText(inputText.value);
+                        inputText.value = ArBasic.DecodeTashkil(resultText.value, tashkilText.value);
                         break;
                     default:
                         resultText.value = "";
