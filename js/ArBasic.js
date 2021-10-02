@@ -593,40 +593,8 @@ export const ArBasic = {
         return this.UnifyLetters(str);
     },
 
-    // /**
-    //  * تأخذ نص وتعيد أحرف الكلمات منفصلة عن بعضها.
-    //  * Takes string and return words' letters in disconnected form.
-    //  *
-    //  * @param {string} str
-    //  * @returns {string}
-    //  */
-    // DisconnectChars: function (str) {
-    //     const len = str.length;
-    //     let newStr = "";
-
-    //     /**
-    //      * (UTF-16BE: dec) الحروف العربية في جدول الينيكود هي بين 1569 إلى 1610 حسب الترميز.
-    //      * Arabic Alphabet in the Unicode table are between 1569 -> 1610 (UTF-16BE: dec).
-    //      */
-    //     for (let i = 0; i < len; i++) {
-    //         const cc = str.charCodeAt(i);
-
-    //         if ((cc >= this.CharacterTable.Hamza) && (cc <= this.CharacterTable.Yeh)) {
-    //             // بحكم أن المصفوفة تبدأ من العدد 0، يطرح 1569 من رقم الحرف؛ للوصول إلى هيئة الحرف المستقلة.
-    //             // Because arrays starts from 0, subtract 1569 from char code; to match the index of isolated form.
-    //             if (cc !== this.CharacterTable.Tatweel) { // تخطي التطويل.
-    //                 newStr += String.fromCharCode(this.IsolatedForms[(cc - this.CharacterTable.Hamza)]);
-    //             }
-    //         } else {
-    //             newStr += str[i];
-    //         }
-    //     }
-
-    //     return newStr;
-    // },
-
     /**
-     * تفصل التشيكل عن النص، وتعيد النص مع التشكيل مرمزًا.
+     * تفصل التشيكل عن النص، وتعيد النص مع رمز التشكيل.
      * Separates text from Tashkil, and returns text with encoded Tashkil.
      * @param {string} str
      * @returns {object} {EncodeTashkil: string, StrippedText: string}
@@ -729,6 +697,63 @@ export const ArBasic = {
         return { EncodedTashkil: tCode, StrippedText: this.RemoveTashkil(str, false) };
     },
 
+    /**
+     * تفصل التشيكل عن النص، وتعيد النص مع رمز التشكيل.
+     * Separates text from Tashkil, and returns text with encoded Tashkil.
+     * @param {string} str
+     * @param {string} tashkilCode
+     * @returns {string}
+     */
+    DecodeTashkil: function (str, tashkilCode) {
+        const len = Math.min(str.length, str.length);
+        let newStr = "";
+
+        for (let i = 0; i < len; i++) {
+            newStr += str[i];
+
+            let tCode = tashkilCode.charCodeAt(i);
+
+            if ((tCode < 97) && (tCode >= 65)) {
+                newStr += String.fromCharCode(this.CharacterTable.Shadda);
+                tCode += 32;
+            }
+
+            switch (tCode) {
+                case 97:
+                    newStr += String.fromCharCode(this.CharacterTable.Fathatan);
+                    break;
+
+                case 98:
+                    newStr += String.fromCharCode(this.CharacterTable.Dammatan);
+                    break;
+
+                case 99:
+                    newStr += String.fromCharCode(this.CharacterTable.Kasratan);
+                    break;
+
+                case 100:
+                    newStr += String.fromCharCode(this.CharacterTable.Fatha);
+                    break;
+
+                case 101:
+                    newStr += String.fromCharCode(this.CharacterTable.Damma);
+                    break;
+
+                case 102:
+                    newStr += String.fromCharCode(this.CharacterTable.Kasra);
+                    break;
+
+                case 103:
+                    newStr += String.fromCharCode(this.CharacterTable.Sukun);
+                    break;
+
+                default:
+            }
+        }
+
+        return newStr;
+    },
+
     CharacterTable: {
         Space: 32, // Space مسافة.
         ExclamationMark: 33, // ! Exclamation Mark علامة تعجب.
@@ -781,17 +806,4 @@ export const ArBasic = {
         QuotationMarkLeftDouble: 8220, // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
         QuotationMarkRightDouble: 8221 // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
     }
-
-    /**
-     *  ﺀ ﺁ ﺃ ﺅ ﺇ ﺉ ﺍ ﺏ ﺓ ﺕ ﺙ ﺝ ﺡ ﺥ ﺩ ﺭ ﺯ ﺱ ﺵ ﺹ ﺽ ﻁ ﻅ ﻉ ﻍ ﻑ ﻕ ﻙ ﻝ ﻡ ﻥ ﻩ ﻭ ﻯ ﻱ
-     * 1600 = ـ مدّة
-     * ػ = ﻙ
-     * ؼ = ﻙ
-     * ﻯ = ؽ ؾ ؿ
-     * قائمة بالحروف العربية التي لا تتصل ببعضها.
-     * List of Arabic character in uncontactable form.
-     */
-    // IsolatedForms: [65152, 65153, 65155, 65157, 65159, 65161, 65165, 65167, 65171, 65173, 65177, 65181, 65185,
-    //     65189, 65193, 65195, 65197, 65199, 65201, 65205, 65209, 65213, 65217, 65221, 65225,
-    //     65241, 65241, 65263, 65263, 65263, 1600, 65229, 65233, 65237, 65241, 65245, 65249, 65253, 65257, 65261, 65263, 65265]
 };
