@@ -13,7 +13,7 @@ export const ArBasic = {
      * @returns {string}
      */
     RemoveTatweel: function (str) {
-        return str.replaceAll(String.fromCharCode(this.CharacterTable.Tatweel), "");
+        return str.replaceAll(this.CharacterTable.Tatweel, "");
     },
 
     /**
@@ -27,16 +27,16 @@ export const ArBasic = {
      */
     RemoveTashkil: function (str, keepShadda = false) {
         let tashkil =
-            this.CharacterTable2.Fathatan +
-            this.CharacterTable2.Dammatan +
-            this.CharacterTable2.Kasratan +
-            this.CharacterTable2.Fatha +
-            this.CharacterTable2.Damma +
-            this.CharacterTable2.Kasra +
-            this.CharacterTable2.Sukun;
+            this.CharacterTable.Fathatan +
+            this.CharacterTable.Dammatan +
+            this.CharacterTable.Kasratan +
+            this.CharacterTable.Fatha +
+            this.CharacterTable.Damma +
+            this.CharacterTable.Kasra +
+            this.CharacterTable.Sukun;
 
         if (!(keepShadda)) {
-            tashkil += this.CharacterTable2.Shadda;
+            tashkil += this.CharacterTable.Shadda;
         }
 
         return str.replaceAll(new RegExp(tashkil.split("").join("|"), "g"), "");
@@ -58,12 +58,12 @@ export const ArBasic = {
             return "";
         }
 
-        let bcc = str.charCodeAt(0); // Previous letter الحرف السابق.
-        let cc = str.charCodeAt(1); // Current char الحرف الحالي.
-        newStr += str[0];
+        let bcc = str[0]; // Previous letter الحرف السابق.
+        let cc = str[1]; // Current char الحرف الحالي.
+        newStr += bcc;
 
         for (let i = 1, y = 2; i < len; i++, y++) {
-            const ncc = str.charCodeAt(y); // Next char الحرف التالي.
+            const ncc = str[y]; // Next char الحرف التالي.
 
             switch (cc) {
                 case this.CharacterTable.Fatha: //  َ Fatha فَتحة.
@@ -82,7 +82,7 @@ export const ArBasic = {
                             case this.CharacterTable.WawHamzaAbove:
                             case this.CharacterTable.Yeh:
                             {
-                                const bbcc = str.charCodeAt(i - 2);
+                                const bbcc = str[i - 2];
 
                                 if (((bbcc >= this.CharacterTable.Hamza) && (bbcc <= this.CharacterTable.HamzaBelow)) &&
                                      (ncc !== this.CharacterTable.Alef) && (ncc !== this.CharacterTable.AlefHamzaAbove)) {
@@ -174,7 +174,7 @@ export const ArBasic = {
         let quotatStart = false;
         let ignoreSpace = true;
         let newStr = "";
-        let bcc = 0;
+        let bcc = "";
 
         if (len < 2) {
             // يجب أن يكون النص أطول من حرف.
@@ -183,7 +183,7 @@ export const ArBasic = {
         }
 
         for (let i = 0; i < len; i++) {
-            const cc = str.charCodeAt(i);
+            const cc = str[i];
 
             switch (cc) {
                 case this.CharacterTable.Space:
@@ -203,7 +203,7 @@ export const ArBasic = {
                 {
                     // استبدال الفاصلة الأعجمية بالعربية.
                     // Replace Latin Comma with Arabic Comma.
-                    newStr += String.fromCharCode(this.CharacterTable.ArabicComma);
+                    newStr += this.CharacterTable.ArabicComma;
                     insertSpace = true;
                     break;
                 }
@@ -213,7 +213,7 @@ export const ArBasic = {
                 {
                     // استبدال الشرطة المعكوسة بشرطة عادية، مع إزالة المسافات التي قبلها وبعدها.
                     // Replace Reverse Solidus with Solidus, and remove any spaces before or after it.
-                    newStr += String.fromCharCode(this.CharacterTable.Solidus);
+                    newStr += this.CharacterTable.Solidus;
                     insertSpace = false;
                     ignoreSpace = true;
                     break;
@@ -226,7 +226,7 @@ export const ArBasic = {
                     // إضافة مسافة قبل الأقواس.
                     // Add space before ( { [.
                     if (!(ignoreSpace)) {
-                        newStr += String.fromCharCode(this.CharacterTable.Space);
+                        newStr += this.CharacterTable.Space;
                     }
 
                     newStr += str[i];
@@ -251,7 +251,7 @@ export const ArBasic = {
                 {
                     // استبدال الفاصلة المنقوطة الأعجمية بالعربية.
                     // Replace Latin Semicolon with Arabic Semicolon.
-                    newStr += String.fromCharCode(this.CharacterTable.ArabicSemicolon);
+                    newStr += this.CharacterTable.ArabicSemicolon;
                     insertSpace = true;
                     break;
                 }
@@ -261,7 +261,7 @@ export const ArBasic = {
                 {
                     // استبدال علامة الاستفهام الأعجمية بالعربية.
                     // Replace Latin Question Mark with Arabic Question Mark.
-                    newStr += String.fromCharCode(this.CharacterTable.ArabicQuestionMark);
+                    newStr += this.CharacterTable.ArabicQuestionMark;
                     insertSpace = true;
                     break;
                 }
@@ -273,7 +273,7 @@ export const ArBasic = {
                     if (!quotatStart) {
                         // إضافة مسافة في بداية أي اقتباس.
                         // Add a space before the start of any quote.
-                        newStr += String.fromCharCode(this.CharacterTable.Space);
+                        newStr += this.CharacterTable.Space;
                     }
 
                     // منع إضافة مسافة بعد بداية الاقتباس.
@@ -284,7 +284,7 @@ export const ArBasic = {
 
                     // استبدال علامات الاقتباس الأعجمي بعلامة الاقتباس العادي.
                     // 34 = " Quotation Mark.
-                    newStr += String.fromCharCode(this.CharacterTable.QuotationMark);
+                    newStr += this.CharacterTable.QuotationMark;
 
                     break;
                 }
@@ -300,8 +300,8 @@ export const ArBasic = {
                     if (!(insertSpace)) {
                         const y = (i + 1);
 
-                        if ((y < len) && (str.charCodeAt(y) === this.CharacterTable.Fathatan)) {
-                            newStr += String.fromCharCode(this.CharacterTable.Fathatan);
+                        if ((y < len) && (str[y] === this.CharacterTable.Fathatan)) {
+                            newStr += this.CharacterTable.Fathatan;
                             ++i;
                         }
 
@@ -310,7 +310,7 @@ export const ArBasic = {
                         // "لإصلاح مشكلة عند تحسين الجملة: "واو أو ياء.
                         ignoreSpace = false;
                     } else if (!(ignoreSpace)) {
-                        newStr += String.fromCharCode(this.CharacterTable.Space);
+                        newStr += this.CharacterTable.Space;
                         insertSpace = false;
                     }
 
@@ -326,7 +326,7 @@ export const ArBasic = {
                     let keepTatweel = false;
 
                     while (y < len) {
-                        const ncc = str.charCodeAt(y);
+                        const ncc = str[y];
 
                         // عدم إزالة المدة إذا كانت آخر الكلمة.
                         // Don't remove Tatweel if it's at the end of the word.
@@ -346,7 +346,7 @@ export const ArBasic = {
                     i = (y - 1);
 
                     if (keepTatweel) {
-                        newStr += String.fromCharCode(this.CharacterTable.Tatweel);
+                        newStr += this.CharacterTable.Tatweel;
                     }
 
                     break;
@@ -360,7 +360,7 @@ export const ArBasic = {
                     // التحقق من النقاط المتكررة
                     // Checking for repeated dots.
                     while (y < len) {
-                        const ncc = str.charCodeAt(y);
+                        const ncc = str[y];
 
                         if (ncc !== this.CharacterTable.Space) {
                             if (ncc !== this.CharacterTable.Dot) {
@@ -373,8 +373,6 @@ export const ArBasic = {
                         ++y;
                     }
 
-                    const s = str[i]; // Dot النقطة.
-
                     if (repeatedDots) {
                         // تمكين إضافة مسافة بعد النقط إن لم يكن بعدها اقتباس.
                         // Enable adding a space after dots if what's after them is not quotation mark.
@@ -385,18 +383,18 @@ export const ArBasic = {
                         if ((bcc !== this.CharacterTable.QuotationMark) &&
                             (bcc !== this.CharacterTable.QuotationMarkLeftDouble) &&
                             (bcc !== this.CharacterTable.QuotationMarkRightDouble)) {
-                            newStr += String.fromCharCode(this.CharacterTable.Space);
+                            newStr += this.CharacterTable.Space;
                         }
 
-                        newStr += s;
-                        newStr += s;
+                        newStr += this.CharacterTable.Dot;
+                        newStr += this.CharacterTable.Dot;
 
                         // تقدم إلى آخر مسافة أو نقطة.
                         // Advanced to the last space or dot.
                         i = (y - 1);
                     }
 
-                    newStr += s;
+                    newStr += this.CharacterTable.Dot;
                     insertSpace = true;
                     break;
                 }
@@ -413,7 +411,7 @@ export const ArBasic = {
                     // تخطي المسافات بعد واو العطف.
                     // Skip spaces after Waw that behaves like "and".
                     if (insertSpace) {
-                        newStr += String.fromCharCode(this.CharacterTable.Space);
+                        newStr += this.CharacterTable.Space;
                         ignoreSpace = true;
                         insertSpace = false;
                     }
@@ -430,7 +428,7 @@ export const ArBasic = {
                              (cc !== this.CharacterTable.ExclamationMark))) {
                             // عدم إضافة مسافة بين علامة التعجب والاستفهام.
                             // Don't add space between ! and ?.
-                            newStr += String.fromCharCode(this.CharacterTable.Space);
+                            newStr += this.CharacterTable.Space;
                         }
 
                         insertSpace = false;
@@ -446,7 +444,7 @@ export const ArBasic = {
                 }
             }
 
-            bcc = cc;
+            bcc = str[i];
         }
 
         return this.SeparateLamAlef(newStr);
@@ -459,14 +457,14 @@ export const ArBasic = {
      * @returns {string}
      */
     SeparateLamAlef: function (str) {
-        str = str.replaceAll(String.fromCharCode(this.CharacterTable.LamAlefCombined),
-            String.fromCharCode(this.CharacterTable.Lam, this.CharacterTable.Alef));
-        str = str.replaceAll(String.fromCharCode(this.CharacterTable.LamAlefMaddaAboveCombined),
-            String.fromCharCode(this.CharacterTable.Lam, this.CharacterTable.AlefMaddaAbove));
-        str = str.replaceAll(String.fromCharCode(this.CharacterTable.LamAlefHamzaAboveCombined),
-            String.fromCharCode(this.CharacterTable.Lam, this.CharacterTable.AlefHamzaAbove));
-        return str.replaceAll(String.fromCharCode(this.CharacterTable.LamAlefHamzaBelowCombined),
-            String.fromCharCode(this.CharacterTable.Lam, this.CharacterTable.AlefHamzaBelow));
+        str = str.replaceAll(this.CharacterTable.LamAlefCombined,
+            this.CharacterTable.Lam + this.CharacterTable.Alef);
+        str = str.replaceAll(this.CharacterTable.LamAlefMaddaAboveCombined,
+            this.CharacterTable.Lam + this.CharacterTable.AlefMaddaAbove);
+        str = str.replaceAll(this.CharacterTable.LamAlefHamzaAboveCombined,
+            this.CharacterTable.Lam + this.CharacterTable.AlefHamzaAbove);
+        return str.replaceAll(this.CharacterTable.LamAlefHamzaBelowCombined,
+            this.CharacterTable.Lam + this.CharacterTable.AlefHamzaBelow);
     },
 
     /**
@@ -481,24 +479,24 @@ export const ArBasic = {
      * @returns {string}
      */
     UnifyLetters: function (str) {
-        str = str.replaceAll(String.fromCharCode(this.CharacterTable.TehMarbuta), String.fromCharCode(this.CharacterTable.Heh));
-        str = str.replaceAll(String.fromCharCode(this.CharacterTable.AlefMaksura), String.fromCharCode(this.CharacterTable.Yeh));
+        str = str.replaceAll(this.CharacterTable.TehMarbuta, this.CharacterTable.Heh);
 
-        const AlefG = String.fromCharCode(
-            this.CharacterTable.AlefMaddaAbove,
-            this.CharacterTable.AlefHamzaAbove,
-            this.CharacterTable.AlefHamzaBelow,
-            this.CharacterTable.MaddaAbove,
-            this.CharacterTable.HamzaAbove,
-            this.CharacterTable.HamzaBelow);
+        const AlefG =
+            this.CharacterTable.AlefMaksura +
+            this.CharacterTable.AlefMaddaAbove +
+            this.CharacterTable.AlefHamzaAbove +
+            this.CharacterTable.AlefHamzaBelow +
+            this.CharacterTable.MaddaAbove +
+            this.CharacterTable.HamzaAbove +
+            this.CharacterTable.HamzaBelow;
 
-        str = str.replaceAll(new RegExp(AlefG.split("").join("|"), "g"), String.fromCharCode(this.CharacterTable.Alef));
+        str = str.replaceAll(new RegExp(AlefG.split("").join("|"), "g"), this.CharacterTable.Alef);
 
-        const HamzaG = String.fromCharCode(
-            this.CharacterTable.WawHamzaAbove,
-            this.CharacterTable.YehHamzaAbove);
+        const HamzaG =
+            this.CharacterTable.WawHamzaAbove +
+            this.CharacterTable.YehHamzaAbove;
 
-        return str.replaceAll(new RegExp(HamzaG.split("").join("|"), "g"), String.fromCharCode(this.CharacterTable.Hamza));
+        return str.replaceAll(new RegExp(HamzaG.split("").join("|"), "g"), this.CharacterTable.Hamza);
     },
 
     /**
@@ -521,7 +519,7 @@ export const ArBasic = {
      * @returns {object} {EncodeTashkil: string, StrippedText: string}
      */
     EncodeTashkil: function (str) {
-        const fathatan = this.CharacterTable2.Fathatan.charCodeAt(0);
+        const fathatan = this.CharacterTable.Fathatan.charCodeAt(0);
         const len = str.length;
         let strCode = "";
         let hasTashkil = false;
@@ -531,16 +529,16 @@ export const ArBasic = {
         for (let i = 0; i < len; i++) {
             const cChar = str[i];
 
-            if ((cChar >= this.CharacterTable2.Hamza) && (cChar <= this.CharacterTable2.HamzaBelow)) {
+            if ((cChar >= this.CharacterTable.Hamza) && (cChar <= this.CharacterTable.HamzaBelow)) {
                 let y = (i + 1);
 
                 while (y < len) {
                     const hChar = str[y];
 
-                    if ((hChar >= this.CharacterTable2.Fathatan) && (hChar <= this.CharacterTable2.Sukun)) {
+                    if ((hChar >= this.CharacterTable.Fathatan) && (hChar <= this.CharacterTable.Sukun)) {
                         hasTashkil = true;
 
-                        if (hChar === this.CharacterTable2.Shadda) {
+                        if (hChar === this.CharacterTable.Shadda) {
                             hasShadda = true;
                         } else {
                             tashkilCode = (str.charCodeAt(y) - fathatan);
@@ -602,7 +600,7 @@ export const ArBasic = {
             // a-h or A-G
             if (capitalChar || ((tCode >= 97) && (tCode <= 104))) {
                 if (capitalChar) {
-                    newStr += this.CharacterTable2.Shadda;
+                    newStr += this.CharacterTable.Shadda;
                     tCode -= 65;
                 } else {
                     tCode -= 97;
@@ -616,61 +614,39 @@ export const ArBasic = {
     },
 
     CharacterTable: {
-        Space: 32, // Space مسافة.
-        ExclamationMark: 33, // ! Exclamation Mark علامة تعجب.
-        QuotationMark: 34, // " Quotation Mark علامة افتباس عادية.
-        LeftParenthesis: 40, // ( Left Parenthesis بداية القوس.
-        RightParenthesis: 41, // ) Right Parenthesis نهاية القوس.
-        Dot: 46, // . Dot نقطة.
-        Solidus: 47, // / Solidus شرطة.
-        Comma: 44, // , Latin Comma فاصلة أعجمية.
-        Colon: 58, // : Colon نقطتان فوق بعص.
-        Semicolon: 59, // ; Latin Semicolon فاصلة منقوطة أعجمية.
-        QuestionMark: 63, // ? Latin Question Mark علامة استفهام أعجمية.
-        LeftSquareParenthesis: 91, // [ Left Square Parenthesis بداية القوس المربع.
-        ReverseSolidus: 92, // \ Reverse Solidus شرطة معكوسة.
-        RightSquareParenthesis: 93, // ] Right Square Parenthesis نهاية القوس المربع.
-        LeftCurlyBracket: 123, // { Left Curly Bracket بداية القوس المجعد.
-        RightCurlyBracket: 125, // } Right Curly Bracket نهاية القوس المجعد.
-        ArabicComma: 1548, // ، Arabic Comma فاصلة عربية.
-        ArabicSemicolon: 1563, // ؛ Arabic Semicolon فاصلة منقوطة عربية.
-        ArabicQuestionMark: 1567, // ؟ Arabic Question Mark علامة استفهام عربية.
-        Hamza: 1569, // ء Arabic Letter Hamza همزة.
-        AlefMaddaAbove: 1570, // آ Arabic Letter Alef with Madda above ألف فوقها مدة.
-        AlefHamzaAbove: 1571, // أ Arabic Letter Alef with Hamza above ألف فوقها همزة.
-        WawHamzaAbove: 1572, // ا Arabic Letter Waw with Hamza above واو فوقها همزة.
-        AlefHamzaBelow: 1573, // إ Arabic Letter Alef with Hamza below ألف تحتها همزة.
-        YehHamzaAbove: 1574, // ئ Arabic Letter Yeh with Hamza Above ياء فقوها همزة.
-        Alef: 1575, // ا Arabic Letter Alef ألف بلا همزة.
-        TehMarbuta: 1577, // ة Arabic Letter Teh Marbuta تاء مربوطة.
-        Tatweel: 1600, // ـ Arabic Tatweel حرف التطويل.
-        Lam: 1604, // ل Arabic Letter Lam لام.
-        Heh: 1607, // ه Arabic Letter Heh هاء.
-        Waw: 1608, // و Arabic Letter Waw واو.
-        AlefMaksura: 1609, // ى Arabic Letter Alef Maksura ألف مكسورة.
-        Yeh: 1610, // ي Arabic Letter Yeh ياء.
-        Fathatan: 1611, //  ً Arabic Fathatan فتحتان.
-        Dammatan: 1612, //  ٌ Arabic Dammatan ضمتان.
-        Kasratan: 1613, //  ٍ Arabic Kasratan كسرتان.
-        Fatha: 1614, //  َ Arabic Fatha فَتحة.
-        Damma: 1615, //  ُ Arabic Damma ضمة.
-        Kasra: 1616, //  ِ Arabic Kasra كسرة.
-        Shadda: 1617, //  ّ Arabic Shadda شدّة.
-        Sukun: 1618, //  ْ Arabic Sukun سكون.
-        MaddaAbove: 1619, //  ٓ Arabic Madda Above مدة علوية.
-        HamzaAbove: 1620, //  ٔ Arabic Hamza Above همزة علوية.
-        HamzaBelow: 1621, //  ٕ Arabic Hamza Below همزة سفلية.
-        LamAlefCombined: 65275, // ﻻ Arabic Letter Lam with Alef (combined Form) لام مدمجة مع ألف.
-        LamAlefMaddaAboveCombined: 65269, // ﻵ Arabic Letter Lam with Alef with Madda Above (combined Form) لام مدمجة مع ألف فوقها مدة.
-        LamAlefHamzaAboveCombined: 65271, // ﻷ Arabic Letter Lam with Alef with Hamza Above (combined Form) لام مدمجة مع ألف فوقها همزة.
-        LamAlefHamzaBelowCombined: 65273, // ﻹ Arabic Letter Lam with Alef with Hamza Below (combined Form) لام مدمجة مع ألف فوقها همزة.
-        QuotationMarkLeftDouble: 8220, // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
-        QuotationMarkRightDouble: 8221 // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
-    },
-
-    CharacterTable2: {
+        Space: "\u0020", // Space مسافة.
+        ExclamationMark: "\u0021", // ! Exclamation Mark علامة تعجب.
+        QuotationMark: "\u0022", // " Quotation Mark علامة افتباس عادية.
+        LeftParenthesis: "\u0028", // ( Left Parenthesis بداية القوس.
+        RightParenthesis: "\u0029", // ) Right Parenthesis نهاية القوس.
+        Dot: "\u002E", // . Dot نقطة.
+        Solidus: "\u002F", // / Solidus شرطة.
+        Comma: "\u002C", // , Latin Comma فاصلة أعجمية.
+        Colon: "\u003A", // : Colon نقطتان فوق بعص.
+        Semicolon: "\u003B", // ; Latin Semicolon فاصلة منقوطة أعجمية.
+        QuestionMark: "\u003F", // ? Latin Question Mark علامة استفهام أعجمية.
+        LeftSquareParenthesis: "\u005B", // [ Left Square Parenthesis بداية القوس المربع.
+        ReverseSolidus: "\u005C", // \ Reverse Solidus شرطة معكوسة.
+        RightSquareParenthesis: "\u005D", // ] Right Square Parenthesis نهاية القوس المربع.
+        LeftCurlyBracket: "\u007B", // { Left Curly Bracket بداية القوس المجعد.
+        RightCurlyBracket: "\u007D", // } Right Curly Bracket نهاية القوس المجعد.
+        ArabicComma: "\u060C", // ، Arabic Comma فاصلة عربية.
+        ArabicSemicolon: "\u061B", // ؛ Arabic Semicolon فاصلة منقوطة عربية.
+        ArabicQuestionMark: "\u061F", // ؟ Arabic Question Mark علامة استفهام عربية.
         Hamza: "\u0621", // ء Arabic Letter Hamza همزة.
-
+        AlefMaddaAbove: "\u0622", // آ Arabic Letter Alef with Madda above ألف فوقها مدة.
+        AlefHamzaAbove: "\u0623", // أ Arabic Letter Alef with Hamza above ألف فوقها همزة.
+        WawHamzaAbove: "\u0624", // ا Arabic Letter Waw with Hamza above واو فوقها همزة.
+        AlefHamzaBelow: "\u0625", // إ Arabic Letter Alef with Hamza below ألف تحتها همزة.
+        YehHamzaAbove: "\u0626", // ئ Arabic Letter Yeh with Hamza Above ياء فقوها همزة.
+        Alef: "\u0627", // ا Arabic Letter Alef ألف بلا همزة.
+        TehMarbuta: "\u0629", // ة Arabic Letter Teh Marbuta تاء مربوطة.
+        Tatweel: "\u0640", // ـ Arabic Tatweel حرف التطويل.
+        Lam: "\u0644", // ل Arabic Letter Lam لام.
+        Heh: "\u0647", // ه Arabic Letter Heh هاء.
+        Waw: "\u0648", // و Arabic Letter Waw واو.
+        AlefMaksura: "\u0649", // ى Arabic Letter Alef Maksura ألف مكسورة.
+        Yeh: "\u064A", // ي Arabic Letter Yeh ياء.
         Fathatan: "\u064B", //  ً Arabic Fathatan فتحتان.
         Dammatan: "\u064C", //  ٌ Arabic Dammatan ضمتان.
         Kasratan: "\u064D", //  ٍ Arabic Kasratan كسرتان.
@@ -679,8 +655,15 @@ export const ArBasic = {
         Kasra: "\u0650", //  ِ Arabic Kasra كسرة.
         Shadda: "\u0651", //  ّ Arabic Shadda شدّة.
         Sukun: "\u0652", //  ْ Arabic Sukun سكون.
-
-        HamzaBelow: "\u0655" //  ٕ Arabic Hamza Below همزة سفلية.
+        MaddaAbove: "\u0653", //  ٓ Arabic Madda Above مدة علوية.
+        HamzaAbove: "\u0654", //  ٔ Arabic Hamza Above همزة علوية.
+        HamzaBelow: "\u0655", //  ٕ Arabic Hamza Below همزة سفلية.
+        QuotationMarkLeftDouble: "\u201C", // “ Left Double Quotation Mark بداية الاقتباس الأعجمي.
+        QuotationMarkRightDouble: "\u201D", // ” Right Double Quotation Mark نهاية الاقتباس الأعجمي.
+        LamAlefCombined: "\uFEFB", // ﻻ Arabic Letter Lam with Alef (combined Form) لام مدمجة مع ألف.
+        LamAlefMaddaAboveCombined: "\uFEF5", // ﻵ Arabic Letter Lam with Alef with Madda Above (combined Form) لام مدمجة مع ألف فوقها مدة.
+        LamAlefHamzaAboveCombined: "\uFEF7", // ﻷ Arabic Letter Lam with Alef with Hamza Above (combined Form) لام مدمجة مع ألف فوقها همزة.
+        LamAlefHamzaBelowCombined: "\uFEF9" // ﻹ Arabic Letter Lam with Alef with Hamza Below (combined Form) لام مدمجة مع ألف فوقها همزة.
     },
 
     EncodedTashkilTable: [
