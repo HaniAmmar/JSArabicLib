@@ -16,24 +16,20 @@ export const ArBasic = {
      * @returns {string}
      */
     RemoveTashkil: function (str, keepShadda = false) {
-        const len = str.length;
-        let newStr = "";
+        let tashkil = String.fromCharCode(
+            this.CharacterTable.Fathatan,
+            this.CharacterTable.Dammatan,
+            this.CharacterTable.Kasratan,
+            this.CharacterTable.Fatha,
+            this.CharacterTable.Damma,
+            this.CharacterTable.Kasra,
+            this.CharacterTable.Sukun);
 
-        // إزالة التشكيل، واختياريًا الشدة.
-        // Remove all Tashkil and (Optional) Shadda.
-        for (let i = 0; i < len; i++) {
-            const cc = str.charCodeAt(i);
-
-            // الحروف المستخدمة في التشكيل هي من 1611 إلى 1618.
-            // Arabic Tashkil letters are from 1611 to 1618.
-            // 1617 = ّ  Shadda شدّة
-            if (((cc < this.CharacterTable.Fathatan) || (cc > this.CharacterTable.Sukun)) ||
-                 (keepShadda && (cc === this.CharacterTable.Shadda))) {
-                newStr += str[i];
-            }
+        if (!(keepShadda)) {
+            tashkil += String.fromCharCode(this.CharacterTable.Shadda);
         }
 
-        return newStr;
+        return str.replaceAll(new RegExp(tashkil.split("").join("|"), "g"), "");
     },
 
     /**
@@ -212,14 +208,9 @@ export const ArBasic = {
                 }
 
                 case this.CharacterTable.Shadda:
-                {
-                    // Kepp Shadda الإبقاء على الشدة.
-                    newStr += str[i];
-                    break;
-                }
-
                 case this.CharacterTable.Sukun:
                 {
+                    // Kepp Shadda الإبقاء على الشدة.
                     // Kepp Sukun الإبقاء على السكون.
                     newStr += str[i];
                     break;
@@ -247,16 +238,7 @@ export const ArBasic = {
      * @returns {string}
      */
     RemoveTatweel: function (str) {
-        const len = str.length;
-        let newStr = "";
-
-        for (let i = 0; i < len; i++) {
-            if (str.charCodeAt(i) !== this.CharacterTable.Tatweel) {
-                newStr += str[i];
-            }
-        }
-
-        return newStr;
+        return str.replaceAll(String.fromCharCode(this.CharacterTable.Tatweel), "");
     },
 
     /**
@@ -556,48 +538,14 @@ export const ArBasic = {
      * @returns {string}
      */
     SeparateLamAlef: function (str) {
-        const len = str.length;
-        let newStr = "";
-
-        for (let i = 0; i < len; i++) {
-            const cc = str.charCodeAt(i);
-
-            switch (cc) {
-                case this.CharacterTable.LamAlefCombined:
-                {
-                    newStr += String.fromCharCode(this.CharacterTable.Lam);
-                    newStr += String.fromCharCode(this.CharacterTable.Alef);
-                    break;
-                }
-
-                case this.CharacterTable.LamAlefMaddaAboveCombined:
-                {
-                    newStr += String.fromCharCode(this.CharacterTable.Lam);
-                    newStr += String.fromCharCode(this.CharacterTable.AlefMaddaAbove);
-                    break;
-                }
-
-                case this.CharacterTable.LamAlefHamzaAboveCombined:
-                {
-                    newStr += String.fromCharCode(this.CharacterTable.Lam);
-                    newStr += String.fromCharCode(this.CharacterTable.AlefHamzaAbove);
-                    break;
-                }
-
-                case this.CharacterTable.LamAlefHamzaBelowCombined:
-                {
-                    newStr += String.fromCharCode(this.CharacterTable.Lam);
-                    newStr += String.fromCharCode(this.CharacterTable.AlefHamzaBelow);
-                    break;
-                }
-
-                default:
-                    newStr += str[i];
-                    break;
-            }
-        }
-
-        return newStr;
+        str = str.replaceAll(String.fromCharCode(this.CharacterTable.LamAlefCombined),
+            String.fromCharCode(this.CharacterTable.Lam, this.CharacterTable.Alef));
+        str = str.replaceAll(String.fromCharCode(this.CharacterTable.LamAlefMaddaAboveCombined),
+            String.fromCharCode(this.CharacterTable.Lam, this.CharacterTable.AlefMaddaAbove));
+        str = str.replaceAll(String.fromCharCode(this.CharacterTable.LamAlefHamzaAboveCombined),
+            String.fromCharCode(this.CharacterTable.Lam, this.CharacterTable.AlefHamzaAbove));
+        return str.replaceAll(String.fromCharCode(this.CharacterTable.LamAlefHamzaBelowCombined),
+            String.fromCharCode(this.CharacterTable.Lam, this.CharacterTable.AlefHamzaBelow));
     },
 
     /**
@@ -612,42 +560,24 @@ export const ArBasic = {
      * @returns {string}
      */
     UnifyLetters: function (str) {
-        const len = str.length;
-        let newStr = "";
+        str = str.replaceAll(String.fromCharCode(this.CharacterTable.TehMarbuta), String.fromCharCode(this.CharacterTable.Heh));
+        str = str.replaceAll(String.fromCharCode(this.CharacterTable.AlefMaksura), String.fromCharCode(this.CharacterTable.Yeh));
 
-        for (let i = 0; i < len; i++) {
-            const cc = str.charCodeAt(i);
+        const AlefG = String.fromCharCode(
+            this.CharacterTable.AlefMaddaAbove,
+            this.CharacterTable.AlefHamzaAbove,
+            this.CharacterTable.AlefHamzaBelow,
+            this.CharacterTable.MaddaAbove,
+            this.CharacterTable.HamzaAbove,
+            this.CharacterTable.HamzaBelow);
 
-            switch (cc) {
-                case this.CharacterTable.TehMarbuta:
-                    newStr += String.fromCharCode(this.CharacterTable.Heh);
-                    break;
+        str = str.replaceAll(new RegExp(AlefG.split("").join("|"), "g"), String.fromCharCode(this.CharacterTable.Alef));
 
-                case this.CharacterTable.AlefMaksura:
-                    newStr += String.fromCharCode(this.CharacterTable.Yeh);
-                    break;
+        const HamzaG = String.fromCharCode(
+            this.CharacterTable.WawHamzaAbove,
+            this.CharacterTable.YehHamzaAbove);
 
-                case this.CharacterTable.AlefMaddaAbove:
-                case this.CharacterTable.AlefHamzaAbove:
-                case this.CharacterTable.AlefHamzaBelow:
-                case this.CharacterTable.MaddaAbove:
-                case this.CharacterTable.HamzaAbove:
-                case this.CharacterTable.HamzaBelow:
-                    newStr += String.fromCharCode(this.CharacterTable.Alef);
-                    break;
-
-                case this.CharacterTable.WawHamzaAbove:
-                case this.CharacterTable.YehHamzaAbove:
-                    newStr += String.fromCharCode(this.CharacterTable.Hamza);
-                    break;
-
-                default:
-                    newStr += str[i];
-                    break;
-            }
-        }
-
-        return newStr;
+        return str.replaceAll(new RegExp(HamzaG.split("").join("|"), "g"), String.fromCharCode(this.CharacterTable.Hamza));
     },
 
     /**
