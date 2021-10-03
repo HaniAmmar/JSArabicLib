@@ -514,8 +514,7 @@ export const ArBasic = {
      * وتستبدل الهمزة التي على الواو والياء بهمزة على السطر.
      * Replaces Teh Marbuta (ة) with Heh (ه), and Alef Maksura (ى) with Yeh (ي); common misspellings.
      * Also, Uses Alef to replaces all Hamzas that are paired with Alef,
-     * and uses single Hamza (Hamza on line) to replace any Waw or
-     * Yah with HamzaAbove.
+     * and uses single Hamza (Hamza on line) to replace any Waw or Yah with HamzaAbove.
      * @param {string} str
      * @returns {string}
      */
@@ -584,21 +583,23 @@ export const ArBasic = {
                         if (hChar === this.CharacterTable.Shadda) {
                             hasShadda = true;
                         } else {
-                            // To make Tashkil start from zero, subtract the start of the Tashkil,
-                            // which is "Fathatan".
-                            // حتى يكون التشكيل مفهرسًا في مصفوفة، نطرح رقم أول حرف في التشكل، ألا وهو الفتحتين.
+                            // To make Tashkil start from one, it subtracts the start of the Tashkil,
+                            // which is "Fathatan", then adds one; because zero means empty.
+                            // حتى يكون التشكيل مفهرسًا في مصفوفة، يُطرح رقم أول حرف في التشكيل، ألا وهو الفتحتين،
+                            // ثم يضاف واحد حتى يكون العنصر في الحقل رقم 0 فارغًا.
 
-                            // 0: Fathatan  ً Arabic Fathatan فتحتان.
-                            // 1: Dammatan  ٌ Arabic Dammatan ضمتان.
-                            // 2: Kasratan  ٍ Arabic Kasratan كسرتان.
-                            // 3: Fatha  َ Arabic Fatha فَتحة.
-                            // 4: Damma  ُ Arabic Damma ضمة.
-                            // 5: Kasra  ِ Arabic Kasra كسرة.
-                            // 6: Shadda  ّ Arabic Shadda شدّة.
-                            // 7: Sukun  ْ Arabic Sukun سكون.
+                            // 0: None
+                            // 1: Fathatan  ً Arabic Fathatan فتحتان.
+                            // 2: Dammatan  ٌ Arabic Dammatan ضمتان.
+                            // 3: Kasratan  ٍ Arabic Kasratan كسرتان.
+                            // 4: Fatha  َ Arabic Fatha فَتحة.
+                            // 5: Damma  ُ Arabic Damma ضمة.
+                            // 6: Kasra  ِ Arabic Kasra كسرة.
+                            // 7: Shadda  ّ Arabic Shadda شدّة.
+                            // 8: Sukun  ْ Arabic Sukun سكون.
 
                             // See EncodedTashkilTable[];
-                            tashkilCode = (str.charCodeAt(y) - fathatan);
+                            tashkilCode = ((str.charCodeAt(y) - fathatan) + 1);
                         }
 
                         ++i;
@@ -625,16 +626,20 @@ export const ArBasic = {
                         // Just Shadda.
                         strCode += "g";
                     } else {
+                        // "tashkilCode" is > 0;
                         // 65 is "A"; ASCII
                         // نشكيل مع شدة
                         // Tashkil with Shadda.
-                        strCode += String.fromCharCode(tashkilCode + 65);
+                        strCode += String.fromCharCode(tashkilCode + 64);
+                        tashkilCode = 0;
                     }
                 } else {
+                    // "tashkilCode" is > 0;
                     // 97 is "a"; ASCII
                     // نشكيل بدون شدة
                     // Tashkil without Shadda.
-                    strCode += String.fromCharCode(tashkilCode + 97);
+                    strCode += String.fromCharCode(tashkilCode + 96);
+                    tashkilCode = 0;
                 }
             }
         }
@@ -666,11 +671,11 @@ export const ArBasic = {
                     // التشكيل به شدة.
                     // Tashkil with Shadda.
                     newStr += this.CharacterTable.Shadda;
-                    tCode -= 65;
+                    tCode -= 64;
                 } else {
                     // تشكيلا بلا شدة.
                     // Tashkil without Shadda.
-                    tCode -= 97;
+                    tCode -= 96;
                 }
 
                 newStr += this.EncodedTashkilTable[tCode];
@@ -735,6 +740,7 @@ export const ArBasic = {
 
     // Used in DecodeTashkil()
     EncodedTashkilTable: [
+        "", // Empty فارغ.
         "\u064B", //  ً Arabic Fathatan فتحتان.
         "\u064C", //  ٌ Arabic Dammatan ضمتان.
         "\u064D", //  ٍ Arabic Kasratan كسرتان.
