@@ -55,7 +55,7 @@ export const ArBasic = {
         if (len < 3) {
             // يجب أن يكون طول النص 3 أحرف كحدٍ أقل.
             // String has to be at least 3 characters in length.
-            return "";
+            return str;
         }
 
         let bcc = str[0]; // Previous letter الحرف السابق.
@@ -73,20 +73,29 @@ export const ArBasic = {
                     // أو كان الواو و الياء في بداية الكلمة.
                     // Add Fatha only if at the end of a word, or on Waw or what's after it is Waw,
                     // or on Yeh or what's after it is Yeh, and Waw is with Hamza or without:
-                    // Only if there is not Alef after it, or Waw Yeh are not at the start of a word.
+                    // Only if there is no Alef after it, or Waw Yeh are not at the start of a word.
                     if ((ncc < this.CharacterTable.Hamza) || (ncc > this.CharacterTable.HamzaBelow)) {
+                        // نهاية الكلمة
+                        // At the end of a word.
                         newStr += str[i];
-                    } else if (i > 1) {
+                    } else {
                         switch (bcc) {
                             case this.CharacterTable.Waw:
                             case this.CharacterTable.WawHamzaAbove:
                             case this.CharacterTable.Yeh:
                             {
-                                const bbcc = str[i - 2];
+                                // إذا كانت الفتحة على واو أو واو عليها همزة،
+                                // أو ياء، أضف الفتحة إن لم يكن بعدها ألف بجميع أشكالها.
+                                // If the letter is Waw or Waw with Hamza above, or Yeh,
+                                // add Fatha unless there is no type of Alef after it.
+                                if (i > 1) {
+                                    const bbcc = str[i - 2];
 
-                                if (((bbcc >= this.CharacterTable.Hamza) && (bbcc <= this.CharacterTable.HamzaBelow)) &&
-                                     (ncc !== this.CharacterTable.Alef) && (ncc !== this.CharacterTable.AlefHamzaAbove)) {
-                                    newStr += str[i];
+                                    if ((bbcc >= this.CharacterTable.Hamza) && (bbcc <= this.CharacterTable.HamzaBelow) &&
+                                        (ncc !== this.CharacterTable.Alef) && (ncc !== this.CharacterTable.AlefHamzaAbove) &&
+                                        (ncc !== this.CharacterTable.AlefHamzaBelow) && (ncc !== this.CharacterTable.AlefMaddaAbove)) {
+                                        newStr += str[i];
+                                    }
                                 }
 
                                 break;
@@ -97,10 +106,18 @@ export const ArBasic = {
                                     case this.CharacterTable.Waw:
                                     case this.CharacterTable.WawHamzaAbove:
                                     case this.CharacterTable.Yeh:
-                                        if ((bcc !== this.CharacterTable.Alef) && (bcc !== this.CharacterTable.AlefHamzaAbove)) {
+                                    {
+                                        // إذا كان الحرف التالي هو واو أو واو عليها همزة، أو ياء،
+                                        // أضف الفتحة ما لم تكن على ألف بجميع أشكالها
+                                        // If the next letter is Waw or Waw with Hamza above, or Yeh,
+                                        // add Fatha unless it's not on any type of Alef after it.
+                                        if ((bcc !== this.CharacterTable.Alef) && (bcc !== this.CharacterTable.AlefHamzaAbove) &&
+                                            (bcc !== this.CharacterTable.AlefHamzaBelow) && (bcc !== this.CharacterTable.AlefMaddaAbove)) {
                                             newStr += str[i];
                                         }
+
                                         break;
+                                    }
                                     default:
                                 }
                             }
@@ -112,12 +129,22 @@ export const ArBasic = {
 
                 case this.CharacterTable.Damma: //  ُ Damma ضمة.
                 {
-                    // إضافة الضمة في حالة لم تكن على واو أو بعدها واو, أو في آخر الكلمة.
-                    // Add Damma if it's not on Waw or there is Waw after it, or at the end of a word.
+                    // إضافة الضمة في حالة لم تكن على واو أو بعدها واو, أو في آخر الكلمة، أو بداية الكلام.
+                    // Add Damma if it's not on Waw or there is Waw after it, or at the end of a word, or at the start of it.
                     if ((ncc < this.CharacterTable.Hamza) || (ncc > this.CharacterTable.HamzaBelow) ||
                         ((bcc !== this.CharacterTable.Waw) && (bcc !== this.CharacterTable.WawHamzaAbove) &&
                         (ncc !== this.CharacterTable.Waw) && (ncc !== this.CharacterTable.WawHamzaAbove))) {
                         newStr += str[i];
+                    } else {
+                        if (i > 1) {
+                            const bbcc = str[i - 2];
+
+                            if ((bbcc < this.CharacterTable.Hamza) || (bbcc > this.CharacterTable.HamzaBelow)) {
+                                newStr += str[i];
+                            }
+                        } else {
+                            newStr += str[i];
+                        }
                     }
 
                     break;
@@ -126,13 +153,27 @@ export const ArBasic = {
                 case this.CharacterTable.Kasra: //  ِ Kasra كسرة.
                 {
                     // إضافة الكسرة إن لم تكن على ياء أو بعدها ياء، أو على همزة على ياء،
-                    // أو لم تكن تحت ألف همزتها تحت.
+                    // أو لم تكن تحت ألف همزتهاأسفلها, أو أنها تحت ألف بلا همزة, أو في نهاية الكلمة.
                     // Add Kasra if it's not under Yeh or Yeh is not after it,
-                    // or under Yeh with Hamza above it, or not under Alef with Hamza Below it.
-                    if ((bcc === this.CharacterTable.Alef) || ((bcc !== this.CharacterTable.Yeh) && (bcc !== this.CharacterTable.AlefHamzaBelow) &&
-                        (bcc !== this.CharacterTable.YehHamzaAbove) &&
-                        (ncc !== this.CharacterTable.Yeh))) {
+                    // or under Yeh with Hamza above it, or not under Alef with Hamza Below it,
+                    // or the Kasra is under Alef without any type of Hamza, or at the end of a word.
+                    if ((bcc === this.CharacterTable.Alef) ||
+                        (ncc < this.CharacterTable.Hamza) || (ncc > this.CharacterTable.HamzaBelow) ||
+                        ((bcc !== this.CharacterTable.Yeh) && (bcc !== this.CharacterTable.YehHamzaAbove) &&
+                         (bcc !== this.CharacterTable.AlefHamzaBelow) &&
+                         (ncc !== this.CharacterTable.Yeh))) {
                         newStr += str[i];
+                    } else {
+                        if (i > 1) {
+                            const bbcc = str[i - 2];
+
+                            if (((bbcc < this.CharacterTable.Hamza) || (bbcc > this.CharacterTable.HamzaBelow)) &&
+                                (bcc !== this.CharacterTable.AlefHamzaBelow)) {
+                                newStr += str[i];
+                            }
+                        } else if (bcc !== this.CharacterTable.AlefHamzaBelow) {
+                            newStr += str[i];
+                        }
                     }
 
                     break;
@@ -141,15 +182,15 @@ export const ArBasic = {
                 case this.CharacterTable.Shadda:
                 case this.CharacterTable.Sukun:
                 {
-                    // Kepp Shadda الإبقاء على الشدة.
-                    // Kepp Sukun الإبقاء على السكون.
+                    // Preserve Shadda الإبقاء على الشدة.
+                    // Preserve Sukun الإبقاء على السكون.
                     newStr += str[i];
                     break;
                 }
 
                 default:
                 {
-                    // "bcc" only stores letter المتغير التالي يخزن الحروف فقط.
+                    // "bcc" only stores letters المتغير التالي يخزن الحروف فقط.
                     bcc = cc;
                     newStr += str[i];
                 }
