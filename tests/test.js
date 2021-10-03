@@ -1,2 +1,2 @@
-import { RunTests } from "./ArBasic.test.js";
-RunTests();
+import { RunArBasicTests } from "./ArBasic.test.js";
+RunArBasicTests();

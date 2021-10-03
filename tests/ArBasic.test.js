@@ -358,7 +358,7 @@ const ArBasicTest = {
     }
 };
 
-export function RunTests () {
+export function RunArBasicTests () {
     ArBasicTest.RemoveTatweelTest();
     ArBasicTest.RemoveTashkilTest();
     ArBasicTest.SeparateLamAlefTest();
