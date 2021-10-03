@@ -60,6 +60,7 @@ export const ArBasic = {
 
         let bcc = str[0]; // Previous letter الحرف السابق.
         let cc = str[1]; // Current char الحرف الحالي.
+
         newStr += bcc;
 
         for (let i = 1, y = 2; i < len; i++, y++) {

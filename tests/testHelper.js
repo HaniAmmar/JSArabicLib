@@ -11,13 +11,12 @@ export function RunTest (name, data, callback) {
         const returned = callback(value.In);
 
         if (returned !== value.Out) {
-            failed = true;
             console.error("\x1b[31mFailed\x1b[0m:", name);
-
             console.error("    Given: `%s`", value.In);
             console.error("    Returned: `%s`", returned);
             console.error("    Expected: `%s`", value.Out);
             console.error("    Index: `%d`\n", index);
+            failed = true;
             break;
         }
     }
