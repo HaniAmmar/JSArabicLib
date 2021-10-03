@@ -533,6 +533,8 @@ export const ArBasic = {
                 let y = (i + 1);
 
                 while (y < len) {
+                    // تحقق فيما إذا كان التشكل فيه شدّة أو لا.
+                    // Checking to see if the Tashkil has Shadda or not.
                     const hChar = str[y];
 
                     if ((hChar >= this.CharacterTable.Fathatan) && (hChar <= this.CharacterTable.Sukun)) {
@@ -541,6 +543,20 @@ export const ArBasic = {
                         if (hChar === this.CharacterTable.Shadda) {
                             hasShadda = true;
                         } else {
+                            // To make Tashkil start from zero, subtract the start of the Tashkil,
+                            // which is "Fathatan".
+                            // حتى يكون التشكيل مفهرسًا في مصفوفة، نطرح رقم أول حرف في التشكل، ألا وهو الفتحتين.
+
+                            // 0: Fathatan  ً Arabic Fathatan فتحتان.
+                            // 1: Dammatan  ٌ Arabic Dammatan ضمتان.
+                            // 2: Kasratan  ٍ Arabic Kasratan كسرتان.
+                            // 3: Fatha  َ Arabic Fatha فَتحة.
+                            // 4: Damma  ُ Arabic Damma ضمة.
+                            // 5: Kasra  ِ Arabic Kasra كسرة.
+                            // 6: Shadda  ّ Arabic Shadda شدّة.
+                            // 7: Sukun  ْ Arabic Sukun سكون.
+
+                            // See EncodedTashkilTable[];
                             tashkilCode = (str.charCodeAt(y) - fathatan);
                         }
 
@@ -554,35 +570,40 @@ export const ArBasic = {
             }
 
             if (!(hasTashkil)) {
+                // 0 يعني لا تشكيل.
+                // 0 Means no Tashkil.
                 strCode += "0";
             } else {
+                hasTashkil = false;
+
                 if (hasShadda) {
                     hasShadda = false;
 
                     if (tashkilCode === 0) {
+                        // فقط شدّة.
+                        // Just Shadda.
                         strCode += "g";
                     } else {
-                        // 64 is "A"; ASCII
+                        // 65 is "A"; ASCII
+                        // نشكيل مع شدة
+                        // Tashkil with Shadda.
                         strCode += String.fromCharCode(tashkilCode + 65);
                     }
                 } else {
                     // 97 is "a"; ASCII
+                    // نشكيل بدون شدة
+                    // Tashkil without Shadda.
                     strCode += String.fromCharCode(tashkilCode + 97);
                 }
-
-                tashkilCode = 0;
-                hasTashkil = false;
             }
-
-            hasTashkil = false;
         }
 
         return { EncodedTashkil: strCode, StrippedText: this.RemoveTashkil(str, false) };
     },
 
     /**
-     * تفصل التشيكل عن النص، وتعيد النص مع رمز التشكيل.
-     * Separates text from Tashkil, and returns text with encoded Tashkil.
+     * تعيد تشكيل النص بناءً على ما رمز التشكيل المرسل.
+     * Reconstruct text with given tashkil code.
      * @param {string} str
      * @param {string} tashkilCode
      * @returns {string}
@@ -595,14 +616,19 @@ export const ArBasic = {
             newStr += str[i];
 
             let tCode = tashkilCode.charCodeAt(i);
+            // A - G
             const capitalChar = ((tCode >= 65) && (tCode <= 71));
 
-            // a-h or A-G
+            // A-G or a-h
             if (capitalChar || ((tCode >= 97) && (tCode <= 104))) {
                 if (capitalChar) {
+                    // التشكيل به شدة.
+                    // Tashkil with Shadda.
                     newStr += this.CharacterTable.Shadda;
                     tCode -= 65;
                 } else {
+                    // تشكيلا بلا شدة.
+                    // Tashkil without Shadda.
                     tCode -= 97;
                 }
 
@@ -666,6 +692,7 @@ export const ArBasic = {
         LamAlefHamzaBelowCombined: "\uFEF9" // ﻹ Arabic Letter Lam with Alef with Hamza Below (combined Form) لام مدمجة مع ألف فوقها همزة.
     },
 
+    // Used in DecodeTashkil()
     EncodedTashkilTable: [
         "\u064B", //  ً Arabic Fathatan فتحتان.
         "\u064C", //  ٌ Arabic Dammatan ضمتان.
