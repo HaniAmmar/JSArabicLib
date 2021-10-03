@@ -16,7 +16,8 @@ export function RunTest (name, data, callback) {
 
             console.error("    Given: `%s`", value.In);
             console.error("    Returned: `%s`", returned);
-            console.error("    Expected: `%s`\n", value.Out);
+            console.error("    Expected: `%s`", value.Out);
+            console.error("    Index: `%d`\n", index);
             break;
         }
     }
