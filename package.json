@@ -1,6 +1,6 @@
 {
   "name": "jsarabiclib",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Library for providing JavaScript with tools specific for Arabic language.",
   "type": "module",
   "main": "index.js",

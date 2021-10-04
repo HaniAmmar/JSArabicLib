@@ -1,5 +1,5 @@
 ﻿/**
- * @Name Arabic library for JavaScript v0.0.1
+ * @Name Arabic library for JavaScript v0.1.0
  * @Source https://github.com/hani-ammar/JSArabicLib
  * @Copyright 2021 Hani Ammar, Taha Zerrouki, and other contributors
  * @License MIT license https://opensource.org/licenses/MIT
@@ -180,11 +180,14 @@ export const ArBasic = {
                     break;
                 }
 
+                case this.CharacterTable.Fathatan:
+                case this.CharacterTable.Dammatan:
+                case this.CharacterTable.Kasratan:
                 case this.CharacterTable.Shadda:
                 case this.CharacterTable.Sukun:
                 {
-                    // Preserve Shadda الإبقاء على الشدة.
-                    // Preserve Sukun الإبقاء على السكون.
+                    // هذا لمنع المتغير (بي سي سي) من تخزين أي تشكيل.
+                    // This prevent the variable "bcc" from storing any Tashkil.
                     newStr += str[i];
                     break;
                 }
@@ -228,8 +231,8 @@ export const ArBasic = {
             const cc = str[i];
 
             switch (cc) {
-                case this.CharacterTable.Space:
-                case 9: // tab
+                case this.CharacterTable.Space: // مسافة.
+                case this.CharacterTable.Tab: // مسافة رباعية.
                 {
                     // تخطي المسافات المكررة.
                     // Skip duplicate spaces.
@@ -687,6 +690,7 @@ export const ArBasic = {
     },
 
     CharacterTable: {
+        Tab: "\u0009", // Tab مسافة رباعية.
         Space: "\u0020", // Space مسافة.
         ExclamationMark: "\u0021", // ! Exclamation Mark علامة تعجب.
         QuotationMark: "\u0022", // " Quotation Mark علامة افتباس عادية.
