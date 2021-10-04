@@ -231,6 +231,16 @@ export const ArBasic = {
             const cc = str[i];
 
             switch (cc) {
+                case this.CharacterTable.NewLine: // \n سطر جديد.
+                {
+                    // لا مسافات قبل أو بعد سطرٍ جديد.
+                    // No spaces before nor after new line.
+                    newStr += str[i];
+                    insertSpace = false;
+                    ignoreSpace = true;
+                    break;
+                }
+
                 case this.CharacterTable.Space: // مسافة.
                 case this.CharacterTable.Tab: // مسافة رباعية.
                 {
@@ -690,7 +700,8 @@ export const ArBasic = {
     },
 
     CharacterTable: {
-        Tab: "\u0009", // Tab مسافة رباعية.
+        Tab: "\u0009", // \t Tab مسافة رباعية.
+        NewLine: "\u000A", // \n NewLine سطر جديد.
         Space: "\u0020", // Space مسافة.
         ExclamationMark: "\u0021", // ! Exclamation Mark علامة تعجب.
         QuotationMark: "\u0022", // " Quotation Mark علامة افتباس عادية.
