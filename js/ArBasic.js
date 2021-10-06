@@ -258,8 +258,6 @@ export const ArBasic = {
 
                 ++y;
             }
-        } else {
-            ++index;
         }
 
         return { hasShadda: hasShadda, tashkilCode: tashkilCode, index: index };
@@ -664,18 +662,19 @@ export const ArBasic = {
     EncodeTashkil: function (str) {
         const len = str.length;
         let strCode = "";
-
         let TashkilInfo = { hasShadda: false, tashkilCode: 0, index: 0 };
+        let i = 0;
 
-        for (let i = 0; i < len; i++) {
+        while (i < len) {
             TashkilInfo = this.GetTashkil(str, len, i);
-            i = TashkilInfo.index;
 
             if (!(TashkilInfo.hasShadda) && (TashkilInfo.tashkilCode === 0)) {
                 // 0 يعني لا تشكيل.
                 // 0 Means no Tashkil.
                 strCode += "0";
             } else {
+                i = TashkilInfo.index;
+
                 if (TashkilInfo.hasShadda) {
                     TashkilInfo.hasShadda = false;
 
@@ -700,6 +699,8 @@ export const ArBasic = {
                     TashkilInfo.tashkilCode = 0;
                 }
             }
+
+            ++i;
         }
 
         return { EncodedTashkil: strCode, StrippedText: this.RemoveTashkil(str, false) };
