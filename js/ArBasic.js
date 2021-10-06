@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @Name Arabic library for JavaScript v0.1.0
  * @Source https://github.com/hani-ammar/JSArabicLib
  * @Copyright 2021 Hani Ammar.
@@ -397,6 +397,30 @@ export const ArBasic = {
                     break;
                 }
 
+                case this.CharacterTable.Fathatan:
+                case this.CharacterTable.Dammatan:
+                case this.CharacterTable.Kasratan:
+                case this.CharacterTable.Fatha:
+                case this.CharacterTable.Damma:
+                case this.CharacterTable.Kasra:
+                case this.CharacterTable.Sukun: {
+                    if (i > 0) {
+                        // هذا سيزيل التشكيل المتكرر ويضع الشدة قبل أي حركة.
+                        // This will remove repeated Tashkil, and put Shadda before any other Tashkil.
+                        const info = this.GetTashkil(str, len, i - 1);
+
+                        if (info.hasShadda) {
+                            newStr += this.CharacterTable.Shadda;
+                        }
+
+                        newStr += this.EncodedTashkilTable[info.tashkilCode];
+
+                        i = info.index;
+                    }
+
+                    break;
+                }
+
                 // نقل الفتحتين إلى ما قبل الألف.
                 // Move Fathatan to the letter that is before Alef.
                 case this.CharacterTable.Alef:
@@ -406,16 +430,22 @@ export const ArBasic = {
                     // إذا كانت هناك مسافة قبل الألف، فإن الألف في بداية الكلمة.
                     // If "insertSpace" is true, then Alef is at the start of a word.
                     if (!(insertSpace)) {
-                        const y = (i + 1);
+                        const info = this.GetTashkil(str, len, i);
 
-                        if ((y < len) && (str[y] === this.CharacterTable.Fathatan)) {
+                        if (info.tashkilCode === 1) {
+                            // الرقم واخد هو رقم فهرسة الفتحتين في المصفوفة EncodedTashkilTable.
+                            // One is the index of Fathatan in EncodedTashkilTable.
+                            if (info.hasShadda) {
+                                newStr += this.CharacterTable.Shadda;
+                            }
+
                             newStr += this.CharacterTable.Fathatan;
-                            ++i;
-                        }
 
+                            i = info.index;
+                        }
                         // إعادة تعيين تجاهل المسافة فيما لو كانت الألف في بداية الكلام.
-                        // Reset ignoreSpace if Alef it at the start.
                         // "لإصلاح مشكلة عند تحسين الجملة: "واو أو ياء.
+                        // Reset ignoreSpace if Alef it at the start.
                         ignoreSpace = false;
                     } else if (!(ignoreSpace)) {
                         newStr += this.CharacterTable.Space;
