@@ -220,41 +220,46 @@ export const ArBasic = {
         let hasShadda = false;
         let tashkilCode = 0;
         let y = (index + 1);
+        let cChar = str[index];
 
-        while (y < len) {
-            // تحقق فيما إذا كان التشكل فيه شدّة أو لا.
-            // Checking to see if the Tashkil has Shadda or not.
-            const hChar = str[y];
+        if ((cChar >= this.CharacterTable.Hamza) && (cChar <= this.CharacterTable.HamzaBelow)) {
+            while (y < len) {
+                // تحقق فيما إذا كان التشكل فيه شدّة أو لا.
+                // Checking to see if the Tashkil has Shadda or not.
+                cChar = str[y];
 
-            if ((hChar >= this.CharacterTable.Fathatan) && (hChar <= this.CharacterTable.Sukun)) {
-                if (hChar === this.CharacterTable.Shadda) {
-                    hasShadda = true;
-                } else {
+                if ((cChar >= this.CharacterTable.Fathatan) && (cChar <= this.CharacterTable.Sukun)) {
+                    if (cChar === this.CharacterTable.Shadda) {
+                        hasShadda = true;
+                    } else {
                     // To make Tashkil start from one, it subtracts the start of the Tashkil,
                     // which is "Fathatan", then adds one; because zero means empty.
                     // حتى يكون التشكيل مفهرسًا في مصفوفة، يُطرح رقم أول حرف في التشكيل، ألا وهو الفتحتين،
                     // ثم يضاف واحد حتى يكون العنصر في الحقل رقم 0 فارغًا.
 
-                    // 0: None
-                    // 1: Fathatan  ً Arabic Fathatan فتحتان.
-                    // 2: Dammatan  ٌ Arabic Dammatan ضمتان.
-                    // 3: Kasratan  ٍ Arabic Kasratan كسرتان.
-                    // 4: Fatha  َ Arabic Fatha فَتحة.
-                    // 5: Damma  ُ Arabic Damma ضمة.
-                    // 6: Kasra  ِ Arabic Kasra كسرة.
-                    // 7: Shadda  ّ Arabic Shadda شدّة.
-                    // 8: Sukun  ْ Arabic Sukun سكون.
+                        // 0: None
+                        // 1: Fathatan  ً Arabic Fathatan فتحتان.
+                        // 2: Dammatan  ٌ Arabic Dammatan ضمتان.
+                        // 3: Kasratan  ٍ Arabic Kasratan كسرتان.
+                        // 4: Fatha  َ Arabic Fatha فَتحة.
+                        // 5: Damma  ُ Arabic Damma ضمة.
+                        // 6: Kasra  ِ Arabic Kasra كسرة.
+                        // 7: Shadda  ّ Arabic Shadda شدّة.
+                        // 8: Sukun  ْ Arabic Sukun سكون.
 
-                    // See EncodedTashkilTable[];
-                    tashkilCode = ((str.charCodeAt(y) - fathatan) + 1);
+                        // See EncodedTashkilTable[];
+                        tashkilCode = ((str.charCodeAt(y) - fathatan) + 1);
+                    }
+
+                    ++index;
+                } else {
+                    break;
                 }
 
-                ++index;
-            } else {
-                break;
+                ++y;
             }
-
-            ++y;
+        } else {
+            ++index;
         }
 
         return { hasShadda: hasShadda, tashkilCode: tashkilCode, index: index };
@@ -403,6 +408,7 @@ export const ArBasic = {
                 case this.CharacterTable.Fatha:
                 case this.CharacterTable.Damma:
                 case this.CharacterTable.Kasra:
+                case this.CharacterTable.Shadda:
                 case this.CharacterTable.Sukun: {
                     if (i > 0) {
                         // هذا سيزيل التشكيل المتكرر ويضع الشدة قبل أي حركة.
@@ -662,12 +668,8 @@ export const ArBasic = {
         let TashkilInfo = { hasShadda: false, tashkilCode: 0, index: 0 };
 
         for (let i = 0; i < len; i++) {
-            const cChar = str[i];
-
-            if ((cChar >= this.CharacterTable.Hamza) && (cChar <= this.CharacterTable.HamzaBelow)) {
-                TashkilInfo = this.GetTashkil(str, len, i);
-                i = TashkilInfo.index;
-            }
+            TashkilInfo = this.GetTashkil(str, len, i);
+            i = TashkilInfo.index;
 
             if (!(TashkilInfo.hasShadda) && (TashkilInfo.tashkilCode === 0)) {
                 // 0 يعني لا تشكيل.
