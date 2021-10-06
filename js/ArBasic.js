@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @Name Arabic library for JavaScript v0.1.0
  * @Source https://github.com/hani-ammar/JSArabicLib
  * @Copyright 2021 Hani Ammar.
@@ -205,6 +205,59 @@ export const ArBasic = {
 
         newStr += str[len];
         return newStr;
+    },
+
+    /**
+     * تعود بمعلومات عن التشكل الذي على الحرف الحاي.
+     * Returns an object that contains Tashki info about the current letter.
+     * @param {string} str
+     * @param {number} len
+     * @param {number} index
+     * @returns {object{hasShadda: true|false, tashkilCode: number, index: number}}
+     */
+    GetTashkil: function (str, len, index) {
+        const fathatan = this.CharacterTable.Fathatan.charCodeAt(0);
+        let hasShadda = false;
+        let tashkilCode = 0;
+        let y = (index + 1);
+
+        while (y < len) {
+            // تحقق فيما إذا كان التشكل فيه شدّة أو لا.
+            // Checking to see if the Tashkil has Shadda or not.
+            const hChar = str[y];
+
+            if ((hChar >= this.CharacterTable.Fathatan) && (hChar <= this.CharacterTable.Sukun)) {
+                if (hChar === this.CharacterTable.Shadda) {
+                    hasShadda = true;
+                } else {
+                    // To make Tashkil start from one, it subtracts the start of the Tashkil,
+                    // which is "Fathatan", then adds one; because zero means empty.
+                    // حتى يكون التشكيل مفهرسًا في مصفوفة، يُطرح رقم أول حرف في التشكيل، ألا وهو الفتحتين،
+                    // ثم يضاف واحد حتى يكون العنصر في الحقل رقم 0 فارغًا.
+
+                    // 0: None
+                    // 1: Fathatan  ً Arabic Fathatan فتحتان.
+                    // 2: Dammatan  ٌ Arabic Dammatan ضمتان.
+                    // 3: Kasratan  ٍ Arabic Kasratan كسرتان.
+                    // 4: Fatha  َ Arabic Fatha فَتحة.
+                    // 5: Damma  ُ Arabic Damma ضمة.
+                    // 6: Kasra  ِ Arabic Kasra كسرة.
+                    // 7: Shadda  ّ Arabic Shadda شدّة.
+                    // 8: Sukun  ْ Arabic Sukun سكون.
+
+                    // See EncodedTashkilTable[];
+                    tashkilCode = ((str.charCodeAt(y) - fathatan) + 1);
+                }
+
+                ++index;
+            } else {
+                break;
+            }
+
+            ++y;
+        }
+
+        return { hasShadda: hasShadda, tashkilCode: tashkilCode, index: index };
     },
 
     /**
@@ -573,69 +626,28 @@ export const ArBasic = {
      * @returns {object} {EncodeTashkil: string, StrippedText: string}
      */
     EncodeTashkil: function (str) {
-        const fathatan = this.CharacterTable.Fathatan.charCodeAt(0);
         const len = str.length;
         let strCode = "";
-        let hasTashkil = false;
-        let hasShadda = false;
-        let tashkilCode = 0;
+
+        let TashkilInfo = { hasShadda: false, tashkilCode: 0, index: 0 };
 
         for (let i = 0; i < len; i++) {
             const cChar = str[i];
 
             if ((cChar >= this.CharacterTable.Hamza) && (cChar <= this.CharacterTable.HamzaBelow)) {
-                let y = (i + 1);
-
-                while (y < len) {
-                    // تحقق فيما إذا كان التشكل فيه شدّة أو لا.
-                    // Checking to see if the Tashkil has Shadda or not.
-                    const hChar = str[y];
-
-                    if ((hChar >= this.CharacterTable.Fathatan) && (hChar <= this.CharacterTable.Sukun)) {
-                        hasTashkil = true;
-
-                        if (hChar === this.CharacterTable.Shadda) {
-                            hasShadda = true;
-                        } else {
-                            // To make Tashkil start from one, it subtracts the start of the Tashkil,
-                            // which is "Fathatan", then adds one; because zero means empty.
-                            // حتى يكون التشكيل مفهرسًا في مصفوفة، يُطرح رقم أول حرف في التشكيل، ألا وهو الفتحتين،
-                            // ثم يضاف واحد حتى يكون العنصر في الحقل رقم 0 فارغًا.
-
-                            // 0: None
-                            // 1: Fathatan  ً Arabic Fathatan فتحتان.
-                            // 2: Dammatan  ٌ Arabic Dammatan ضمتان.
-                            // 3: Kasratan  ٍ Arabic Kasratan كسرتان.
-                            // 4: Fatha  َ Arabic Fatha فَتحة.
-                            // 5: Damma  ُ Arabic Damma ضمة.
-                            // 6: Kasra  ِ Arabic Kasra كسرة.
-                            // 7: Shadda  ّ Arabic Shadda شدّة.
-                            // 8: Sukun  ْ Arabic Sukun سكون.
-
-                            // See EncodedTashkilTable[];
-                            tashkilCode = ((str.charCodeAt(y) - fathatan) + 1);
-                        }
-
-                        ++i;
-                    } else {
-                        break;
-                    }
-
-                    ++y;
-                }
+                TashkilInfo = this.GetTashkil(str, len, i);
+                i = TashkilInfo.index;
             }
 
-            if (!(hasTashkil)) {
+            if (!(TashkilInfo.hasShadda) && (TashkilInfo.tashkilCode === 0)) {
                 // 0 يعني لا تشكيل.
                 // 0 Means no Tashkil.
                 strCode += "0";
             } else {
-                hasTashkil = false;
+                if (TashkilInfo.hasShadda) {
+                    TashkilInfo.hasShadda = false;
 
-                if (hasShadda) {
-                    hasShadda = false;
-
-                    if (tashkilCode === 0) {
+                    if (TashkilInfo.tashkilCode === 0) {
                         // فقط شدّة.
                         // Just Shadda.
                         strCode += "g";
@@ -644,16 +656,16 @@ export const ArBasic = {
                         // 65 is "A"; ASCII
                         // نشكيل مع شدة
                         // Tashkil with Shadda.
-                        strCode += String.fromCharCode(tashkilCode + 64);
-                        tashkilCode = 0;
+                        strCode += String.fromCharCode(TashkilInfo.tashkilCode + 64);
+                        TashkilInfo.tashkilCode = 0;
                     }
                 } else {
                     // "tashkilCode" is > 0;
                     // 97 is "a"; ASCII
                     // نشكيل بدون شدة
                     // Tashkil without Shadda.
-                    strCode += String.fromCharCode(tashkilCode + 96);
-                    tashkilCode = 0;
+                    strCode += String.fromCharCode(TashkilInfo.tashkilCode + 96);
+                    TashkilInfo.tashkilCode = 0;
                 }
             }
         }
