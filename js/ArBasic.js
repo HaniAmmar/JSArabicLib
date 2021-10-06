@@ -232,10 +232,10 @@ export const ArBasic = {
                     if (cChar === this.CharacterTable.Shadda) {
                         hasShadda = true;
                     } else {
-                    // To make Tashkil start from one, it subtracts the start of the Tashkil,
-                    // which is "Fathatan", then adds one; because zero means empty.
-                    // حتى يكون التشكيل مفهرسًا في مصفوفة، يُطرح رقم أول حرف في التشكيل، ألا وهو الفتحتين،
-                    // ثم يضاف واحد حتى يكون العنصر في الحقل رقم 0 فارغًا.
+                        // To make Tashkil start from one, it subtracts the start of the Tashkil,
+                        // which is "Fathatan", then adds one; because zero means empty.
+                        // حتى يكون التشكيل مفهرسًا في مصفوفة، يُطرح رقم أول حرف في التشكيل، ألا وهو الفتحتين،
+                        // ثم يضاف واحد حتى يكون العنصر في الحقل رقم 0 فارغًا.
 
                         // 0: None
                         // 1: Fathatan  ً Arabic Fathatan فتحتان.
@@ -400,14 +400,15 @@ export const ArBasic = {
                     break;
                 }
 
-                case this.CharacterTable.Fathatan:
-                case this.CharacterTable.Dammatan:
-                case this.CharacterTable.Kasratan:
-                case this.CharacterTable.Fatha:
-                case this.CharacterTable.Damma:
-                case this.CharacterTable.Kasra:
-                case this.CharacterTable.Shadda:
-                case this.CharacterTable.Sukun: {
+                case this.CharacterTable.Fathatan: //  ً Arabic Fathatan فتحتان.
+                case this.CharacterTable.Dammatan: //  ٌ Arabic Dammatan ضمتان.
+                case this.CharacterTable.Kasratan: //  ٍ Arabic Kasratan كسرتان.
+                case this.CharacterTable.Fatha: //  َ Arabic Fatha فَتحة.
+                case this.CharacterTable.Damma: //  ُ Arabic Damma ضمة.
+                case this.CharacterTable.Kasra: //  ِ Arabic Kasra كسرة.
+                case this.CharacterTable.Shadda: //  ّ Arabic Shadda شدّة.
+                case this.CharacterTable.Sukun: //  ْ Arabic Sukun سكون.
+                {
                     if (i > 0) {
                         // هذا سيزيل التشكيل المتكرر ويضع الشدة قبل أي حركة.
                         // This will remove repeated Tashkil, and put Shadda before any other Tashkil.
