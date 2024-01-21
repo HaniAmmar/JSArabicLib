@@ -40,12 +40,14 @@
                 id="inputText">   ذَهَـــبَ           زَيْــــدٌ إِلَى اَلـسُّوقِ فَلَمْ يَعْثُرْ عَلَى . . . . مَا كَانَ يُرِيدُ , وَكَانَ الْـجَوُّ حِينَهَا جَمِيلاً , وَ     الـسَّمَاءُ صَافِيَةً،والْهَوَاءُ نَقِيًا  ; فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ عِنْدَ مَكَانٍ اِسْمه  : " اَلْجُرْف " . </textarea>
             <button id="execute">تنفيذ</button>
             <button id="clearInputText">تفريغ الحقل</button>
+            <!-- <button id="pasteInputText">لصق</button> -->
         </fieldset>
 
         <fieldset id="resultFieldset">
             <legend>الناتج:</legend>
             <textarea id="resultText" rows="3"></textarea>
             <button id="copyResultText">نسخ</button>
+            <!-- <button id="pasteResultText">لصق</button> -->
         </fieldset>
 
         <fieldset id="tashkilFieldset">
@@ -66,13 +68,19 @@
             let selectedOP = 0;
 
             function copyToClipboard(tag) {
-                tag.select();
-                document.execCommand("copy");
+                navigator.clipboard.writeText(tag.value);
             }
 
             function clearText(tag) {
                 tag.value = "";
             }
+
+            // function pasteText(tag) {
+            //     clearText(tag);
+
+            //     navigator.clipboard.readText().then(
+            //         (clipText) => tag.value = clipText);
+            // }
 
             function CheckTashkilFieldsetDisplay(selectedOP) {
                 switch (selectedOP) {
@@ -104,9 +112,17 @@
                 inputText.focus();
             });
 
+            // document.getElementById("pasteInputText").addEventListener("click", function () {
+            //     pasteText(inputText);
+            // });
+
             document.getElementById("copyResultText").addEventListener("click", function () {
                 copyToClipboard(resultText);
             });
+
+            // document.getElementById("pasteResultText").addEventListener("click", function () {
+            //     pasteText(resultText);
+            // });
 
             document.getElementById("execute").addEventListener("click", function () {
                 switch (selectedOP) {

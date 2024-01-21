@@ -75,17 +75,17 @@ input[type="radio"] {
     width: 1.5em;
 }
 
-input[type="radio"] + label {
+input[type="radio"]+label {
     display: inline-block;
     position: relative;
     cursor: pointer;
 }
 
-input[type="radio"]:hover + label {
+input[type="radio"]:hover+label {
     color: mediumaquamarine;
 }
 
-input[type="radio"]:checked + label {
+input[type="radio"]:checked+label {
     color: turquoise;
 }
 
@@ -101,22 +101,18 @@ button {
     color: rgb(39, 39, 44);
     border-radius: 25%;
     display: inline-block;
-    background-image: linear-gradient(
-        to bottom,
-        var(--main-border-color) 0%,
-        var(--second-border-color) 51%,
-        var(--main-border-color) 100%
-    );
+    background-image: linear-gradient(to bottom,
+            var(--main-border-color) 0%,
+            var(--second-border-color) 51%,
+            var(--main-border-color) 100%);
 }
 
 button:hover {
     color: rgb(230, 227, 233);
-    background-image: linear-gradient(
-        to bottom,
-        var(--second-border-color) 0%,
-        var(--main-border-color) 51%,
-        var(--second-border-color) 100%
-    );
+    background-image: linear-gradient(to bottom,
+            var(--second-border-color) 0%,
+            var(--main-border-color) 51%,
+            var(--second-border-color) 100%);
 }
 
 #main {
@@ -128,7 +124,7 @@ button:hover {
     flex-wrap: wrap;
 }
 
-#main > div {
+#main>div {
     padding: 0;
     margin: 1em auto 0.5em auto;
 }
