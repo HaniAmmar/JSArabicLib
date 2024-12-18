@@ -24,38 +24,34 @@
             <label for="removeTatweel">إزالة التطويل.</label>
             <input type="radio" id="separateLamAlef" name="options" value="6" />
             <label for="separateLamAlef">فصل اللام عن الألف.</label>
-            <input type="radio" id="unifyLetters" name="options" value="7" />
-            <label for="unifyLetters">توحيد الحروف.</label>
-            <input type="radio" id="simplifyText" name="options" value="8" />
-            <label for="simplifyText">تبسيط النص.</label>
-            <input type="radio" id="encodeTashkil" name="options" value="9" />
+            <!-- <input type="radio" id="unifyLetters" name="options" value="7" />
+            <label for="unifyLetters">توحيد الحروف.</label> -->
+            <!-- <input type="radio" id="simplifyText" name="options" value="8" />
+            <label for="simplifyText">تبسيط النص.</label> -->
+            <!-- <input type="radio" id="encodeTashkil" name="options" value="9" />
             <label for="encodeTashkil">ترميز التشكيل.</label>
             <input type="radio" id="decodeTashkil" name="options" value="10" />
-            <label for="decodeTashkil">دمج التشكيل.</label>
+            <label for="decodeTashkil">دمج التشكيل.</label> -->
         </fieldset>
-
         <fieldset id="textFieldset">
             <legend>النص:</legend>
-            <textarea rows="3" placeholder="اكتب نصًا هنا."
-                id="inputText">   ذَهَـــبَ           زَيْــــدٌ إِلَى اَلـسُّوقِ فَلَمْ يَعْثُرْ عَلَى . . . . مَا كَانَ يُرِيدُ , وَكَانَ الْـجَوُّ حِينَهَا جَمِيلاً , وَ     الـسَّمَاءُ صَافِيَةً،والْهَوَاءُ نَقِيًا  ; فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ عِنْدَ مَكَانٍ اِسْمه  : " اَلْجُرْف " . </textarea>
+            <textarea rows="3" placeholder="اكتب نصًا هنا." id="inputText">   ذَهَـــبَ           زَيْــــدٌ إِلَى اَلـسُّوقِ فَلَمْ يَعْثُرْ عَلَى . . . . مَا كَانَ يُرِيدُ , وَكَانَ الْـجَوُّ حِينَهَا جَمِيلاً , وَ     الـسَّمَاءُ صَافِيَةً،والْهَوَاءُ نَقِيًا  ; فَذَهَبَ إِلَى اَلْبَحْرِ، وَجَلَسَ يَسْتَمْتِعُ بِالْغُرُوبِ عِنْدَ مَكَانٍ اِسْمه  : " اَلْجُرْف " . </textarea>
             <button id="execute">تنفيذ</button>
             <button id="clearInputText">تفريغ الحقل</button>
+            <button id="copyOutputToInput">نقل الناتج إلى حقل النص</button>
             <!-- <button id="pasteInputText">لصق</button> -->
         </fieldset>
-
         <fieldset id="resultFieldset">
             <legend>الناتج:</legend>
             <textarea id="resultText" rows="3"></textarea>
             <button id="copyResultText">نسخ</button>
             <!-- <button id="pasteResultText">لصق</button> -->
         </fieldset>
-
         <fieldset id="tashkilFieldset">
             <legend>رموز التشكيل:</legend>
             <textarea id="tashkilText" rows="3" dir="ltr"></textarea>
         </fieldset>
     </div>
-
     <script type="module">
         import { ArBasic } from "./js/ArBasic.js";
 
@@ -123,6 +119,11 @@
             // document.getElementById("pasteResultText").addEventListener("click", function () {
             //     pasteText(resultText);
             // });
+
+            document.getElementById("copyOutputToInput").addEventListener("click", function () {
+                inputText.value = resultText.value;
+                inputText.focus();
+            });
 
             document.getElementById("execute").addEventListener("click", function () {
                 switch (selectedOP) {
